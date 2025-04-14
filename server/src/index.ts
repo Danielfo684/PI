@@ -26,4 +26,3 @@ try {
 } catch (error: any) {
     console.error(`Error occurred: ${error.message}`);
 }
-

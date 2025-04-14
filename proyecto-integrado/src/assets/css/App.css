@@ -35,8 +35,32 @@
 
 .card {
   padding: 2em;
+  width: 100px;
+  height: 100px;
+  transition: 0.2s;
+  position: relative;
+}
+.card:hover {
+  filter: drop-shadow(0 0 2em #000000aa);
+  transform: scale(1.05);
+
 }
 
 .read-the-docs {
   color: #888;
+}
+.cards-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+
+.card img {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: calc(50% - 25px);
+  left: calc(50% - 25px);
 }
