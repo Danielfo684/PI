@@ -35,8 +35,8 @@
 
 .card {
   padding: 2em;
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   transition: 0.2s;
   position: relative;
 }

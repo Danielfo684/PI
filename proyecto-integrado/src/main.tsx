@@ -1,8 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './assets/css/index.css'
 import App from './App'
-import io from 'socket.io-client'
+import { GamePage } from './pages/game/GamePage'
+import { HomePage } from './pages/home/HomePage'
+import { JoinRoomPage } from './pages/join/JoinRoomPage'
+import { Layout } from './components/layout/Layout'
 
 const rootElement = document.getElementById('root')
 
@@ -10,13 +14,18 @@ if (!rootElement) {
   throw new Error('Root element not found')
 }
 
-const socket = io('http://localhost:5000')
-
-socket.on('connect', () => {
-  console.log('Connected to socket server')
-  createRoot(rootElement).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  )
-})
+createRoot(rootElement).render(
+  <StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          {/* All these routes will be rendered inside the Layout component */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/game/:roomId" element={<GamePage />} />
+          <Route path="/join" element={<JoinRoomPage />} />
+          <Route path="*" element={<App />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  </StrictMode>
+)

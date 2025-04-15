@@ -14,7 +14,7 @@ export const Components = {
             </button>
         );
     },
-    Card: (props: { className?: string; dataset: number  }): JSX.Element => {
+    Card: (props: { className?: string; dataset: number; onClick: React.MouseEventHandler<HTMLButtonElement> }): JSX.Element => {
         let cardImage : string = "";
         let backgroundColor : string = "#000000";
         switch (props.dataset) {
@@ -36,9 +36,9 @@ export const Components = {
             break;
         }
         return (
-            <div className={`card ${props.className || ""}`} style={{ backgroundColor: backgroundColor }} data-id={props.dataset}>
+            <button onClick={props.onClick} className={`card ${props.className || ""}`} style={{ backgroundColor: backgroundColor }} data-id={props.dataset}>
                 <CardContent dataset={props.dataset} />
-            </div>
+            </button>
         );
     },
     CardContent: (props: { dataset: number } ): JSX.Element => {

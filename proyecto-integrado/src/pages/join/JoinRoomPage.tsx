@@ -1,8 +1,11 @@
-import { JSX, useState } from 'react'
-import '././assets/css/App.css'
-import { Card, CardContent, Input, Button } from './components/basicComponents/index'
-function App(): JSX.Element {
-  const [count, setCount] = useState<number>(0)
+import { JSX, useState } from "react"
+import { Card, CardContent, Input, Button } from '../../components/basicComponents/index'
+
+
+export function JoinRoomPage() : JSX.Element {
+    
+
+    const [count, setCount] = useState<number>(0)
 
   // Define the handler separately for clarity
   const handleClick = () => {
@@ -36,5 +39,3 @@ function App(): JSX.Element {
     </>
   )
 }
-
-export default App
