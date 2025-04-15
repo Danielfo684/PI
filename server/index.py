@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from config import config
 import socketio
 import eventlet
-from socket.SocketService import SocketService
+from socket_services.SocketService import SocketService
 
 app = Flask(__name__)
 

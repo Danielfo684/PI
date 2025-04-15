@@ -3,15 +3,16 @@ import './Header.css';
 
 export function Header() {
   return (
-    <header className="app-header">
+    <header className="header">
       <div className="logo">
-        <Link to="/">YourGameName</Link>
+        <Link to="/">Toohak</Link>
       </div>
       <nav className="navigation">
         <ul>
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/join">Join Game</Link></li>
-          {/* Add more navigation items as needed */}
+          <li> <Link to="/join">Join Game</Link></li>
+          <li> <Link to="/create">Create test</Link></li>
+          <li> <Link to="/host">Host game</Link></li>
         </ul>
       </nav>
     </header>

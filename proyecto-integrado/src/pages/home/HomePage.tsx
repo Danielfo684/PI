@@ -1,41 +1,24 @@
 import { JSX, useState } from "react"
 import { Card, CardContent, Input, Button } from '../../components/basicComponents/index'
 import {GameController} from "../../services/GameController"
+import { Link } from 'react-router-dom';
 
 export function HomePage() : JSX.Element {
     
 
-    const [count, setCount] = useState<number>(0)
-
-  // Define the handler separately for clarity
-  const handleClick = () => {
-    setCount(prevCount => prevCount + 1)
-  }
-
   return (
     <>
-      <h1>Vite + React</h1>
+      <h1>Welcome to Toohak</h1>
       <div className="counter">
-        <button onClick={handleClick}>
-          count is {count}
+        <button> <Link to="/join">Join Game</Link>
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <button> <Link to="/create">Create test</Link>
+        </button>
+        <button> <Link to="/host">Host game</Link>
+        </button>
       </div>
       <div className ="cards-section">
-      <Card className="patata card" dataset={1} onClick={handleClick} >
-      </Card>
-      <Card className="patata card" dataset={2} onClick={handleClick}>
-      </Card>
-      <Card className="patata card" dataset={3} onClick={handleClick}>
-      </Card>
-      <Card className="patata card" dataset={4} onClick={handleClick}>
-      </Card>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }

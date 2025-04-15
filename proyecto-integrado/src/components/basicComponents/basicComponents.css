@@ -1,0 +1,56 @@
+.card {
+    padding: 2em;
+    width: 100%;
+    height: 100%;
+    transition: 0.2s;
+    position: relative;
+}
+
+.card:hover {
+    filter: drop-shadow(0 0 2em #000000aa);
+    transform: scale(1.05);
+
+}
+
+.cards-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    width: 90%;
+
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+.card img {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: calc(50% - 25px);
+    left: calc(50% - 25px);
+}
+
+.option-1 {
+    background-color: #f0f0f0;
+}
+
+.option-2 {
+    background-color: #7888e4;
+}
+
+.option-3 {
+    background-color: #c0df79;
+}
+
+.option-4 {
+    background-color: #eb8181;
+}
+
+.option-5 {
+    background-color: #59ac6b;
+}
+
+.option-6 {
+    background-color: #9e9ff1;
+}

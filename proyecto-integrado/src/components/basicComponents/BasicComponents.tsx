@@ -1,5 +1,6 @@
 import { JSX } from "react";
 import { CardContent } from ".";
+import "./BasicComponents.css";
 
 export const Components = {
 
@@ -16,27 +17,22 @@ export const Components = {
     },
     Card: (props: { className?: string; dataset: number; onClick: React.MouseEventHandler<HTMLButtonElement> }): JSX.Element => {
         let cardImage : string = "";
-        let backgroundColor : string = "#000000";
         switch (props.dataset) {
             case 1: 
                 cardImage = `${props.dataset}`;
-                backgroundColor = "#FF0000";
             break;
             case 2:
                 cardImage = `${props.dataset}`;
-                backgroundColor = "#00FF00";
             break;
             case 3:
                 cardImage = `${props.dataset}`;
-                backgroundColor = "#0000FF";
             break;
             case 4:
                 cardImage = `${props.dataset}`;
-                backgroundColor = "#FFFF00";
             break;
         }
         return (
-            <button onClick={props.onClick} className={`card ${props.className || ""}`} style={{ backgroundColor: backgroundColor }} data-id={props.dataset}>
+            <button onClick={props.onClick} className={`card ${props.className || ""}`} data-id={props.dataset}>
                 <CardContent dataset={props.dataset} />
             </button>
         );

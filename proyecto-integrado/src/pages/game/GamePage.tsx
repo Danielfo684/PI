@@ -24,13 +24,13 @@ export function GamePage() : JSX.Element {
         </p>
       </div>
       <div className ="cards-section">
-      <Card className="patata card" dataset={1} onClick={handleClick} >
+      <Card className="option-1" dataset={1} onClick={handleClick} >
       </Card>
-      <Card className="patata card" dataset={2} onClick={handleClick}>
+      <Card className="option-2" dataset={2} onClick={handleClick}>
       </Card>
-      <Card className="patata card" dataset={3} onClick={handleClick}>
+      <Card className="option-3" dataset={3} onClick={handleClick}>
       </Card>
-      <Card className="patata card" dataset={4} onClick={handleClick}>
+      <Card className="option-4" dataset={4} onClick={handleClick}>
       </Card>
       </div>
       <p className="read-the-docs">

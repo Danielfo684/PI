@@ -12,10 +12,7 @@ export class GameController {
     #SocketService = null;
 
     constructor(url : string, ui : HTMLElement, gameUI : any) {
-        //hay que crear en App lo que sería UIv1 y inicializarla desde aquí
-        // Ahora mismo estoy pasando un HTMLElement por pasar algo, pero no tiene sentido
      
-        // this.#gameService = new GameService(ui);
         SocketService.init(url, this, () => {
             this.#state = this.#states.RIGHT;
             gameUI.initUI(ui);
