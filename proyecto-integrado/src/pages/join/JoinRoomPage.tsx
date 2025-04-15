@@ -1,41 +1,40 @@
-import { JSX, useState } from "react"
-import { Card, CardContent, Input, Button } from '../../components/basicComponents/index'
+import { JSX, useState, useEffect } from "react";
+import { Input, Button } from "../../components/basicComponents/index";
+import { usePageTitle } from "../../hooks/usePageTitle";
+import "./joinRoomPage.css";
 
+export function JoinRoomPage(): JSX.Element {
+  usePageTitle("Join Game");
 
-export function JoinRoomPage() : JSX.Element {
-    
+  const [roomCode, setRoomCode] = useState<string>("");
+  const [playerName, setPlayerName] = useState<string>("");
 
-    const [count, setCount] = useState<number>(0)
-
-  // Define the handler separately for clarity
-  const handleClick = () => {
-    setCount(prevCount => prevCount + 1)
-  }
+  const handleJoin = () => {
+    console.log(
+      "Intentando unirse a la sala:",
+      roomCode,
+      "con el nombre:",
+      playerName
+    );
+    // DANI AQUI LA LOGICA PARA UNIRSE A LA SALA, SOCKET.IO O LO QUE SEA
+  };
 
   return (
     <>
-      <h1>Vite + React</h1>
-      <div className="counter">
-        <button onClick={handleClick}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <h1>Unirse a una Sala</h1>
+      <div className="join-room-container">
+        <Input
+          placeholder="Código de la sala"
+          value={roomCode}
+          onChange={(e) => setRoomCode(e.target.value)}
+        />
+        <Input
+          placeholder="Nombre del jugador"
+          value={playerName}
+          onChange={(e) => setPlayerName(e.target.value)}
+        />
+        <Button text="Unirse" onClick={handleJoin} dataset="join-room" />
       </div>
-      <div className ="cards-section">
-      <Card className="patata card" dataset={1} onClick={handleClick} >
-      </Card>
-      <Card className="patata card" dataset={2} onClick={handleClick}>
-      </Card>
-      <Card className="patata card" dataset={3} onClick={handleClick}>
-      </Card>
-      <Card className="patata card" dataset={4} onClick={handleClick}>
-      </Card>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }

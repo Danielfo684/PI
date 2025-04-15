@@ -15,7 +15,7 @@ export const Components = {
             </button>
         );
     },
-    Card: (props: { className?: string; dataset: number; onClick: React.MouseEventHandler<HTMLButtonElement> }): JSX.Element => {
+    Card: (props: { className?: string; dataset: number; onClick: React.MouseEventHandler<HTMLButtonElement>; children?: React.ReactNode }): JSX.Element => {
         let cardImage : string = "";
         switch (props.dataset) {
             case 1: 
@@ -33,7 +33,7 @@ export const Components = {
         }
         return (
             <button onClick={props.onClick} className={`card ${props.className || ""}`} data-id={props.dataset}>
-                <CardContent dataset={props.dataset} />
+                {props.children ? props.children : <CardContent dataset={props.dataset} />}
             </button>
         );
     },

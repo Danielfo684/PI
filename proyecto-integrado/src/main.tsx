@@ -10,6 +10,8 @@ import { JoinRoomPage } from './pages/join/JoinRoomPage'
 import { Layout } from './components/layout/Layout'
 import { UserMainPage } from './pages/user/UserMainPage'
 import { UserSettingPage } from './pages/user/UserSettingPage'
+import { CreateTestPage } from './pages/create/CreateTestPage'
+
 const rootElement = document.getElementById('root')
 
 if (!rootElement) {
@@ -27,8 +29,8 @@ createRoot(rootElement).render(
           <Route path="/user" element={<UserMainPage />} />
           <Route path="/user/settings" element={<UserSettingPage />} />
           <Route path="/host" element={<HostPage />} />
-          <Route path="/create" element={<HomePage />} />
           <Route path="/host/:id" element={<HostPage />} />
+          <Route path="/create" element={<CreateTestPage />} />
           {/* Páginas de juego invitado*/}
           <Route path="/game/:roomId" element={<GamePage />} />
           <Route path="/join" element={<JoinRoomPage />} />

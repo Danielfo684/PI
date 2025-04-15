@@ -1,6 +1,6 @@
 import { JSX, useState } from "react"
 import { Card, CardContent, Input, Button } from '../../components/basicComponents/index'
-import "./gamePage.css"
+import "./GamePage.css"
 
 export function GamePage() : JSX.Element {
     
