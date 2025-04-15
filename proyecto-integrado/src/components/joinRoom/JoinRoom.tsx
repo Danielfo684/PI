@@ -14,7 +14,7 @@ export default function JoinRoom({ onJoin }: JoinRoomProps): JSX.Element {
       onJoin(roomCode, playerName);
     }
   };
- 
+
   return (
     <></>
   )
