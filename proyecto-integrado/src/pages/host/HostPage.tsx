@@ -2,11 +2,16 @@ import { JSX, useState, useEffect } from "react";
 import { Card, CardContent, Button } from "../../components/basicComponents/index";
 import { Link } from "react-router-dom";
 import { usePageTitle } from "../../hooks/usePageTitle";
+import { GameController } from "../../services/GameController";
 import "./HostPage.css";
-
 export function HostPage(): JSX.Element {
   usePageTitle("Host Game");
 
+  const handleClick = () => {
+    GameController.getInstance().init("http://localhost:5000");
+    // Aquí seleccionamos el test que queremos hostear y lo recogemos por fetch. Con el fetch hecho 
+  }
+    
   // Simulacion de los datos pero hay que hacerlo bien
   const [tests, setTests] = useState<{ id: string; title: string; description: string }[]>([]);
 
@@ -37,8 +42,11 @@ export function HostPage(): JSX.Element {
                 <p>{test.description}</p>
               </div>
             </Card>
+        
           </Link>
         ))}
+            <Card  dataset={2} onClick={handleClick}>
+            </Card>
       </div>
     </>
   );

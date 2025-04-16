@@ -11,6 +11,7 @@ export const SocketService = {
         SocketService.socket = io(url);
 
         SocketService.socket.on("connect", (data: any) => {
+            console.log("Connected to server", data);
             SocketService.socket.on("connectionStatus", (data : any) => {
                 SocketService.connected = true;
                 onConnectedCallBack();
@@ -23,6 +24,7 @@ export const SocketService = {
                 SocketService.connected = false;
                 onDisconnectedCallBack();
             });
+            return SocketService;
         })
     }
 }

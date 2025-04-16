@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './assets/css/index.css'
-import App from './App'
+import { GameController } from './services/GameController'
 import { GamePage } from './pages/game/GamePage'
 import { HomePage } from './pages/home/HomePage'
 import { HostPage } from './pages/host/HostPage'
@@ -25,12 +25,11 @@ createRoot(rootElement).render(
         <Route element={<Layout />}>
           
           <Route path="/" element={<HomePage />} />
-          {/* Páginas de usuario */}
-          <Route path="/user" element={<UserMainPage />} />
-          <Route path="/user/settings" element={<UserSettingPage />} />
-          <Route path="/host" element={<HostPage />} />
-          <Route path="/host/:id" element={<HostPage />} />
-          <Route path="/create" element={<CreateTestPage />} />
+            <Route path="/user" element={<UserMainPage />} />
+            <Route path="/user/settings" element={<UserSettingPage />} />
+            <Route path="/host" element={<HostPage/>} />
+            <Route path="/host/:id" element={<HostPage/>} />
+            <Route path="/create" element={<CreateTestPage />} />
           {/* Páginas de juego invitado*/}
           <Route path="/game/:roomId" element={<GamePage />} />
           <Route path="/join" element={<JoinRoomPage />} />

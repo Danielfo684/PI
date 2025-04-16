@@ -26,7 +26,11 @@ export class GameController {
     }
 
     // Initialize the controller
-    public init(url: string, ui: HTMLElement, gameUI: any): void {
+    public init(url: string,
+        //  ui: HTMLElement, 
+        //  gameUI: any): void 
+    )
+         {
         if (this.initialized) {
             console.warn('GameController already initialized');
             return;
@@ -34,14 +38,8 @@ export class GameController {
         
         this.socketService = SocketService.init(url, this, () => {
             this.state = this.states.RIGHT;
-            gameUI.initUI(ui);
+            // gameUI.initUI(ui);
 
-        }, () => {
-            this.state = this.states.BAD;
-        });
-        this.socketService.init(url, this, () => {
-            this.state = this.states.RIGHT;
-            gameUI.initUI(ui);
         }, () => {
             this.state = this.states.BAD;
         });
@@ -49,22 +47,22 @@ export class GameController {
         this.initialized = true;
     }
 
-    public actionController(payload: any): void {
-        console.log(payload);
-        if (this.state === this.states.RIGHT) {
-            // Process game actions here
-        }
-    }
+    // public actionController(payload: any): void {
+    //     console.log(payload);
+    //     if (this.state === this.states.RIGHT) {
+    //         // Process game actions here
+    //     }
+    // }
 
-    public respondController(message: string, payload: any): void {
-        if (this.socketService && this.state === this.states.RIGHT) {
-            this.socketService.send(message, payload);
-        }
-    }
+    // public respondController(message: string, payload: any): void {
+    //     if (this.socketService && this.state === this.states.RIGHT) {
+    //         this.socketService.send(message, payload);
+    //     }
+    // }
     
-    public isConnected(): boolean {
-        return this.state === this.states.RIGHT;
-    }
+    // public isConnected(): boolean {
+    //     return this.state === this.states.RIGHT;
+    // }
 }
 
 

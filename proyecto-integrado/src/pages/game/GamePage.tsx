@@ -1,15 +1,15 @@
 import { JSX, useState } from "react"
 import { Card, CardContent, Input, Button } from '../../components/basicComponents/index'
 import "./GamePage.css"
+import { GameController } from "../../services/GameController"
 
-export function GamePage() : JSX.Element {
+export function GamePage(controlador : any) : JSX.Element {
     
-
-    const [count, setCount] = useState<number>(0)
+  const [count, setCount] = useState<number>(0)
 
   // Define the handler separately for clarity
   const handleClick = () => {
-    setCount(prevCount => prevCount + 1)
+GameController.getInstance().init("http://localhost:5000");
   }
 
   return (

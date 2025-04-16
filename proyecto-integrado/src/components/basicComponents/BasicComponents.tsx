@@ -39,7 +39,7 @@ export const Components = {
     },
     CardContent: (props: { dataset: number } ): JSX.Element => {
         return (
-                <img src={`./src/assets/images/button${props.dataset || "1"}.png`} alt="" />
+                <img src={`../src/assets/images/button${props.dataset || "1"}.png`} alt="" />
         );
     },
 

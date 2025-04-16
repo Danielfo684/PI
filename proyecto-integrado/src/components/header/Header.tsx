@@ -13,6 +13,11 @@ export function Header() {
           <li> <Link to="/join">Join Game</Link></li>
           <li> <Link to="/create">Create test</Link></li>
           <li> <Link to="/host">Host game</Link></li>
+          <li>
+            <Link to="/user">
+              <img src="../src/assets/images/user.png" alt="User Sign In" className="user-icon" />
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
