@@ -1,41 +1,36 @@
 import { JSX, useState } from "react"
-import { Card, CardContent, Input, Button } from '../../components/basicComponents/index'
+import { Card, CardContent, Input, Button, CardSection } from '../../components/basicComponents/index'
 import "./GamePage.css"
-import { GameController } from "../../services/GameController"
+import { GameController} from "../../services/GameController"
+import { Message } from "../../services/SocketService"
 
-export function GamePage(controlador : any) : JSX.Element {
-    
-  const [count, setCount] = useState<number>(0)
-
+export interface Questions {
+  id: number;
+  title: string;
+  description?: string;
+}
+export interface Answer {
+  id: number;
+  text: string;
+}
+export function GamePage(): JSX.Element {
+  let answers: Array<Answer> = [{ id: 1, text: "Respuesta 1" }, { id: 2, text: "Respuesta 2" }, { id: 3, text: "Respuesta 3" }, { id: 4, text: "Respuesta 4" }];
   // Define the handler separately for clarity
-  const handleClick = () => {
-GameController.getInstance().init("http://localhost:5000");
+  const handleClick = (answer: number) => {
+    console.log("Answer clicked:", answer);
+    GameController.getInstance().actionController({
+      type: "ANSWER",
+      content: {
+        selection: answer,
+      }
+    } as Message);
   }
+  GameController.getInstance().init("http://localhost:5000");
 
   return (
+
     <>
-      <h1>Vite + React</h1>
-      <div className="counter">
-        <button onClick={handleClick}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <div className ="cards-section">
-      <Card className="option-1" dataset={1} onClick={handleClick} >
-      </Card>
-      <Card className="option-2" dataset={2} onClick={handleClick}>
-      </Card>
-      <Card className="option-3" dataset={3} onClick={handleClick}>
-      </Card>
-      <Card className="option-4" dataset={4} onClick={handleClick}>
-      </Card>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <CardSection answers={answers} handleClick={handleClick}></CardSection>
     </>
   )
 }

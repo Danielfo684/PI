@@ -31,7 +31,8 @@ createRoot(rootElement).render(
             <Route path="/host/:id" element={<HostPage/>} />
             <Route path="/create" element={<CreateTestPage />} />
           {/* Páginas de juego invitado*/}
-          <Route path="/game/:roomId" element={<GamePage />} />
+          {/* la siguiente ruta solo debe ser accesible desde /join, si no te expulsa */}
+          <Route path="/game/:roomId" element={<GamePage />} /> 
           <Route path="/join" element={<JoinRoomPage />} />
           {/* Redireccionado si no funciona la ruta */}
           <Route path="*" element={<HomePage />} />

@@ -1,10 +1,13 @@
 import { JSX } from "react";
 import { SocketService } from "./SocketService";
 
+
+
+
 export class GameController {
     // Private static instance
     private static instance: GameController | null = null;
-    
+
     // States as private properties
     private states = {
         RIGHT: 0,
@@ -15,7 +18,7 @@ export class GameController {
     private initialized: boolean = false;
 
     // Private constructor to prevent direct instantiation
-    private constructor() {}
+    private constructor() { }
 
     // Static method to get the singleton instance
     public static getInstance(): GameController {
@@ -29,51 +32,48 @@ export class GameController {
     public init(url: string,
         //  ui: HTMLElement, 
         //  gameUI: any): void 
-    )
-         {
+    ) {
         if (this.initialized) {
-            console.warn('GameController already initialized');
-            return;
-        }
-        
-        this.socketService = SocketService.init(url, this, () => {
-            this.state = this.states.RIGHT;
-            // gameUI.initUI(ui);
+            console.log('GameController already initialized');
 
-        }, () => {
-            this.state = this.states.BAD;
-        });
-        
-        this.initialized = true;
+        } else {
+            this.socketService = SocketService.init(url, this, () => {
+                this.state = this.states.RIGHT;
+
+            }, () => {
+                this.state = this.states.BAD;
+            });
+
+            this.initialized = true;
+        }
+
     }
 
-    // public actionController(payload: any): void {
-    //     console.log(payload);
-    //     if (this.state === this.states.RIGHT) {
-    //         // Process game actions here
-    //     }
-    // }
+    public actionController(payload: any): void {
+        console.log(payload);
+        if (this.state === this.states.RIGHT) {
+            if (this.socketService) {
+                this.socketService.emitMessage(payload.type, payload.content);
+                console.log("Sending message", payload.type, payload.content);
+            } else {
+                console.error("Socket service is not initialized.");
+            }
+
+        } else {
+            console.error("GameController is not in the right state.");
+        }
+    }
+
 
     // public respondController(message: string, payload: any): void {
     //     if (this.socketService && this.state === this.states.RIGHT) {
     //         this.socketService.send(message, payload);
     //     }
     // }
-    
+
     // public isConnected(): boolean {
     //     return this.state === this.states.RIGHT;
     // }
 }
 
 
-
-// // Get the singleton instance
-// const gameController = GameController.getInstance();
-
-// // Initialize it
-// gameController.init('http://localhost:5000', gameContainer, GameUI);
-
-// // Use it
-// if (gameController.isConnected()) {
-//     gameController.respondController('move', { x: 10, y: 20 });
-// }
