@@ -1,0 +1,82 @@
+{
+    "questions": [
+      {
+        "id": 1,
+        "questionText": "What is the capital of France?",
+        "answers": [
+          {
+            "id": 1,
+            "text": "Paris",
+            "isCorrect": true
+          },
+          {
+            "id": 2,
+            "text": "London",
+            "isCorrect": false
+          },
+          {
+            "id": 3,
+            "text": "Berlin",
+            "isCorrect": false
+          },
+          {
+            "id": 4,
+            "text": "Madrid",
+            "isCorrect": false
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "questionText": "What is 2 + 2?",
+        "answers": [
+          {
+            "id": 1,
+            "text": "3",
+            "isCorrect": false
+          },
+          {
+            "id": 2,
+            "text": "4",
+            "isCorrect": true
+          },
+          {
+            "id": 3,
+            "text": "22",
+            "isCorrect": false
+          },
+          {
+            "id": 4,
+            "text": "6",
+            "isCorrect": false
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "questionText": "Which language is primarily used for frontend web development?",
+        "answers": [
+          {
+            "id": 1,
+            "text": "Python",
+            "isCorrect": false
+          },
+          {
+            "id": 2,
+            "text": "JavaScript",
+            "isCorrect": true
+          },
+          {
+            "id": 3,
+            "text": "C#",
+            "isCorrect": false
+          },
+          {
+            "id": 4,
+            "text": "Java",
+            "isCorrect": false
+          }
+        ]
+      }
+    ]
+  }

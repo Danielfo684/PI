@@ -3,6 +3,7 @@ from config import config
 import socketio
 import eventlet
 from socket_services.SocketService import SocketService
+from server.messages.MessageHandler import MessageHandler
 
 app = Flask(__name__)
 
@@ -15,6 +16,7 @@ app.wsgi_app = socketio.WSGIApp(sio, app.wsgi_app)
 
 socket_service = SocketService.get_instance(sio)
 socket_service.init()
+MessageHandler(sio)
 
 @app.route("/")
 def hello():
