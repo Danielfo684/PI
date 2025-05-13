@@ -1,51 +1,63 @@
-import json
+import socketio
 import logging
-from socketio import Server
+from game.GameService import GameService
+from .messageActions import do_request_question, do_submit_answer
 
-class MessageHandler:
-    def __init__(self, socket: Server):
-        self.socket = socket
-        self.questions = self._load_questions()
-        self.register_handlers()
+class ServerService:
+    _instance = None
 
-    def _load_questions(self):
-        try:
-            with open("preguntas.json", "r", encoding="utf-8") as f:
-                data = json.load(f)
-                return data.get("questions", [])
-        except Exception as e:
-            logging.error("Error cargando preguntas: %s", e)
-            return []
+    def __init__(self, io: socketio.Server = None):
+        self.io = io
+        self.active = bool(io)
+        self.messages = [
+            {
+                "type": "REQUEST_QUESTION", 
+                "do": lambda sid, data: do_request_question(self, sid, data)
+            },
+            {
+                "type": "SUBMIT_ANSWER", 
+                "do": lambda sid, data: do_submit_answer(self, sid, data)
+            }
+        ]
 
-    def register_handlers(self):
-        @self.socket.on("request_question")
-        def handle_request_question(data):
-            question_id = data.get("question_id")
-            if question_id is None:
-                question = self.questions[0] if self.questions else {}
+    @classmethod
+    def get_instance(cls, io: socketio.Server = None):
+        if cls._instance is None:
+            cls._instance = cls(io)
+        return cls._instance
+
+    def init(self, http_server):
+        self.io = socketio.Server(cors_allowed_origins="*", async_mode="eventlet")
+        self.active = True
+
+        @self.io.event
+        def connect(sid, environ):
+            print("Un cliente se ha conectado:", sid)
+            self.io.emit("connectionStatus", {"status": True}, room=sid)
+            game_service = GameService.get_instance()
+            player = game_service.build_player(sid)
+            game_service.add_player(player)
+
+        @self.io.event
+        def disconnect(sid):
+            print("Un cliente se ha desconectado:", sid)
+
+        @self.io.on("message")
+        def on_message(sid, data):
+            message_type = data.get("type")
+            handler = next((item["do"] for item in self.messages if item["type"] == message_type), None)
+            if handler:
+                handler(sid, data)
             else:
-                question = next((q for q in self.questions if q["id"] == int(question_id)), {})
-            if question:
-                self.socket.emit("question", question)
-                logging.info("Enviada pregunta: %s", question)
-            else:
-                self.socket.emit("error", {"message": "Pregunta no encontrada"})
+                logging.warning("Mensaje no soportado: %s", message_type)
 
-        @self.socket.on("submit_answer")
-        def handle_submit_answer(data):
-            question_id = data.get("question_id")
-            answer_id = data.get("answer_id")
-            if question_id is None or answer_id is None:
-                self.socket.emit("error", {"message": "Datos insuficientes en submit_answer"})
-                return
-            question = next((q for q in self.questions if q["id"] == int(question_id)), None)
-            if question:
-                answer = next((a for a in question.get("answers", []) if a["id"] == int(answer_id)), None)
-                if answer is not None:
-                    correct = answer.get("isCorrect", False)
-                    self.socket.emit("answer_result", {"correct": correct})
-                    logging.info("Respuesta recibida para la pregunta %s: respuesta %s; correcta: %s", question_id, answer_id, correct)
-                else:
-                    self.socket.emit("error", {"message": "Respuesta no encontrada"})
-            else:
-                self.socket.emit("error", {"message": "Pregunta no encontrada"})
+    def add_player_to_room(self, sid, room: str):
+        self.io.enter_room(sid, str(room))
+
+    def send_message(self, room: str, type: str, content):
+        print(content)
+        if self.active and self.io is not None and room is not None:
+            self.io.emit("message", {"type": type, "content": content}, room=str(room))
+
+    def is_active(self):
+        return self.active
