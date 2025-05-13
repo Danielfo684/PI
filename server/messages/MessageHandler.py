@@ -1,23 +1,21 @@
 import socketio
 import logging
 from game.GameService import GameService
-from .messageActions import do_request_question, do_submit_answer
+from . import messageActions  
 
-class ServerService:
+class MessageHandler:
     _instance = None
 
     def __init__(self, io: socketio.Server = None):
         self.io = io
         self.active = bool(io)
+        actions = messageActions.get_message_actions()
         self.messages = [
             {
-                "type": "REQUEST_QUESTION", 
-                "do": lambda sid, data: do_request_question(self, sid, data)
-            },
-            {
-                "type": "SUBMIT_ANSWER", 
-                "do": lambda sid, data: do_submit_answer(self, sid, data)
+                "type": key, 
+                "do": lambda sid, data, func=func: func(self, sid, data)
             }
+            for key, func in actions.items()
         ]
 
     @classmethod
