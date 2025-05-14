@@ -25,6 +25,7 @@ export class GameController {
         if (!GameController.instance) {
             GameController.instance = new GameController();
         }
+        
         return GameController.instance;
     }
 
@@ -53,7 +54,7 @@ export class GameController {
         console.log(payload);
         if (this.state === this.states.RIGHT) {
             if (this.socketService) {
-                this.socketService.emitMessage(payload.type, payload.content);
+                this.socketService.emitMessage(payload);
                 console.log("Sending message", payload.type, payload.content);
             } else {
                 console.error("Socket service is not initialized.");

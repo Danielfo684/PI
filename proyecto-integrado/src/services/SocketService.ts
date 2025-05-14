@@ -40,6 +40,6 @@ export const SocketService = {
 
      emitMessage(message: Message): any {
 
-        SocketService.socket.emit("message", { type: "HELLO", content: "Hello world!"});
+        SocketService.socket.emit("message", message);
     }
 }

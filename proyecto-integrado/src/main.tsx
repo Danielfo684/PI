@@ -2,7 +2,6 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './assets/css/index.css'
-import { GameController } from './services/GameController'
 import { GamePage } from './pages/game/GamePage'
 import { HomePage } from './pages/home/HomePage'
 import { HostPage } from './pages/host/HostPage'
@@ -11,6 +10,7 @@ import { Layout } from './components/layout/Layout'
 import { UserMainPage } from './pages/user/UserMainPage'
 import { UserSettingPage } from './pages/user/UserSettingPage'
 import { CreateTestPage } from './pages/create/CreateTestPage'
+import { HostingGamePage } from './pages/hostingGamePage/HostingGamePage'
 
 const rootElement = document.getElementById('root')
 
@@ -28,7 +28,7 @@ createRoot(rootElement).render(
             <Route path="/user" element={<UserMainPage />} />
             <Route path="/user/settings" element={<UserSettingPage />} />
             <Route path="/host" element={<HostPage/>} />
-            <Route path="/host/:id" element={<HostPage/>} />
+            <Route path="/host/:id" element={<HostingGamePage/>} />
             <Route path="/create" element={<CreateTestPage />} />
           {/* Páginas de juego invitado*/}
           {/* la siguiente ruta solo debe ser accesible desde /join, si no te expulsa */}

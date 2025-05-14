@@ -13,7 +13,7 @@ class SocketService:
     def __init__(self, socket: socketio.Server):
         self.socket = socket
         self.active = False
-        self.register_events()
+        
 
     @classmethod
     def get_instance(cls, socket: socketio.Server = None): # Se suele usar "cls" para referirse a la propa clase
@@ -32,5 +32,10 @@ class SocketService:
         def disconnect(id):
             print("Un cliente se ha desconectado:", id)
 
+        @self.socket.on("message")
+        def on_message(id, payload):
+                print(f"mensaje recibido en el server de {id}")
+                print(f"contenido {payload}")
+                      
     def init(self):
         self.active = True

@@ -16,7 +16,7 @@ export const Components = {
             </button>
         );
     },
-    Card: (props: { className?: string; dataset: number; onClick: React.MouseEventHandler<HTMLButtonElement>; children?: React.ReactNode }): JSX.Element => {
+    Card: (props: { className?: string; dataset: number; onClick?: React.MouseEventHandler<HTMLButtonElement>; children?: React.ReactNode }): JSX.Element => {
         let cardImage: string = "";
 
         // por implementar los estados de las respuestas

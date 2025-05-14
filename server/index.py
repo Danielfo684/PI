@@ -3,7 +3,7 @@ from config import config
 import socketio
 import eventlet
 from socket_services.SocketService import SocketService
-from server.messages.MessageHandler import MessageHandler
+from messages.MessageHandler import MessageHandler
 
 app = Flask(__name__)
 
