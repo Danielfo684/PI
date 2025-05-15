@@ -18,7 +18,6 @@ export const SocketService = {
         SocketService.controller = gameController;
         SocketService.url = url;
         SocketService.socket = io(url);
-
         SocketService.socket.on("connect", () => {
             console.log("Connected to server");
             SocketService.connected = true;

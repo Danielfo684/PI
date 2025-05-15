@@ -2,21 +2,28 @@ import { JSX, useState, useEffect } from "react";
 import { Input, Button } from "../../components/basicComponents/index";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import "./joinRoomPage.css";
+import { GameController } from "../../services/GameController";
 
 export function JoinRoomPage(): JSX.Element {
   usePageTitle("Join Game");
 
   const [roomCode, setRoomCode] = useState<string>("");
   const [playerName, setPlayerName] = useState<string>("");
-
-  const handleJoin = () => {
+  const [gameControllerInstance] = useState(() => GameController.getInstance());
+  const handleJoin = async () => {
     console.log(
       "Intentando unirse a la sala:",
       roomCode,
       "con el nombre:",
       playerName
     );
-    // DANI AQUI LA LOGICA PARA UNIRSE A LA SALA, SOCKET.IO O LO QUE SEA
+
+    // await gameControllerInstance.init("http://localhost:5000");
+    // console.log("Promesa terminada");
+    // gameControllerInstance.actionController({ type: "CREATE_ROOM", content: data.id });
+    // console.log(`Mensaje enviado al servidor para iniciar el quiz con ID: ${data.id}`);
+
+
   };
 
   return (

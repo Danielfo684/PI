@@ -16,10 +16,11 @@ const [gameControllerInstance] = useState(() => GameController.getInstance());
   const { data } = location.state || {};
   const [roomCode, setRoomCode] = useState<string | null>(null);
   console.log(data);
+  
   async () => {
     await gameControllerInstance.init("http://localhost:5000");
     console.log("Promesa terminada");
-    gameControllerInstance.actionController({ type: "NEW_QUIZ", content: data.id });
+    gameControllerInstance.actionController({ type: "CREATE_ROOM", content: data.id });
     console.log(`Mensaje enviado al servidor para iniciar el quiz con ID: ${data.id}`);
   }
 
