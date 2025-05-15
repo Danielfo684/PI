@@ -1,4 +1,5 @@
 import socketio
+from messages.messageActions import MessageActions
 
 class SocketService:
     _instance = None
@@ -36,6 +37,7 @@ class SocketService:
         def on_message(id, payload):
                 print(f"mensaje recibido en el server de {id}")
                 print(f"contenido {payload}")
+                MessageActions.get_message_actions().get(payload.get("type"))(self, id, payload)
                       
     def init(self):
         self.active = True

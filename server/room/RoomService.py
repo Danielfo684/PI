@@ -2,8 +2,8 @@ import random
 import logging
 
 class Room:
-    def __init__(self, name: str, players=None, occupied: bool = False):
-        self.name = name
+    def __init__(self, key: str, players=None, occupied: bool = False):
+        self.key = key
         self.players = players if players is not None else []
         self.occupied = occupied
 
@@ -29,8 +29,8 @@ class RoomService:
         for room in self.rooms:
             if not room.occupied:
                 return room
-        room_name = "room" + self._gen_ran_hex(128)
-        new_room = Room(name=room_name)
+        room_key = "room" + self._gen_ran_hex(128)
+        new_room = Room(key=room_key)
         self.rooms.append(new_room)
         return new_room
 

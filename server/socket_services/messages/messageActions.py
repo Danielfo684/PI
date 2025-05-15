@@ -1,5 +1,6 @@
 import logging
 from game.GameService import GameService
+from room.RoomService import RoomService
 
 def do_request_question(service, sid, data):
     question_id = data.get("question_id")
@@ -32,9 +33,16 @@ def do_submit_answer(service, sid, data):
             service.io.emit("error", {"message": "Respuesta no encontrada"}, room=sid)
     else:
         service.io.emit("error", {"message": "Pregunta no encontrada"}, room=sid)
+        
+def do_create_room(service, sid, data):
+    generated_room = service.create_room()
+    service.add_player_to_room(sid, generated_room)
+    service.io.emit("room_created", {"room": generated_room}, room=sid)
+    logging.info("Sala creada: %s", generated_room)
 
 def get_message_actions():
     return {
         "REQUEST_QUESTION": do_request_question,
-        "SUBMIT_ANSWER": do_submit_answer
+        "SUBMIT_ANSWER": do_submit_answer,
+        "CREATE_ROOM": do_create_room,
     }
