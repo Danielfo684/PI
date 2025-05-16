@@ -11,6 +11,7 @@ import { UserMainPage } from './pages/user/UserMainPage'
 import { UserSettingPage } from './pages/user/UserSettingPage'
 import { CreateTestPage } from './pages/create/CreateTestPage'
 import { HostingGamePage } from './pages/hostingGamePage/HostingGamePage'
+import { MainPage } from './pages/main/MainPage'
 
 const rootElement = document.getElementById('root')
 
@@ -24,7 +25,8 @@ createRoot(rootElement).render(
       <Routes>
         <Route element={<Layout />}>
           
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<MainPage />} />
+          <Route path="/home" element={<HomePage />} />
             <Route path="/user" element={<UserMainPage />} />
             <Route path="/user/settings" element={<UserSettingPage />} />
             <Route path="/host" element={<HostPage/>} />
@@ -35,7 +37,7 @@ createRoot(rootElement).render(
           <Route path="/game/:roomId" element={<GamePage />} /> 
           <Route path="/join" element={<JoinRoomPage />} />
           {/* Redireccionado si no funciona la ruta */}
-          <Route path="*" element={<HomePage />} />
+          <Route path="*" element={<MainPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
