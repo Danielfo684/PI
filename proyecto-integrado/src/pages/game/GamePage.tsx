@@ -1,6 +1,6 @@
 import { JSX, useState } from "react"
 import { Card, CardContent, Input, Button, CardSection } from '../../components/basicComponents/index'
-import "./GamePage.css"
+import "./gamePage.css"
 import { GameController} from "../../services/GameController"
 import { Message } from "../../services/SocketService"
 

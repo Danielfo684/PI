@@ -1,6 +1,4 @@
-import { JSX, useState } from "react"
-import { Card, CardContent, Input, Button } from '../../components/basicComponents/index'
-import {GameController} from "../../services/GameController"
+import { JSX } from "react"
 import { Link } from 'react-router-dom';
 import { usePageTitle } from "../../hooks/usePageTitle";
 import "./MainPage.css";

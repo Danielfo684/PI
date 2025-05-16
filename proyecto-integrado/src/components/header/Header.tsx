@@ -5,7 +5,9 @@ export function Header() {
   return (
     <header className="header">
       <div className="logo">
-        <Link to="/">Quizify</Link>
+        <Link to="/">
+          <img src="../src/assets/images/logo.png" alt="Logo" className="logo-icon" />
+        </Link>
       </div>
       <nav className="navigation">
         <ul>
