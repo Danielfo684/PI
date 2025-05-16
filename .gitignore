@@ -1,4 +1,2 @@
-/proyecto-integrado/node_modules
-/server/node_modules
-/server/__pycache__
-/server/socket/__pycache__
+**/node_modules
+**/__pycache__/
