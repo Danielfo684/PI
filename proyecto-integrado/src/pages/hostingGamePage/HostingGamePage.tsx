@@ -5,6 +5,7 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 import { GameController } from "../../services/GameController";
 import { useLocation } from "react-router-dom";
 import "./HostingGamePage.css";
+import { Player } from "../../components/player/Player";
 
 export function HostingGamePage(): JSX.Element {
   usePageTitle("Game Hosting");
@@ -12,6 +13,7 @@ export function HostingGamePage(): JSX.Element {
   const [gameControllerInstance] = useState(() => GameController.getInstance());
   const [gameControllerSocket] = useState(() => gameControllerInstance.getSocketService());
   const location = useLocation();
+  const [players, setPlayers] = useState<any[]>([]);
   const { data } = location.state || {};
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const socketFlag = useRef(false);
@@ -21,6 +23,10 @@ export function HostingGamePage(): JSX.Element {
     if (payload.type === "ROOM_CODE") {
       console.log(`Código de sala recibido: ${payload.content}`);
       setRoomCode(payload.content as string);
+    }
+    if (payload.type === "JOIN_PLAYER") {
+      setPlayers(prev => [...prev, payload.content]);
+      console.log(`Nuevo jugador unido: ${payload}`);
     }
   };
 
@@ -40,16 +46,16 @@ export function HostingGamePage(): JSX.Element {
     }
   }, [data?.id, gameControllerInstance]);
 
- useEffect(() => {
-  if (gameControllerSocket) {
-    gameControllerSocket.onMessage(handleMessage);
-    return () => {
-      if (gameControllerSocket.offMessage) {
-        gameControllerSocket.offMessage(handleMessage);
-      }
-    };
-  }
-}, [data?.id, gameControllerSocket]);
+  useEffect(() => {
+    if (gameControllerSocket) {
+      gameControllerSocket.onMessage(handleMessage);
+      return () => {
+        if (gameControllerSocket.offMessage) {
+          gameControllerSocket.offMessage(handleMessage);
+        }
+      };
+    }
+  }, [data?.id, gameControllerSocket]);
 
   return (gameControllerInstance &&
     <>
@@ -59,6 +65,18 @@ export function HostingGamePage(): JSX.Element {
         <p>Nombre del Quiz <strong>{data.title}</strong></p>
         <p>Descripción:{data.description}</p>
         <h2>Código de Sala: {roomCode ?? "Esperando código..."}</h2>
+        <h3>Jugadores en la sala:</h3>
+        <div>
+          {players.map((player, idx) => (
+            <Player.PlayerCard
+              key={player.id}
+              id={player.id}
+              name={player.name}
+              className={player.className}
+              iconNumber={player.iconNumber}
+            />
+          ))}
+        </div>
       </div>
     </>
   );

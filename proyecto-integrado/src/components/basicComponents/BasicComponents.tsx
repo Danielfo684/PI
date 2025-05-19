@@ -2,7 +2,6 @@ import { JSX, useState } from "react";
 import { Card, CardContent } from ".";
 import "./BasicComponents.css";
 import { Answer } from "../../pages/game/GamePage";
-import { data } from "react-router-dom";
 export const Components = {
 
     Button: (props: { text: string; onClick: () => void; dataset: string; className?: string }): any => {
@@ -16,7 +15,7 @@ export const Components = {
             </button>
         );
     },
-    Card: (props: { className?: string; dataset: number; onClick?: React.MouseEventHandler<HTMLButtonElement>; children?: React.ReactNode }): JSX.Element => {
+    Card: (props: { className?: string; dataset: number; answer?: boolean, onClick?: React.MouseEventHandler<HTMLButtonElement>; children?: React.ReactNode }): JSX.Element => {
         let cardImage: string = "";
 
         // por implementar los estados de las respuestas
@@ -44,7 +43,7 @@ export const Components = {
             </button>
         );
     },
-    CardContent: (props: { dataset: number }): JSX.Element => {
+    CardContent: (props: { dataset?: number }): JSX.Element => {
         return (
             <img src={`../src/assets/images/button${props.dataset || "1"}.png`} alt="" />
         );

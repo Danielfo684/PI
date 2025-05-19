@@ -1,5 +1,6 @@
 import random
 import logging
+from player.Player import Player
 
 class Room:
     def __init__(self, name: str, players=None, occupied: bool = False):
@@ -7,8 +8,10 @@ class Room:
         self.players = players if players is not None else []
         self.occupied = occupied
 
+
 class RoomConfig:
-    maxRoomPlayers = 25  
+    maxRoomPlayers = 3
+
 
 class RoomService:
     _instance = None
@@ -27,32 +30,36 @@ class RoomService:
         new_room = Room(name=room_name)
         self.rooms.append(new_room)
         return room_name
-    
+
     def gen_ran_hex(self, size: int = 4) -> str:
         return f"{random.randint(0, 9999):04d}"
-    
-    def get_room(self) -> Room:
+
+    def get_room(self, room_code) -> Room:
         for room in self.rooms:
-            if not room.occupied:
+            if room.name == room_code:
+                print("Sala encontrada: %s", room.name)
                 return room
-        room_name = "room" + self._gen_ran_hex(128)
-        new_room = Room(name=room_name)
-        self.rooms.append(new_room)
-        return new_room
+        return None
 
     def get_room_by_player_id(self, player_id: str) -> Room:
         for room in self.rooms:
             if any(getattr(player, "id", None) == player_id for player in room.players):
                 return room
-        logging.info("Sala no encontrada para el jugador: %s", player_id)
         return None
 
-    def add_player(self, player) -> Room:
-        room = self._get_room()
+    def add_player(self, sid, data, room_code) -> Player:
+        room = self.get_room(room_code)
+        player_id = len(room.players) + 1
+        player = Player(
+            id=player_id,
+            name=data.get("playerName"),
+        )
         room.players.append(player)
         if len(room.players) == RoomConfig.maxRoomPlayers:
             room.occupied = True
-        return room
+        else:
+            room.occupied = False
+        return player
 
     def find_player(self, player_id: str):
         for room in self.rooms:

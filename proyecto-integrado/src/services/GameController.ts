@@ -5,10 +5,17 @@ import { SocketService } from "./SocketService";
 
 
 export class GameController {
-    // Private static instance
+    reset() {
+        if (this.socketService && this.socketService.disconnect) {
+            this.socketService.disconnect();
+        }
+        this.socketService = null;
+        this.initialized = false;
+        this.state = this.states.BAD;
+        GameController.instance = null;
+    }
     private static instance: GameController | null = null;
 
-    // States as private properties
     private states = {
         RIGHT: 0,
         BAD: 1,
@@ -17,24 +24,20 @@ export class GameController {
     private socketService: any = null;
     private initialized: boolean = false;
 
-    // Private constructor to prevent direct instantiation
     private constructor() { }
 
-    // Static method to get the singleton instance
     public static getInstance(): GameController {
         if (!GameController.instance) {
             GameController.instance = new GameController();
         }
-        
+
         return GameController.instance;
     }
 
 
 
-    // Initialize the controller
     public init(url: string,
-        //  ui: HTMLElement, 
-        //  gameUI: any): void 
+      
     ) {
         if (this.initialized) {
             console.log('GameController already initialized');
@@ -51,9 +54,9 @@ export class GameController {
         }
 
     }
-        public getSocketService() {
-    return this.socketService;
-}
+    public getSocketService() {
+        return this.socketService;
+    }
 
     public actionController(payload: any): void {
         console.log(payload);
@@ -69,17 +72,6 @@ export class GameController {
             console.error("GameController is not in the right state.");
         }
     }
-
-
-    // public respondController(message: string, payload: any): void {
-    //     if (this.socketService && this.state === this.states.RIGHT) {
-    //         this.socketService.send(message, payload);
-    //     }
-    // }
-
-    // public isConnected(): boolean {
-    //     return this.state === this.states.RIGHT;
-    // }
 }
 
 

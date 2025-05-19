@@ -11,6 +11,7 @@ class SocketService:
         },
         "in": {
             "CREATE_ROOM": "do_create_room",
+            "JOIN_ROOM": "do_join_room",
         },
     }
 
