@@ -12,6 +12,7 @@ import { UserSettingPage } from './pages/user/UserSettingPage'
 import { CreateTestPage } from './pages/create/CreateTestPage'
 import { HostingGamePage } from './pages/hostingGamePage/HostingGamePage'
 import { MainPage } from './pages/main/MainPage'
+import { PlayPage } from './pages/play/PlayPage'
 
 const rootElement = document.getElementById('root')
 
@@ -23,6 +24,7 @@ createRoot(rootElement).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<MainPage />} />
         <Route element={<Layout />}>
           
           <Route path="/" element={<MainPage />} />
@@ -32,6 +34,7 @@ createRoot(rootElement).render(
             <Route path="/host" element={<HostPage/>} />
             <Route path="/host/:id" element={<HostingGamePage/>} />
             <Route path="/create" element={<CreateTestPage />} />
+            <Route path="/play" element={<PlayPage />} />
           {/* Páginas de juego invitado*/}
           {/* la siguiente ruta solo debe ser accesible desde /join, si no te expulsa */}
           <Route path="/game/:roomId" element={<GamePage />} /> 
