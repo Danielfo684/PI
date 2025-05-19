@@ -53,12 +53,12 @@ header {
   }
 
   .navigation li:last-child a:hover {
-    background-color: #7a167b;
+    background-color: transparent;
     border: 1px solid #f9fbfc;
   }
   
   .navigation a:hover {
-    background-color: #7a167b;
+    background-color: transparent;
     border: 1px solid #f9fbfc;
   }
 
