@@ -11,12 +11,7 @@ export function HostPage(): JSX.Element {
 
     const gameController =  GameController.getInstance();
     gameController.init("http://localhost:5000");
-    console.log("Promesa terminada");
-    const handleClick = async (id: string) => {
-    gameController.actionController({ type: "NEW_QUIZ", content: id });
-    console.log(`Mensaje enviado al servidor para iniciar el quiz con ID: ${id}`);
 
-  };
   // Simulacion de los datos pero hay que hacerlo bien
   const [tests, setTests] = useState<{ id: string; title: string; description: string }[]>([]);
 
@@ -32,14 +27,11 @@ export function HostPage(): JSX.Element {
       { id: "4", title: "Desafío de Química", description: "Prueba tus conocimientos en química." }
     ]);
   }, []);
-  console.log(tests);
 
   return (
     <>
       <h1>Elige el test que deseas hostear</h1>
-      <div className="host-actions">
-        <Button text="Ver Estadísticas" onClick={() => { }} dataset="host-stats" />
-      </div>
+    
       <div className="cards-section">
         {tests.map((test) => (
           <Link 

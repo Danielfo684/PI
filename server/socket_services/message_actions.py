@@ -35,10 +35,10 @@ def do_submit_answer(service, sid, data):
         service.io.emit("error", {"message": "Pregunta no encontrada"}, room=sid)
         
 def do_create_room(service, sid, data):
-    generated_room = service.create_room()
-    service.add_player_to_room(sid, generated_room)
-    service.io.emit("room_created", {"room": generated_room}, room=sid)
-    logging.info("Sala creada: %s", generated_room)
+    room_service = RoomService.get_instance()
+    generated_room = room_service.create_room(data)
+    service.socket.emit("message", {"type": "ROOM_CODE", "content": generated_room}) 
+    
 
 def get_message_actions():
     return {

@@ -1,55 +1,61 @@
 import socketio
-from flask import request
-from .message_actions import get_message_actions
+from socket_services import message_actions
+
 class SocketService:
     _instance = None
     messages = {
         "out": {
-            "new_player": "NEW_PLAYER",
-            "room_status": "ROOM_STATUS",
-            "players_ready": "PLAYERS_READY"
-        }
+            "NEW_PLAYER": "do_new_player",
+            "ROOM_STATUS": "do_room_status",
+            "PLAYERS_READY": "do_players_ready",
+        },
+        "in": {
+            "CREATE_ROOM": "do_create_room",
+        },
     }
 
     def __init__(self, socket: socketio.Server):
         self.socket = socket
         self.active = False
-        
+        self.register_events()
 
     @classmethod
-    def get_instance(cls, socket: socketio.Server = None): # Se suele usar "cls" para referirse a la propa clase
+    def get_instance(cls, socket: socketio.Server = None):
         if cls._instance is None:
             if socket is None:
-                raise ValueError("Se requiere una instancia de Socket.IO para la inicialización")
+                raise ValueError(
+                    "Se requiere una instancia de Socket.IO para la inicialización"
+                )
             cls._instance = cls(socket)
         return cls._instance
 
     def register_events(self):
         @self.socket.event
-        def connect(sid, environ):  # No necesita parámetros id y callback
-            sid = request.sid  # Necesitas importar request de flask
-            print(f"Un cliente se ha conectado: {sid}")
-            # Puedes usar sid como identificador del cliente
-            
+        def connect(id, callback):
+            print("Un cliente se ha conectado:", id)
+
         @self.socket.event
-        def disconnect(sid):  # No necesita parámetro id
-            sid = request.sid
-            print("Un cliente se ha desconectado: {sid}")
-            
-        @self.socket.on("message")
-        def on_message(sid, data):  # Solo recibe el payload, no el id
-            sid = request.sid
-            print(f"Mensaje recibido en el server de {sid}")
-            print(f"Contenido: {data}")
-            if isinstance(data, dict) and "type" in data:
-                message_type = data.get("type")
-                actions = get_message_actions()
-                if message_type in actions:
-                    actions[message_type](self, sid, data)
+        def disconnect(id):
+            print("Un cliente se ha desconectado:", id)
+
+        @self.socket.event
+        def message(id, data):
+            msg_type = data.get("type")
+            content = data.get("content")
+            valid_types = self.messages["in"].keys()
+            if msg_type not in valid_types:
+                print(f"Tipo de mensaje no válido: {msg_type}")
+                return
+            else:
+                print(f"Mensaje recibido de {id}: tipo={msg_type}, contenido={content}")
+                action_name = self.messages["in"][msg_type]
+                action = getattr(message_actions, action_name, None)
+                if callable(action):
+                    action(self, id, content)
                 else:
-                    print(f"No hay acción para el tipo de mensaje: {message_type}")              
+                    print(
+                        f"No se encontró la acción '{action_name}' en message_actions.py"
+                    )
+
     def init(self):
-        self.register_events()  # Añade esta línea
         self.active = True
-        print("Socket service initialized and active")
-        return self

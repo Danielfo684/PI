@@ -29,6 +29,8 @@ export class GameController {
         return GameController.instance;
     }
 
+
+
     // Initialize the controller
     public init(url: string,
         //  ui: HTMLElement, 
@@ -49,6 +51,9 @@ export class GameController {
         }
 
     }
+        public getSocketService() {
+    return this.socketService;
+}
 
     public actionController(payload: any): void {
         console.log(payload);

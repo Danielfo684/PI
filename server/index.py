@@ -2,8 +2,7 @@ from flask import Flask, jsonify
 from config import config
 import socketio
 import eventlet
-from socket_services.SocketService import SocketService
-
+from socket_services.SocketService import SocketService 
 app = Flask(__name__)
 
 sio = socketio.Server(
@@ -14,8 +13,7 @@ sio = socketio.Server(
 app.wsgi_app = socketio.WSGIApp(sio, app.wsgi_app)
 
 socket_service = SocketService.get_instance(sio)
-socket_service.init()
-
+socket_service.register_events()
 @app.route("/")
 def hello():
     return jsonify(message="Hello World!")
