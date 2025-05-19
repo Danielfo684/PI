@@ -11,10 +11,10 @@ export function Header() {
       </div>
       <nav className="navigation">
         <ul>
-          <li><Link to="/">Home</Link></li>
-          <li> <Link to="/join">Join Game</Link></li>
-          <li> <Link to="/create">Create test</Link></li>
-          <li> <Link to="/host">Host game</Link></li>
+          <li><Link to="/">Inicio</Link></li>
+          <li> <Link to="/join">Unirse a partida</Link></li>
+          <li> <Link to="/create">Crear test</Link></li>
+          <li> <Link to="/host">Organizar partida</Link></li>
           <li>
             <Link to="/user">
               <img src="../src/assets/images/user.png" alt="User Sign In" className="user-icon" />

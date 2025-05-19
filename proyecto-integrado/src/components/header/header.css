@@ -10,18 +10,21 @@ header {
     display: flex;
     align-items: center;
   }
+
   .logo {
     width: fit-content;
     height: fit-content;
     margin: 0;
     padding: 0;
   }
+
   .logo img {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     transition: 0.3s;
   }
+
   .navigation ul {
     display: flex;
     list-style: none;
@@ -30,7 +33,6 @@ header {
     gap: 3rem;
   }
   
-
   .navigation a {
     color: #f9fbfc;
     text-decoration: none;
@@ -49,12 +51,14 @@ header {
     padding: 0.5rem;
     border: 1px solid transparent;
   }
+
   .navigation li:last-child a:hover {
-    background-color: #4145d2;
+    background-color: #7a167b;
     border: 1px solid #f9fbfc;
   }
+  
   .navigation a:hover {
-    background-color: #4145d2;
+    background-color: #7a167b;
     border: 1px solid #f9fbfc;
   }
 

@@ -23,6 +23,7 @@ createRoot(rootElement).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<MainPage />} />
         <Route element={<Layout />}>
           
           <Route path="/" element={<MainPage />} />
