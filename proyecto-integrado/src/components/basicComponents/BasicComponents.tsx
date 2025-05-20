@@ -1,6 +1,6 @@
 import { JSX, useState } from "react";
 import { Card, CardContent } from ".";
-import "./BasicComponents.css";
+import "./basicComponents.css";
 import { Answer } from "../../pages/game/GamePage";
 export const Components = {
 

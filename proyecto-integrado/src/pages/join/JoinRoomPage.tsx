@@ -1,7 +1,7 @@
 import { JSX, useEffect, useRef, useState } from "react";
 import { Input, Button } from "../../components/basicComponents/index";
 import { usePageTitle } from "../../hooks/usePageTitle";
-import "./joinRoomPage.css";
+import "./JoinRoomPage.css";
 import { GameController } from "../../services/GameController";
 import { useNavigate } from "react-router-dom";
 import { Player } from "../../components/player/Player";

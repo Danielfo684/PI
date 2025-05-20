@@ -40,7 +40,7 @@ createRoot(rootElement).render(
           <Route path="/game/:roomId" element={<GamePage />} /> 
           <Route path="/join" element={<JoinRoomPage />} />
           {/* Redireccionado si no funciona la ruta */}
-          <Route path="*" element={<MainPage />} />
+          {/* <Route path="*" element={<MainPage />} /> */}
         </Route>
       </Routes>
     </BrowserRouter>
