@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import type { JSX } from "react";
+import { Header } from "../../components/header/Header";
 import "./LoginPage.css";
 
 export function LoginPage(): JSX.Element {
@@ -41,22 +42,25 @@ export function LoginPage(): JSX.Element {
   }
 
   return (
-    <div className="login-container">
-      <h1>Iniciar sesión</h1>
-      {error && <p className="error">{error}</p>}
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Entrar</button>
-    </div>
+    <>
+      <Header />
+      <div className="login-container">
+        <h1>Iniciar sesión</h1>
+        {error && <p className="error">{error}</p>}
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button onClick={handleLogin}>Entrar</button>
+      </div>
+    </>
   );
 }

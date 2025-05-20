@@ -107,5 +107,3 @@ Cada usuario debe configurar su identidad de Git (ya sea a nivel global o local 
 - Este proyecto se encuentra en fase de desarrollo.
 - Se recomienda utilizar herramientas como ESLint y Prettier para mantener un código limpio.
 - Asegúrate de mantener actualizadas las dependencias tanto del cliente como del servidor.
-
-¡Buena suerte y felices commits!
