@@ -5,7 +5,7 @@ import "./player.css";
 export const Player = {
     PlayerCard: (props: { name: string, className?: string, id: number, iconNumber?: number }): JSX.Element => {
         const iconStyle = {
-            backgroundImage: `url(/icons/${props.iconNumber ?? 1}.png)`, //Aquí tienes que cambiar la url para que funcionen los iconos, Álvaro
+            backgroundImage: `url(/user-icons/${props.iconNumber ?? 1}.png)`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             width: "48px",

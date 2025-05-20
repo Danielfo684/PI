@@ -1,12 +1,13 @@
 import random
 import logging
 from player.Player import Player
-
+from quiz.Quiz import Quiz
 class Room:
-    def __init__(self, name: str, players=None, occupied: bool = False):
+    def __init__(self, name: str, players=None, occupied: bool = False, quiz=None):
         self.name = name
         self.players = players if players is not None else []
         self.occupied = occupied
+        self.quiz = quiz
 
 
 class RoomConfig:
@@ -26,10 +27,12 @@ class RoomService:
         return cls._instance
 
     def create_room(self, data):
-        room_name = self.gen_ran_hex()
-        new_room = Room(name=room_name)
-        self.rooms.append(new_room)
-        return room_name
+            room_name = self.gen_ran_hex()
+                        # Esto lo tenemos que cambiar cuando tengamos la base de datos con las preguntas
+            new_quiz = Quiz()       
+            new_room = Room(name=room_name, quiz=new_quiz)
+            self.rooms.append(new_room)
+            return room_name
 
     def gen_ran_hex(self, size: int = 4) -> str:
         return f"{random.randint(0, 9999):04d}"
@@ -37,7 +40,7 @@ class RoomService:
     def get_room(self, room_code) -> Room:
         for room in self.rooms:
             if room.name == room_code:
-                print("Sala encontrada: %s", room.name)
+                print("Sala encontrada:", room.name)
                 return room
         return None
 
@@ -47,8 +50,8 @@ class RoomService:
                 return room
         return None
 
-    def add_player(self, sid, data, room_code) -> Player:
-        room = self.get_room(room_code)
+    def add_player(self, sid, data, room) -> Player:
+        
         player_id = len(room.players) + 1
         player = Player(
             id=player_id,

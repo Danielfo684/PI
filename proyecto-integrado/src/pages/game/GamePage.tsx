@@ -1,36 +1,47 @@
 import { JSX, useState } from "react"
 import { Card, CardContent, Input, Button, CardSection } from '../../components/basicComponents/index'
 import "./gamePage.css"
-import { GameController} from "../../services/GameController"
+import { GameController } from "../../services/GameController"
 import { Message } from "../../services/SocketService"
 
-export interface Questions {
+interface Question {
   id: number;
   title: string;
   description?: string;
+  answers: [{ id: number, text?: string, isCorrect: boolean }];
 }
-export interface Answer {
+interface Player {
   id: number;
-  text: string;
+  name: string;
+  score: number;
 }
+
 export function GamePage(): JSX.Element {
-  let answers: Array<Answer> = [{ id: 1, text: "Respuesta 1" }, { id: 2, text: "Respuesta 2" }, { id: 3, text: "Respuesta 3" }, { id: 4, text: "Respuesta 4" }];
-  // Define the handler separately for clarity
+  const [question, setQuestion] = useState<Question | null>(null);
+  const [players, setPlayers] = useState<Player[]>([]);
   const handleClick = (answer: number) => {
     console.log("Answer clicked:", answer);
-    GameController.getInstance().actionController({
+    GameController.getInstance().socketMessage({
       type: "ANSWER",
       content: {
         selection: answer,
       }
     } as Message);
   }
-  GameController.getInstance().init("http://localhost:5000");
 
   return (
 
     <>
-      <CardSection answers={answers} handleClick={handleClick}></CardSection>
+      {question && (
+        <div className="game-question-container">
+          <h2>{question?.title}</h2>
+          <p>{question?.description}</p>
+
+          <CardSection answers={question.answers} handleClick={handleClick} />
+
+        </div>
+      )}
     </>
+
   )
 }

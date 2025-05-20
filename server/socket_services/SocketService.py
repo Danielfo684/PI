@@ -12,6 +12,7 @@ class SocketService:
         "in": {
             "CREATE_ROOM": "do_create_room",
             "JOIN_ROOM": "do_join_room",
+            "START_GAME": "do_start_game",
         },
     }
 

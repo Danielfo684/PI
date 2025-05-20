@@ -5,6 +5,8 @@ import { SocketService } from "./SocketService";
 
 
 export class GameController {
+
+    public initialized: boolean = false;
     reset() {
         if (this.socketService && this.socketService.disconnect) {
             this.socketService.disconnect();
@@ -22,8 +24,6 @@ export class GameController {
     };
     private state: number = 1;
     private socketService: any = null;
-    private initialized: boolean = false;
-
     private constructor() { }
 
     public static getInstance(): GameController {
@@ -37,7 +37,7 @@ export class GameController {
 
 
     public init(url: string,
-      
+
     ) {
         if (this.initialized) {
             console.log('GameController already initialized');
@@ -58,7 +58,11 @@ export class GameController {
         return this.socketService;
     }
 
-    public actionController(payload: any): void {
+    public isInicialized(): boolean {
+        return this.initialized;
+    }
+
+    public socketMessage(payload: any): void {
         console.log(payload);
         if (this.state === this.states.RIGHT) {
             if (this.socketService) {
