@@ -119,66 +119,82 @@ header {
 /*-----QUOTE SECTION-----*/
 
 .quote-section {
-    margin-top: 4rem;
+    margin: 4rem auto;
     width: 100%;
-    height: 500px;
-    position: relative;
-    background-image: url(../../assets/images/fondo-quote1.jpg);
-    background-size: cover;
-    background-position: center 60%;
-    background-repeat: no-repeat;
+    height: 100%;
+    text-align: center;
+    color: #f9fbfc;
 
     display: flex;
-    flex-direction: column;
+    flex-flow: row wrap;
     justify-content: center;
     align-items: center;
+}
+
+.quote-text {
+    flex: 2;
+}
+
+.quote {
+    font-size: 2rem;
+    color: #f9fbfc;
     text-align: center;
-    padding: 0 2rem;
-
+    font-family: 'Poetsen One', sans-serif;
 }
 
-.quote-section::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-
-    z-index: 1;
+.author {
+    font-size: 1.2rem;
+    color: #f9fbfc;
 }
 
-.quote-section .quote,
-.quote-section .author {
-    position: relative;
-    z-index: 2;
-    color: black;
-    font-style: italic !important;
-}
+.quote-img {
+    flex: 1;
+    height: 500px;
 
-.quote-section .quote {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.quote-section .author {
-    font-size: 1rem;
-    font-weight: 300;
+    background-image: url(../../assets/images/question2.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 /*--------COMO JUGAR--------*/
 
 .play-section {
-  margin: 4rem auto;
-  max-width: 900px;
-  text-align: center;
+  width: 100%;
+  margin-top: 5rem;
   color: #f9fbfc;
-  font-family: 'Poetsen One', sans-serif;
+
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.cards-container {
-  margin-top: 2rem;
+.play-section h2 {
+  font-size: 3rem;
+  color: #f9fbfc;
+}
+
+.play-container {
+  margin-top: 4rem;
   display: flex;
+  flex-flow: row wrap;
   justify-content: center;
+  align-items: center;
   gap: 2rem;
-  flex-wrap: wrap;
+  padding: 0 2rem;
+}
+
+.play {
+  width: 300px;
+  height: 500px;
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .flip-card {
@@ -230,19 +246,27 @@ header {
   color: rgba(255, 255, 255, 0.95);
 }
 
+.flip-card.red .flip-card-front {
+  background-color: #E74C3C;
+}
+
+.flip-card.red .flip-card-back {
+  background-color: #C0392B;
+}
+
 .flip-card.blue .flip-card-front {
-  background-color: #12fd74;
+  background-color: #8E44AD;
 }
 
 .flip-card.blue .flip-card-back {
-  background-color: #3efa8c;
+  background-color: #9B59B6;
 }
 
 .flip-card.orange .flip-card-front {
-  background-color: #FF7F50;
+  background-color: #1ABC9C;
 }
 
 .flip-card.orange .flip-card-back {
-  background-color: #FFA07A;
+  background-color: #16A085;
 }
 

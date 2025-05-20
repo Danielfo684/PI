@@ -57,7 +57,7 @@ Este proyecto es una aplicación full-stack que consta de dos grandes partes:
    ```
 2. Instala las dependencias:
    ```sh
-   pip install flask python-socketio eventlet python-dotenv mysql-connector-python
+   pip install flask python-socketio eventlet python-dotenv mysql-connector-python flask-cors
    ```
 3. Configura la base de datos editando el archivo `.env` (ubicado en `PI/server/`) con los siguientes valores (ejemplo):
    ```properties

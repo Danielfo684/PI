@@ -35,6 +35,7 @@ export function MainPage() : JSX.Element {
           — Aprender nunca fue tan divertido
         </div>
       </div>
+
       <div className="about-us">
         <div className="about-text">
           <h2>¿Qué es <span>Quizify</span>?</h2>
@@ -48,39 +49,36 @@ export function MainPage() : JSX.Element {
         </div>
         <div className="about-img"></div>
       </div>
-      <div className="quote-section">
-        <p className="quote">“We learn from failure, not from success”</p><br/>
-        <p className="author">— Bram Stoker</p>
-      </div>
-      <div className="play-section">
-        <h2>¿Cómo jugar?</h2>
-        <div className="cards-container">
-          <div className="flip-card blue">
-            <div className="flip-card-inner">
-              <div className="flip-card-front">
-                <h3>Unirse a partida</h3>
-              </div>
-              <div className="flip-card-back">
-                <p>Conéctate a una partida ya creada para jugar en tiempo real con otros usuarios.</p>
-              </div>
-            </div>
-          </div>
 
-          <div className="flip-card orange">
-            <div className="flip-card-inner">
-              <div className="flip-card-front">
-                <h3>Organizar partida</h3>
-              </div>
-              <div className="flip-card-back">
-                <p>Crea y configura tu propia partida, invita amigos y empieza a jugar.</p>
-              </div>
-            </div>
+      <div className="quote-section">
+        <div className="quote-img"></div>
+        <div className="quote-text">
+          <p className="quote">“We learn from failure, not from success”</p><br/>
+          <p className="author">— Bram Stoker</p>
+        </div>
+      </div>
+
+      <div className="play-section">
+        <h2 className="play-title">¿Cómo jugar?</h2>
+        <div className="play-container">
+          <div className="play play1">
+            <div className="play-title">Jugar en solitario</div>
+            <div className="play-text"><p>Pon a prueba tus conocimientos respondiendo preguntas de cualquier categoría.</p></div>
+            <button><Link to="/play">Jugar</Link></button>
+          </div>
+          <div className="play play2">
+            <div className="play-title">Unirse a partida</div>
+            <div className="play-text"><p>Conéctate a una partida ya creada para jugar en tiempo real con otros jugadores.</p></div>
+            <button><Link to="/join">Unirse a partida</Link></button>
+          </div>
+          <div className="play play">
+            <div className="play-title">Organizar partida</div>
+            <div className="play-text"><p>Crea y configura tu propia partida, invita amigos y empieza a jugar.</p></div>
+            <button><Link to="/create">Organizar partida</Link></button>
           </div>
         </div>
       </div>
 
-      <div className ="cards-section">
-      </div>
     </>
   )
 }
