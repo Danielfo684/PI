@@ -12,7 +12,7 @@ export function MainPage() : JSX.Element {
         <header className="header">
           <div className="logo">
             <Link to="/">
-              <img src="../src/assets/images/logo.png" alt="Logo" className="logo-icon" />
+              <img src="../src/assets/images/logo-sinborde.png" alt="Logo" className="logo-icon" />
             </Link>
           </div>
           <nav className="navigation">
@@ -49,15 +49,36 @@ export function MainPage() : JSX.Element {
         <div className="about-img"></div>
       </div>
       <div className="quote-section">
-        <p className="quote">“We learn from failure, not from success”</p>
+        <p className="quote">“We learn from failure, not from success”</p><br/>
         <p className="author">— Bram Stoker</p>
       </div>
       <div className="play-section">
         <h2>¿Cómo jugar?</h2>
-        <p>Hay diferentes</p>
-        <button> <Link to="/join"><p>Unirse a partida</p></Link></button>
-        <button> <Link to="/host"><p>Organizar partida</p></Link></button>
+        <div className="cards-container">
+          <div className="flip-card blue">
+            <div className="flip-card-inner">
+              <div className="flip-card-front">
+                <h3>Unirse a partida</h3>
+              </div>
+              <div className="flip-card-back">
+                <p>Conéctate a una partida ya creada para jugar en tiempo real con otros usuarios.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flip-card orange">
+            <div className="flip-card-inner">
+              <div className="flip-card-front">
+                <h3>Organizar partida</h3>
+              </div>
+              <div className="flip-card-back">
+                <p>Crea y configura tu propia partida, invita amigos y empieza a jugar.</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
       <div className ="cards-section">
       </div>
     </>

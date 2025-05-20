@@ -13,6 +13,7 @@ import { CreateTestPage } from './pages/create/CreateTestPage'
 import { HostingGamePage } from './pages/hostingGamePage/HostingGamePage'
 import { MainPage } from './pages/main/MainPage'
 import { PlayPage } from './pages/play/PlayPage'
+import { LoginPage } from './pages/login/LoginPage'
 
 const rootElement = document.getElementById('root')
 
@@ -25,22 +26,17 @@ createRoot(rootElement).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route element={<Layout />}>
-          
-          <Route path="/" element={<MainPage />} />
           <Route path="/home" element={<HomePage />} />
-            <Route path="/user" element={<UserMainPage />} />
-            <Route path="/user/settings" element={<UserSettingPage />} />
-            <Route path="/host" element={<HostPage/>} />
-            <Route path="/host/:id" element={<HostingGamePage/>} />
-            <Route path="/create" element={<CreateTestPage />} />
-            <Route path="/play" element={<PlayPage />} />
-          {/* Páginas de juego invitado*/}
-          {/* la siguiente ruta solo debe ser accesible desde /join, si no te expulsa */}
-          <Route path="/game/:roomId" element={<GamePage />} /> 
+          <Route path="/user" element={<UserMainPage />} />
+          <Route path="/user/settings" element={<UserSettingPage />} />
+          <Route path="/host" element={<HostPage />} />
+          <Route path="/host/:id" element={<HostingGamePage />} />
+          <Route path="/create" element={<CreateTestPage />} />
+          <Route path="/play" element={<PlayPage />} />
           <Route path="/join" element={<JoinRoomPage />} />
-          {/* Redireccionado si no funciona la ruta */}
-          {/* <Route path="*" element={<MainPage />} /> */}
+          {/* Other routes */}
         </Route>
       </Routes>
     </BrowserRouter>

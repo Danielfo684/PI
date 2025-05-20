@@ -1,7 +1,11 @@
+## Activacion del entorno virtual en aws
 El servidor en aws se tiene que depslegar en un entorno virtual estos son los comandos:
+
+```shell
 cd PI/server
 python3 -m venv env
 source env/bin/activate
+```
 
 ## Instalación de dependencias
 
@@ -19,4 +23,14 @@ Una vez instaladas las dependencias y posicionado en el directorio del server, e
 
 ```shell
 python index.py
+```
+
+
+## Ejecutar el script para que cree las tablas en la base de datos
+
+Tenemos que irnos a la carpeta de server y en ella hacer estos dos comandos para activar el entorno virtual y ejecutar el script:
+
+```shell
+source env/bin/activate
+python scripts/create_tables.py
 ```
