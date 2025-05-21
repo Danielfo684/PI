@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from config import config
 import socketio
 import eventlet
@@ -7,14 +7,15 @@ from socket_services.SocketService import SocketService
 import mysql.connector
 from mysql.connector import Error
 from flask_cors import CORS
-from flask import Flask, jsonify, request
-import hashlib
 
 app = Flask(__name__)
-CORS(app)
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "mi_clave_secreta")
+
+CORS(app, supports_credentials=True, origins=[config.CLIENT_URL])
 
 sio = socketio.Server(
-    cors_allowed_origins="*",
+    #cors_allowed_origins="*",
+    cors_allowed_origins=[config.CLIENT_URL],
     logger=False,
     engineio_logger=False
 )
@@ -27,68 +28,19 @@ socket_service.register_events()
 def hello():
     return jsonify(message="Hello World!")
 
-@app.route("/login", methods=["POST", "OPTIONS"])
-def login():
-    if request.method == "OPTIONS":
-        # Responder a la preflight request
-        return '', 200
+# Registra los Blueprints
+from api.login import login_api
+from api.logout import logout_api
+from api.db_test import db_api
 
-    data = request.get_json()
-    email = data.get("email")
-    password = data.get("password")
+app.register_blueprint(login_api)
+app.register_blueprint(logout_api)
+app.register_blueprint(db_api)
 
-    # Validar que se envíen ambos datos
-    if not email or not password:
-        return jsonify(error="Faltan datos de autenticación"), 400
-
-    connection = None
-    try:
-        connection = mysql.connector.connect(
-            host=config.DB_HOST,
-            port=config.DB_PORT,
-            user=config.DB_USER,
-            password=config.DB_PASSWORD,
-            database=config.DB_NAME
-        )
-        cursor = connection.cursor(dictionary=True)
-        # Se busca al usuario por email
-        query = "SELECT * FROM users WHERE email = %s"
-        cursor.execute(query, (email,))
-        user = cursor.fetchone()
-
-        # Se compara la contraseña hasheada
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
-        if user and user["password"] == hashed_password:
-            # Aquí se debería generar un token real (por ejemplo, JWT)
-            token = "fake-jwt-token"
-            return jsonify(token=token, user=user), 200
-        else:
-            return jsonify(error="Credenciales incorrectas"), 401
-    except Error as e:
-        return jsonify(error=str(e)), 500
-    finally:
-        if connection and connection.is_connected():
-            connection.close()
-
-@app.route("/db_test")
-def db_test():
-    connection = None
-    try:
-        connection = mysql.connector.connect(
-            host=config.DB_HOST,
-            port=config.DB_PORT,
-            user=config.DB_USER,
-            password=config.DB_PASSWORD,
-            database=config.DB_NAME
-        )
-        if connection.is_connected():
-            version = connection.server_info
-            return jsonify(message=f"Conexión exitosa a MySQL versión {version}")
-    except Error as e:
-        return jsonify(error=str(e)), 500
-    finally:
-        if connection and connection.is_connected():
-            connection.close()
+""" @app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response """
 
 if __name__ == "__main__":
     try:

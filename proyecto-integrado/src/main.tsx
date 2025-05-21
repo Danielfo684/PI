@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import React, { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './assets/css/index.css'
@@ -14,6 +14,7 @@ import { HostingGamePage } from './pages/hostingGamePage/HostingGamePage'
 import { MainPage } from './pages/main/MainPage'
 import { PlayPage } from './pages/play/PlayPage'
 import { LoginPage } from './pages/login/LoginPage'
+import Quiz from './pages/pruebaPregunta/Pregunta'
 
 const rootElement = document.getElementById('root')
 
@@ -36,6 +37,7 @@ createRoot(rootElement).render(
           <Route path="/create" element={<CreateTestPage />} />
           <Route path="/play" element={<PlayPage />} />
           <Route path="/join" element={<JoinRoomPage />} />
+          <Route path="/quiz" element={<Quiz />} />
           {/* Other routes */}
         </Route>
       </Routes>

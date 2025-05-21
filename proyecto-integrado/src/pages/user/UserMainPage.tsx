@@ -1,10 +1,26 @@
 import { JSX } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import "./UserMainPage.css";
 
 export function UserMainPage(): JSX.Element {
   usePageTitle("Dashboard - Toohak");
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/logout", {
+        method: "POST",
+        credentials: "include"
+      });
+      const data = await response.json();
+      console.log("Logout successful", data);
+      localStorage.removeItem("token");
+      navigate("/login");
+    } catch (err) {
+      console.error("Error during logout:", err);
+    }
+  };
 
   return (
     <div className="user-dashboard">
@@ -31,8 +47,12 @@ export function UserMainPage(): JSX.Element {
           <li>Quiz de Historia - 90%</li>
           <li>Desafío de Ciencia - 75%</li>
         </ul>
-        <Link to="/create" className="btn">Crear Nuevo Test</Link>
       </section>
+
+      {/* Botón de Logout */}
+      <div className="logout-container">
+        <button onClick={handleLogout} className="btn-logout">Logout</button>
+      </div>
     </div>
   );
 }
