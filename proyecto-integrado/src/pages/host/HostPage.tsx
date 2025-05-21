@@ -13,9 +13,10 @@ export function HostPage(): JSX.Element {
     gameController.init("http://localhost:5000");
 
   // Simulacion de los datos pero hay que hacerlo bien
+  //const [tests, setTests] = useState<{ id: string; title: string; description: string }[]>([]);
   const [tests, setTests] = useState<{ id: string; title: string; description: string }[]>([]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     // Fetch al servidor y cogemos los test y partidas del usuario
     //  y sacamos estadi y demas dani 
 
@@ -26,6 +27,26 @@ export function HostPage(): JSX.Element {
       { id: "3", title: "Desafío de Ciencia", description: "Explora conceptos científicos interesantes." },
       { id: "4", title: "Desafío de Química", description: "Prueba tus conocimientos en química." }
     ]);
+  }, []);*/
+
+  useEffect(() => {
+    const fetchTests = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/tests", {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setTests(data.tests);
+        } else {
+          console.error("Error al obtener tests:", data.error);
+        }
+      } catch (err) {
+        console.error("Error de conexión:", err);
+      }
+    };
+    fetchTests();
   }, []);
 
   return (

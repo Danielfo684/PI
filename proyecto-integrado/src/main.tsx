@@ -31,18 +31,15 @@ createRoot(rootElement).render(
         <Route path="/login" element={<LoginPage />} />
         <Route element={<Layout />}>
           <Route path="/home" element={<HomePage />} />
-          {/* Rutas protegidas */}
           <Route element={<ProtectedRoute />}>
             <Route path="/user" element={<UserMainPage />} />
             <Route path="/user/settings" element={<UserSettingPage />} />
+            <Route path="/host" element={<HostPage />} />
+            <Route path="/host/:id" element={<HostingGamePage />} />
+            <Route path="/create" element={<CreateTestPage />} />
           </Route>
-          <Route path="/host" element={<HostPage />} />
-          <Route path="/host/:id" element={<HostingGamePage />} />
-          <Route path="/create" element={<CreateTestPage />} />
           <Route path="/play" element={<PlayPage />} />
           <Route path="/join" element={<JoinRoomPage />} />
-          <Route path="/quiz" element={<Quiz />} />
-          {/* Other routes */}
         </Route>
       </Routes>
     </BrowserRouter>

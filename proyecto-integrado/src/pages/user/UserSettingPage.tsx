@@ -1,69 +1,80 @@
-import { JSX, useState } from "react";
+import { JSX, useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { usePageTitle } from "../../hooks/usePageTitle";
-import { Link } from "react-router-dom";
 import "./UserSettingPage.css";
 
 export function UserSettingPage(): JSX.Element {
-  usePageTitle("Configuración de Usuario - Toohak");
-
-  // Datos para simular un perfil luego se cambiara a los datos del server 
-  // dani dani
-  const [name, setName] = useState<string>("Juan Pérez");
-  const [email, setEmail] = useState<string>("juan@example.com");
+  usePageTitle("Configuración de Usuario - Quizify");
+  const navigate = useNavigate();
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [profilePic, setProfilePic] = useState<string>("https://placehold.co/100");
-  const [bio, setBio] = useState<string>("Esta es mi biografía.");
-  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(true);
-  const [language, setLanguage] = useState<string>("es");
+  const [error, setError] = useState<string>("");
 
-  const handleSave = () => {
-    // Aquí se enviarán los datos al servidor vía API
-    console.log("Guardando cambios:", {
-      name,
-      email,
-      password,
-      profilePic,
-      bio,
-      notificationsEnabled,
-      language,
-    });
-    // Ejemplo de llamado a API (comentado para futuro uso)
-    // fetch("http://localhost:5000/api/user", {
-    //   method: "PUT",
-    //   headers: {"Content-Type": "application/json"},
-    //   body: JSON.stringify({ name, email, password, profilePic, bio, notificationsEnabled, language }),
-    // })
-    //   .then(response => response.json())
-    //   .then(data => console.log("Perfil actualizado:", data))
-    //   .catch(error => console.error(error));
+  // Cargar datos actuales del usuario
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/user", {
+          method: "GET",
+          credentials: "include"
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setName(data.user.name);
+          setEmail(data.user.email);
+        } else {
+          setError(data.error);
+        }
+      } catch (err) {
+        console.error("Error al obtener datos del usuario:", err);
+        setError("Error de conexión con el servidor");
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const handleSave = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/user", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          username: name,
+          email: email,
+          password: password // por si al actualizar la contraseña
+                            // no se cambia y asi no se envía el campo
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error);
+      } else {
+        alert("Perfil actualizado correctamente");
+        navigate("/user", { replace: true });
+      }
+    } catch (err) {
+      console.error("Error al actualizar el perfil:", err);
+      setError("Error de conexión con el servidor");
+    }
   };
 
   const handleCancel = () => {
-    // Reseteo de los datos a unos datos por defecto DE MOMENTO Y DE PRUEBA
-    setName("Juan Pérez");
-    setEmail("juan@example.com");
-    setPassword("");
-    setProfilePic("https://placehold.co/100");
-    setBio("Esta es mi biografía.");
-    setNotificationsEnabled(true);
-    setLanguage("es");
+    navigate("/user");
   };
 
   return (
     <div className="user-settings">
       <h1>Configuración de Usuario</h1>
-      <form className="settings-form">
-        <label>
-          Foto de Perfil (URL):
-          <input
-            type="text"
-            value={profilePic}
-            onChange={(e) => setProfilePic(e.target.value)}
-          />
-        </label>
-        <div className="profile-preview">
-          <img src={profilePic} alt="Preview del perfil" />
-        </div>
+      {error && <p className="error">{error}</p>}
+      <form
+        className="settings-form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSave();
+        }}
+      >
         <label>
           Nombre:
           <input
@@ -81,42 +92,16 @@ export function UserSettingPage(): JSX.Element {
           />
         </label>
         <label>
-          Biografía:
-          <textarea
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            rows={3}
-          />
-        </label>
-        <label>
-          Notificaciones:
-          <input
-            type="checkbox"
-            checked={notificationsEnabled}
-            onChange={(e) => setNotificationsEnabled(e.target.checked)}
-          />
-        </label>
-        <label>
-          Idioma:
-          <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-            <option value="es">Español</option>
-            <option value="en">Inglés</option>
-            <option value="fr">Francés</option>
-          </select>
-        </label>
-        <label>
           Contraseña:
           <input
             type="password"
-            placeholder="Nueva contraseña"
+            placeholder="Nueva contraseña (opcional)"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
         <div className="form-buttons">
-          <button type="button" onClick={handleSave}>
-            Guardar Cambios
-          </button>
+          <button type="submit">Guardar Cambios</button>
           <button type="button" onClick={handleCancel}>
             Cancelar
           </button>

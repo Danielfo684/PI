@@ -7,6 +7,7 @@ from socket_services.SocketService import SocketService
 import mysql.connector
 from mysql.connector import Error
 from flask_cors import CORS
+from api.tests import tests_api
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "mi_clave_secreta")
@@ -38,6 +39,7 @@ app.register_blueprint(login_api)
 app.register_blueprint(logout_api)
 app.register_blueprint(db_api)
 app.register_blueprint(user_api)
+app.register_blueprint(tests_api)
 
 """ @app.after_request
 def add_cors_headers(response):
