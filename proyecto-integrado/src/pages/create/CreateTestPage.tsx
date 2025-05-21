@@ -6,6 +6,7 @@ import "./CreateTestPage.css";
 export function CreateTestPage(): JSX.Element {
   usePageTitle("Create Test");
 
+  const [error, setError] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [questions, setQuestions] = useState<
@@ -72,9 +73,28 @@ export function CreateTestPage(): JSX.Element {
     setQuestions(newQuestions);
   };
 
-  const handleSubmit = (): void => {
-    console.log("Test Created:", { title, description, questions });
-    // Aqui enviamos la info al server cunado lo configuremos Dani
+    const handleSubmit = async (): Promise<void> => {
+    const testData = { title, description, questions };
+    try {
+      const response = await fetch("http://localhost:5000/api/tests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(testData),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        setError(data.error);
+      } else {
+        console.log("Test creado:", data);
+        // Puedes redirigir, limpiar el formulario, o mostrar un mensaje de éxito
+        // Ejemplo: setTitle(""); setDescription(""); setQuestions([]);
+      }
+    } catch (err) {
+      setError("Error de conexión con el servidor");
+    }
   };
 
   return (
