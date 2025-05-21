@@ -32,10 +32,12 @@ def hello():
 from api.login import login_api
 from api.logout import logout_api
 from api.db_test import db_api
+from api.user import user_api
 
 app.register_blueprint(login_api)
 app.register_blueprint(logout_api)
 app.register_blueprint(db_api)
+app.register_blueprint(user_api)
 
 """ @app.after_request
 def add_cors_headers(response):

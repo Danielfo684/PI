@@ -28,7 +28,6 @@ export function LoginPage(): JSX.Element {
       if (!response.ok) {
         setError(data.error);
       } else {
-        // Se espera que el backend te devuelva un token
         localStorage.setItem("token", data.token);
         setLoggedIn(true);
       }
@@ -44,22 +43,24 @@ export function LoginPage(): JSX.Element {
   return (
     <>
       <Header />
-      <div className="login-container">
-        <h1>Iniciar sesión</h1>
-        {error && <p className="error">{error}</p>}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button onClick={handleLogin}>Entrar</button>
+      <div className="login-page">
+        <div className="login-container">
+          <h1>Iniciar sesión</h1>
+          {error && <p className="error">{error}</p>}
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button onClick={handleLogin}>Entrar</button>
+        </div>
       </div>
     </>
   );
