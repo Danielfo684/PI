@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import type { JSX } from "react";
 import { Header } from "../../components/header/Header";
 import "./LoginPage.css";
@@ -22,13 +22,13 @@ export function LoginPage(): JSX.Element {
       const response = await fetch("http://localhost:5000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
       if (!response.ok) {
         setError(data.error);
       } else {
-        // Se espera que el backend te devuelva un token
         localStorage.setItem("token", data.token);
         setLoggedIn(true);
       }
@@ -44,22 +44,34 @@ export function LoginPage(): JSX.Element {
   return (
     <>
       <Header />
-      <div className="login-container">
-        <h1>Iniciar sesión</h1>
-        {error && <p className="error">{error}</p>}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button onClick={handleLogin}>Entrar</button>
+      <div className="login-page">
+        <div className="login-container">
+          <h1>Iniciar sesión</h1>
+          {error && <p className="error">{error}</p>}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleLogin();
+            }}
+          >
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button type="submit">Entrar</button>
+          </form>
+          <p className="register-link">
+            ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
+          </p>
+        </div>
       </div>
     </>
   );

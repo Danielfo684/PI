@@ -9,18 +9,13 @@ VALUES
   ((SELECT id FROM users WHERE email='user1@example.com'), 'Información adicional de user1'),
   ((SELECT id FROM users WHERE email='user2@example.com'), 'Información adicional de user2');
 
--- Inserción de un ejemplo de sala en la tabla rooms
-INSERT INTO rooms (name)
-VALUES ('Room 1');
-
--- Inserción de un ejemplo de partida en la tabla games, ligada a la sala insertada
-INSERT INTO games (room_id, status, started_at)
-VALUES ((SELECT id FROM rooms WHERE name = 'Room 1'), 'in progress', NOW());
-
 -- Inserción de un test de ejemplo en la tabla tests
-INSERT INTO tests (title, description)
-VALUES ('Sample Test', 'Descripción de un test de ejemplo');
-
+INSERT INTO tests (title, description, user_id)
+VALUES (
+  'Sample Test', 
+  'Descripción de un test de ejemplo', 
+  (SELECT id FROM users WHERE email='user1@example.com')
+);
 -- Inserción de preguntas para el test insertado
 INSERT INTO questions (test_id, question_text)
 VALUES

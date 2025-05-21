@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import React, { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './assets/css/index.css'
@@ -14,6 +14,10 @@ import { HostingGamePage } from './pages/hostingGamePage/HostingGamePage'
 import { MainPage } from './pages/main/MainPage'
 import { PlayPage } from './pages/play/PlayPage'
 import { LoginPage } from './pages/login/LoginPage'
+import Quiz from './pages/pruebaPregunta/Pregunta'
+import { ProtectedRoute } from "./components/protectedroute/ProtectedRoute";
+import { RegisterPage } from "./pages/register/RegisterPage";
+
 
 const rootElement = document.getElementById('root')
 
@@ -28,16 +32,18 @@ createRoot(rootElement).render(
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/game" element={<GamePage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route element={<Layout />}>
           <Route path="/home" element={<HomePage />} />
-          <Route path="/user" element={<UserMainPage />} />
-          <Route path="/user/settings" element={<UserSettingPage />} />
-          <Route path="/host" element={<HostPage />} />
-          <Route path="/host/:id" element={<HostingGamePage />} />
-          <Route path="/create" element={<CreateTestPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/user" element={<UserMainPage />} />
+            <Route path="/user/settings" element={<UserSettingPage />} />
+            <Route path="/host" element={<HostPage />} />
+            <Route path="/host/:id" element={<HostingGamePage />} />
+            <Route path="/create" element={<CreateTestPage />} />
+          </Route>
           <Route path="/play" element={<PlayPage />} />
           <Route path="/join" element={<JoinRoomPage />} />
-          {/* Add other routes here */}
           {/* Other routes */}
         </Route>
       </Routes>

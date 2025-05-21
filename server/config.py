@@ -12,7 +12,7 @@ class Config:
     DB_PASSWORD = os.getenv("DB_PASSWORD", "root")
     DB_NAME = os.getenv("DB_NAME", "proyectointegrado")
     # Agregar impresión para depurar
-    def __init__(self):
-        print("DB_NAME:", self.DB_NAME)
+    """ def __init__(self):
+        print("DB_NAME:", self.DB_NAME) """
 
 config = Config()

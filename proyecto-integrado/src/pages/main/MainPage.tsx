@@ -23,8 +23,8 @@ export function MainPage() : JSX.Element {
               <li> <Link to="/host">Organizar partida</Link></li>
               <li> <Link to="/create">Crear test</Link></li>
               <li>
-                <Link to="/user">
-                  <img src="../src/assets/images/user.png" alt="User Sign In" className="user-icon" />
+                <Link to={localStorage.getItem("token") ? "/user" : "/login"}>
+                  <img src="/src/assets/images/user.png" alt="User Sign In" className="user-icon" />
                 </Link>
               </li>
             </ul>
