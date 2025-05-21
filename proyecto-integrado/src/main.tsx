@@ -16,6 +16,8 @@ import { PlayPage } from './pages/play/PlayPage'
 import { LoginPage } from './pages/login/LoginPage'
 import Quiz from './pages/pruebaPregunta/Pregunta'
 import { ProtectedRoute } from "./components/protectedroute/ProtectedRoute";
+import { RegisterPage } from "./pages/register/RegisterPage";
+
 
 const rootElement = document.getElementById('root')
 
@@ -29,6 +31,7 @@ createRoot(rootElement).render(
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route element={<Layout />}>
           <Route path="/home" element={<HomePage />} />
           <Route element={<ProtectedRoute />}>

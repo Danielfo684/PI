@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import type { JSX } from "react";
 import { Header } from "../../components/header/Header";
 import "./LoginPage.css";
@@ -48,19 +48,29 @@ export function LoginPage(): JSX.Element {
         <div className="login-container">
           <h1>Iniciar sesión</h1>
           {error && <p className="error">{error}</p>}
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button onClick={handleLogin}>Entrar</button>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleLogin();
+            }}
+          >
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button type="submit">Entrar</button>
+          </form>
+          <p className="register-link">
+            ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
+          </p>
         </div>
       </div>
     </>
