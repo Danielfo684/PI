@@ -15,6 +15,7 @@ import { MainPage } from './pages/main/MainPage'
 import { PlayPage } from './pages/play/PlayPage'
 import { LoginPage } from './pages/login/LoginPage'
 import Quiz from './pages/pruebaPregunta/Pregunta'
+import { ProtectedRoute } from "./components/protectedroute/ProtectedRoute";
 
 const rootElement = document.getElementById('root')
 
@@ -30,8 +31,11 @@ createRoot(rootElement).render(
         <Route path="/login" element={<LoginPage />} />
         <Route element={<Layout />}>
           <Route path="/home" element={<HomePage />} />
-          <Route path="/user" element={<UserMainPage />} />
-          <Route path="/user/settings" element={<UserSettingPage />} />
+          {/* Rutas protegidas */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/user" element={<UserMainPage />} />
+            <Route path="/user/settings" element={<UserSettingPage />} />
+          </Route>
           <Route path="/host" element={<HostPage />} />
           <Route path="/host/:id" element={<HostingGamePage />} />
           <Route path="/create" element={<CreateTestPage />} />
