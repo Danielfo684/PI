@@ -4,45 +4,51 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 import "./UserMainPage.css";
 
 export function UserMainPage(): JSX.Element {
-  usePageTitle("Dashboard - Toohak");
+  usePageTitle("Dashboard");
   const navigate = useNavigate();
 
   // Estado para almacenar los datos del usuario actual
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<{ name: string; email: string }>({
     name: "",
     email: "",
-    notifications: false,
-    photo: "",
   });
 
   // Se obtienen los datos del usuario desde el endpoint
- /*  useEffect(() => {
-    fetch("http://localhost:5000/api/user", { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => {
-        setUser(data.user);
-      })
-      .catch((err) => console.error("Error al cargar el usuario:", err));
-  }, []); */
+    useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          const res = await fetch("http://localhost:5000/api/user", {
+            method: "GET",
+            credentials: "include"
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            throw new Error(data.error || "Error al obtener usuario");
+          }
+          setUser(data.user);
+        } catch (err) {
+          console.error("Error fetching user:", err);
+        }
+      };
+      fetchUser();
+    }, [navigate]);
 
-  const toggleNotifications = () => {
-    // Aquí podrías agregar un llamado a API para actualizar en el backend
+  /* const toggleNotifications = () => {
     setUser((prev) => ({
       ...prev,
       notifications: !prev.notifications,
     }));
-  };
+  }; */
 
   const handleLogout = async () => {
     try {
       const response = await fetch("http://localhost:5000/logout", {
         method: "POST",
-        credentials: "include"
+        credentials: "include",
       });
-      const data = await response.json();
-      console.log("Logout successful", data);
+      await response.json();
       localStorage.removeItem("token");
-      navigate("/login");
+      navigate("/login", { replace: true });
     } catch (err) {
       console.error("Error during logout:", err);
     }
@@ -51,29 +57,29 @@ export function UserMainPage(): JSX.Element {
   return (
     <div className="user-dashboard">
       <h1>
-        Bienvenido a tu Dashboard, {user.name ? user.name : "Usuario"}
+        Bienvenido a tu Dashboard, {user.name || "Usuario"}
       </h1>
       <p>
         Esta es tu área personal donde podrás ver tu información, tus resultados
         y administrar tus tests.
       </p>
-      
+
       <section className="profile-section">
         <h2>Perfil</h2>
         <div className="profile-details">
-          <img
-            src={user.photo ? user.photo : "https://placehold.co/100"}
+          {/* <img
+            src={user.photo || "https://placehold.co/100"}
             alt="Foto de perfil"
             className="profile-pic"
-          />
+          /> */}
           <p><strong>Nombre:</strong> {user.name}</p>
           <p><strong>Email:</strong> {user.email}</p>
-          <p>
+          {/* <p>
             <strong>Notificaciones:</strong>{" "}
             <button onClick={toggleNotifications} className="btn">
               {user.notifications ? "Desactivar" : "Activar"} notificaciones
             </button>
-          </p>
+          </p> */}
           <Link to="/user/settings" className="btn">
             Editar Perfil
           </Link>
@@ -89,7 +95,6 @@ export function UserMainPage(): JSX.Element {
         </ul>
       </section>
 
-      {/* Botón de Logout */}
       <div className="logout-container">
         <button onClick={handleLogout} className="btn-logout">
           Logout
