@@ -27,6 +27,7 @@ createRoot(rootElement).render(
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/game" element={<GamePage />} />
         <Route element={<Layout />}>
           <Route path="/home" element={<HomePage />} />
           <Route path="/user" element={<UserMainPage />} />
@@ -36,6 +37,7 @@ createRoot(rootElement).render(
           <Route path="/create" element={<CreateTestPage />} />
           <Route path="/play" element={<PlayPage />} />
           <Route path="/join" element={<JoinRoomPage />} />
+          {/* Add other routes here */}
           {/* Other routes */}
         </Route>
       </Routes>

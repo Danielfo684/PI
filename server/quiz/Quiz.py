@@ -42,9 +42,3 @@ class Quiz:
     def get_questions(self):
         return self.questions
 
-    def build_player(self, sid):
-        return {"id": sid, "score": 0}
-
-    def add_player(self, player):
-        self.players[player["id"]] = player
-        logging.info("Jugador agregado: %s", player["id"])

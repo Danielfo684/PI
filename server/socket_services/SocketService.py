@@ -4,15 +4,12 @@ from socket_services import message_actions
 class SocketService:
     _instance = None
     messages = {
-        "out": {
-            "NEW_PLAYER": "do_new_player",
-            "ROOM_STATUS": "do_room_status",
-            "PLAYERS_READY": "do_players_ready",
-        },
         "in": {
             "CREATE_ROOM": "do_create_room",
             "JOIN_ROOM": "do_join_room",
             "START_GAME": "do_start_game",
+            "QUESTION": "do_send_question",
+            "ANSWER": "do_submit_answer",
         },
     }
 

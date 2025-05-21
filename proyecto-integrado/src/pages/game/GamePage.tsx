@@ -1,8 +1,10 @@
-import { JSX, useState } from "react"
+import { JSX, useEffect, useState } from "react"
 import { Card, CardContent, Input, Button, CardSection } from '../../components/basicComponents/index'
 import "./gamePage.css"
 import { GameController } from "../../services/GameController"
 import { Message } from "../../services/SocketService"
+import { useLocation } from "react-router-dom"
+import { usePageTitle } from "../../hooks/usePageTitle"
 
 interface Question {
   id: number;
@@ -16,15 +18,51 @@ interface Player {
   score: number;
 }
 
+
 export function GamePage(): JSX.Element {
-  const [question, setQuestion] = useState<Question | null>(null);
+  usePageTitle("Game");
+
   const [players, setPlayers] = useState<Player[]>([]);
-  const handleClick = (answer: number) => {
+  const [gameControllerInstance] = useState(() => GameController.getInstance());
+  const [gameControllerSocket] = useState(() => gameControllerInstance.getSocketService());
+  const [currentQuestion, setCurrentQuestion] = useState<any>(null);
+  const [showPoints, setShowPoints] = useState(false);
+  const [roomCode, setRoomCode] = useState<string | null>(null);
+  const location = useLocation();
+  const { data } = location.state || {};
+
+  useEffect(() => {
+    setRoomCode(data?.roomCode ?? null);
+  }, [data?.roomCode]);
+  useEffect(() => {
+    if (gameControllerSocket) {
+      gameControllerSocket.onMessage(handleMessage);
+      return () => {
+        if (gameControllerSocket.offMessage) {
+          gameControllerSocket.offMessage(handleMessage);
+        }
+      };
+    }
+  }, [data?.id, gameControllerSocket]);
+
+  const handleMessage = (payload: any) => {
+    console.log("Mensaje recibido del socket", payload);
+
+    if (payload.type === "QUESTION") {
+      console.log(`Pregunta recibida: ${payload.content}`);
+      setCurrentQuestion(payload.content);
+      setShowPoints(true);
+    }
+
+  };
+  const sendAnswer = (answer: number) => {
     console.log("Answer clicked:", answer);
-    GameController.getInstance().socketMessage({
+    gameControllerInstance.socketMessage({
       type: "ANSWER",
       content: {
         selection: answer,
+        playerId: data?.id,
+        roomCode: roomCode,
       }
     } as Message);
   }
@@ -32,15 +70,14 @@ export function GamePage(): JSX.Element {
   return (
 
     <>
-      {question && (
-        <div className="game-question-container">
-          <h2>{question?.title}</h2>
-          <p>{question?.description}</p>
+      {currentQuestion ? (
+        <div className="game-currentQuestion-container">
+          <h2>{currentQuestion.text}</h2>
 
-          <CardSection answers={question.answers} handleClick={handleClick} />
+          <CardSection answers={currentQuestion.answers} handleClick={sendAnswer} />
 
         </div>
-      )}
+      ) : (<div>Aún no hay pregunta</div>)}
     </>
 
   )

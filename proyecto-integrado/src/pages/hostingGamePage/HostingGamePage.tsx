@@ -17,28 +17,43 @@ export function HostingGamePage(): JSX.Element | null {
   const location = useLocation();
   const [players, setPlayers] = useState<any[]>([]);
   const { data } = location.state || {};
-  const [currentQuestion, setCurrentQuestion] = useState<any>({});
-  const [roomCode, setRoomCode] = useState<string | null>(null);
+  const [currentQuestion, setCurrentQuestion] = useState<any>(null);
+  const [showPoints, setShowPoints] = useState(false);
+  const [roomCode, setRoomCode] = useState<any>(null);
   const socketFlag = useRef(false);
   const navigate = useNavigate();
+  const [waitingTime] = useState(1000);
+  const roomCodeRef = useRef<any>(null);
+
+
   const handleMessage = (payload: any) => {
     console.log("Mensaje recibido del socket", payload);
     if (payload.type === "ROOM_CODE") {
       console.log(`Código de sala recibido: ${payload.content}`);
-      setRoomCode(payload.content as string);
+      setRoomCode(payload.content);
+      roomCodeRef.current = payload.content;
+      console.log(`Código de sala: ${payload.content}`);
     }
     if (payload.type === "JOIN_PLAYER") {
       setPlayers(prev => [...prev, payload.content]);
       console.log(`Nuevo jugador unido: ${payload}`);
     }
     if (payload.type === "QUESTION") {
-      console.log(`Pregunta recibida: ${payload.content}`);
+      console.log(`Pregunta recibida :` + payload.content);
       setCurrentQuestion(payload.content);
+      setShowPoints(true);
+    }
+    if (payload.type === "START_GAME") {
+      console.log("El juego ha comenzado");
+      console.log(roomCode);
+      setGameStarted(true);
+      setTimeout(() => {
+         gameControllerInstance.socketMessage({ type: "QUESTION", content: { roomCode: roomCodeRef.current } });
+      }, waitingTime);
     }
   };
 
   useEffect(() => { if (!data) { navigate("/host", { replace: true }); } }, [data, navigate]);
-
   useEffect(() => {
     const initGame = async () => {
       gameControllerInstance.init("http://localhost:5000");
@@ -122,7 +137,7 @@ export function HostingGamePage(): JSX.Element | null {
               dataset=""
             />
           </div>
-        ) : (
+        ) : showPoints ? (
           <>
             <h3>Jugadores en la sala:</h3>
             <div>
@@ -137,7 +152,21 @@ export function HostingGamePage(): JSX.Element | null {
               ))}
             </div>
           </>
-        )}
+        ) : (<>
+          <h3>¿Preparados?</h3>
+          <div>
+            {players.map((player, idx) => (
+              <Player.PlayerCard
+                key={player.id}
+                id={player.id}
+                name={player.name}
+                className={player.className}
+                iconNumber={player.iconNumber}
+              />
+            ))}
+          </div>
+          <div> Sección para la cuenta atrás</div>
+        </>)}
       </div>
     </>
   )

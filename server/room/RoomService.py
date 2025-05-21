@@ -1,13 +1,34 @@
 import random
-import logging
+import threading
 from player.Player import Player
 from quiz.Quiz import Quiz
+
+
 class Room:
     def __init__(self, name: str, players=None, occupied: bool = False, quiz=None):
         self.name = name
         self.players = players if players is not None else []
         self.occupied = occupied
         self.quiz = quiz
+        self.remaining_time = 0
+        self.timer_thread = None
+
+    def set_remaining_time(self, seconds=10, on_time_end=None):
+        self.remaining_time = seconds
+        if self.timer_thread and self.timer_thread.is_alive():
+            return  # Ya hay un temporizador corriendo
+
+        def countdown():
+            while self.remaining_time > 0:
+                print(f"Tiempo restante en la sala {self.name}: {self.remaining_time}")
+                self.remaining_time -= 1
+                threading.Event().wait(1)
+            print(f"¡Tiempo terminado en la sala {self.name}!")
+            if on_time_end:
+                on_time_end()  # Llama al callback cuando termina el tiempo
+
+        self.timer_thread = threading.Thread(target=countdown, daemon=True)
+        self.timer_thread.start()
 
 
 class RoomConfig:
@@ -27,12 +48,12 @@ class RoomService:
         return cls._instance
 
     def create_room(self, data):
-            room_name = self.gen_ran_hex()
-                        # Esto lo tenemos que cambiar cuando tengamos la base de datos con las preguntas
-            new_quiz = Quiz()       
-            new_room = Room(name=room_name, quiz=new_quiz)
-            self.rooms.append(new_room)
-            return room_name
+        room_name = self.gen_ran_hex()
+        # Esto lo tenemos que cambiar cuando tengamos la base de datos con las preguntas
+        new_quiz = Quiz()
+        new_room = Room(name=room_name, quiz=new_quiz)
+        self.rooms.append(new_room)
+        return room_name
 
     def gen_ran_hex(self, size: int = 4) -> str:
         return f"{random.randint(0, 9999):04d}"
@@ -51,7 +72,7 @@ class RoomService:
         return None
 
     def add_player(self, sid, data, room) -> Player:
-        
+
         player_id = len(room.players) + 1
         player = Player(
             id=player_id,

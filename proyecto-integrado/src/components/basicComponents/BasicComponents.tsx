@@ -1,7 +1,6 @@
 import { JSX, useState } from "react";
 import { Card, CardContent } from ".";
 import "./basicComponents.css";
-import { Answer } from "../../pages/game/GamePage";
 export const Components = {
 
     Button: (props: { text: string; onClick: () => void; dataset: string; className?: string }): any => {
@@ -50,12 +49,13 @@ export const Components = {
     },
 
 
-    CardSection: (props: { answers: Array<Answer>, handleClick: Function }): JSX.Element => {
-
+    CardSection: (props: { answers: any, handleClick: Function }): JSX.Element => {
+        console.log("answers", props.answers)
 
         return (
+            
             <div className={`card-section`}>
-                {props.answers.map((answer) => {
+                {props.answers.map((answer : {id: number, text: string, isCorrect: boolean }) => {
                     return (
                         <Card className={`option-${answer.id}`} dataset={answer.id} onClick={() => { props.handleClick(answer.id) }} key={answer.id}>
                             <CardContent dataset={answer.id} />
@@ -69,14 +69,6 @@ export const Components = {
         )
 
 
-        // <Card className="option-1" dataset={1} onClick={() => handleClick(1)} >
-        // </Card>
-        // <Card className="option-2" dataset={2} onClick={() => handleClick(2)}>
-        // </Card>
-        // <Card className="option-3" dataset={3} onClick={() => handleClick(3)}>
-        // </Card>
-        // <Card className="option-4" dataset={4} onClick={() => handleClick(4)}>
-        // </Card>
     },
 
     Input: (props: { placeholder: string; value: string; onChange: (e: any) => void; className?: string }): JSX.Element => {
