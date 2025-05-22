@@ -3,6 +3,7 @@ import { Navigate, Link } from "react-router-dom";
 import type { JSX } from "react";
 import { Header } from "../../components/header/Header";
 import "./LoginPage.css";
+import { Footer } from "../../components/footer/Footer";
 
 export function LoginPage(): JSX.Element {
   const [email, setEmail] = useState("");
@@ -73,6 +74,9 @@ export function LoginPage(): JSX.Element {
           </p>
         </div>
       </div>
+
+        <Footer />
+ 
     </>
   );
 }

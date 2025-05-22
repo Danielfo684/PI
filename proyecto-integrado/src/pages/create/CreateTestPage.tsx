@@ -3,6 +3,7 @@ import { Input, Button } from "../../components/basicComponents/index";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import { useNavigate } from "react-router-dom";
 import "./CreateTestPage.css";
+import { Footer } from "../../components/footer/Footer";
 
 export function CreateTestPage(): JSX.Element {
   usePageTitle("Create Test");
@@ -243,6 +244,8 @@ export function CreateTestPage(): JSX.Element {
         <Button text="Add Question" onClick={addQuestion} dataset="add-question" />
         <Button text="Create Test" onClick={handleSubmit} dataset="create-test" />
       </div>
+
+      <Footer />
     </>
   );
 }

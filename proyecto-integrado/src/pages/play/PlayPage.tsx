@@ -2,6 +2,7 @@ import { JSX } from "react"
 import { Link } from 'react-router-dom';
 import { usePageTitle } from "../../hooks/usePageTitle";
 import "./PlayPage.css";
+import { Footer } from "../../components/footer/Footer";
 
 export function PlayPage() : JSX.Element {
   usePageTitle("Quizify - Jugar");
@@ -35,6 +36,9 @@ export function PlayPage() : JSX.Element {
       </div>
       <div className ="cards-section">
       </div>
+
+
+      <Footer />
     </>
   )
 }

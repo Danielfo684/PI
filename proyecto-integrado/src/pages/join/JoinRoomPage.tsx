@@ -4,6 +4,7 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 import "./JoinRoomPage.css";
 import { GameController } from "../../services/GameController";
 import { useNavigate } from "react-router-dom";
+import { Footer } from "../../components/footer/Footer";
 
 export function JoinRoomPage(): JSX.Element {
   usePageTitle("Join Game");
@@ -100,6 +101,8 @@ export function JoinRoomPage(): JSX.Element {
         />
         <Button text="Unirse" onClick={handleJoin} dataset="join-room" />
       </div>
+
+      <Footer />
     </>
   );
 }

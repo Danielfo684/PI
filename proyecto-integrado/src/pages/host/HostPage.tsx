@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import { GameController } from "../../services/GameController";
 import "./HostPage.css";
+import { Footer } from "../../components/footer/Footer";
+
+
 export function HostPage(): JSX.Element {
   usePageTitle("Host Game");
 
@@ -134,5 +137,11 @@ export function HostPage(): JSX.Element {
         </div>
       </section>
     </div>
+  
+    
   );
+
+  <>
+        <Footer />
+    </>
 }
