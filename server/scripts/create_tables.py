@@ -1,7 +1,6 @@
 import os
 import sys
-# Agregamos la carpeta padre (PI/server) al path
-# para que no nos de fallo la importacion de config
+import re
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import mysql.connector
@@ -22,13 +21,16 @@ def execute_sql_script(script_path: str) -> None:
         with open(script_path, "r") as file:
             sql_script = file.read()
 
-        # Separa las sentencias por ';'
-        statements = sql_script.split(';')
+        # Eliminar comentarios de bloque (/* ... */)
+        sql_script = re.sub(r'/\*.*?\*/', '', sql_script, flags=re.DOTALL)
+        # Eliminar líneas que comiencen con '--' o que sean compuestas solo de guiones
+        sql_script = '\n'.join([line for line in sql_script.splitlines() if not line.strip().startswith('--') and not set(line.strip()) == {"-"}])
+        # Dividir por ';' y filtrar sentencias vacías
+        statements = [stmt.strip() for stmt in sql_script.split(';') if stmt.strip()]
+
         for statement in statements:
-            statement = statement.strip()
-            if statement:
-                print("Ejecutando:", statement)
-                cursor.execute(statement)
+            print("Ejecutando:", statement)
+            cursor.execute(statement)
         connection.commit()
         print("Script ejecutado correctamente.")
     except Error as e:
@@ -39,5 +41,4 @@ def execute_sql_script(script_path: str) -> None:
 
 if __name__ == "__main__":
     execute_sql_script("scripts/create_tables.sql")
-    # Ejecuto el script de inserción de datos después de crear las tablas
     execute_sql_script("scripts/insert_sample_data.sql")

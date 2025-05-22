@@ -1,14 +1,17 @@
 import { JSX, useState } from "react";
 import { Input, Button } from "../../components/basicComponents/index";
 import { usePageTitle } from "../../hooks/usePageTitle";
+import { useNavigate } from "react-router-dom";
 import "./CreateTestPage.css";
 
 export function CreateTestPage(): JSX.Element {
   usePageTitle("Create Test");
 
+  const navigate = useNavigate();
   const [error, setError] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [isPublic, setIsPublic] = useState<boolean>(false);
   const [questions, setQuestions] = useState<
     { questionText: string; answers: { answerText: string; isCorrect: boolean }[] }[]
   >([
@@ -99,70 +102,67 @@ export function CreateTestPage(): JSX.Element {
   };
 
     const handleSubmit = async (): Promise<void> => {
-      // Validar título y descripción
-      if (!title.trim()) {
-        setError("Falta completar el título del test");
+    if (!title.trim()) {
+      setError("Falta completar el título del test");
+      return;
+    }
+    if (!description.trim()) {
+      setError("Falta completar la descripción del test");
+      return;
+    }
+    // Validate each question and its answers
+    for (let i = 0; i < questions.length; i++) {
+      const q = questions[i];
+      if (!q.questionText.trim()) {
+        setError(`Falta completar la pregunta ${i + 1}`);
         return;
       }
-      if (!description.trim()) {
-        setError("Falta completar la descripción del test");
+      if (q.answers.length < 2) {
+        setError(`La pregunta ${i + 1} debe tener al menos dos respuestas.`);
         return;
       }
-      // Validar cada pregunta
-      for (let i = 0; i < questions.length; i++) {
-        const q = questions[i];
-        if (!q.questionText.trim()) {
-          setError(`Falta completar la pregunta ${i + 1}`);
-          return;
-        }
-        // Verifica que cada pregunta tenga al menos dos respuestas.
-        if (q.answers.length < 2) {
-          setError(`La pregunta ${i + 1} debe tener al menos dos respuestas.`);
-          return;
-        }
-        // Verifica que todas las respuestas estén completas
-        for (let j = 0; j < q.answers.length; j++) {
-          const ans = q.answers[j];
-          if (!ans.answerText.trim()) {
-            setError(`Falta completar la respuesta ${j + 1} de la pregunta ${i + 1}`);
-            return;
-          }
-        }
-        // Verifica que haya exactamente una respuesta correcta
-        const correctCount = q.answers.filter(ans => ans.isCorrect).length;
-        if (correctCount !== 1) {
-          setError(`La pregunta ${i + 1} debe tener exactamente una respuesta correcta.`);
+      for (let j = 0; j < q.answers.length; j++) {
+        const ans = q.answers[j];
+        if (!ans.answerText.trim()) {
+          setError(`Falta completar la respuesta ${j + 1} de la pregunta ${i + 1}`);
           return;
         }
       }
-      // Si pasó todas las validaciones, limpiamos error y procedemos
-      setError("");
-    
-      const testData = { title, description, questions };
-      try {
-        const response = await fetch("http://localhost:5000/api/tests", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(testData),
-        });
-        const data = await response.json();
-        if (!response.ok) {
-          setError(data.error);
-        } else {
-          console.log("Test creado:", data);
-          // Aquí puedes redirigir o limpiar el formulario según prefieras
-        }
-      } catch (err) {
-        setError("Error de conexión con el servidor");
+      const correctCount = q.answers.filter(ans => ans.isCorrect).length;
+      if (correctCount !== 1) {
+        setError(`La pregunta ${i + 1} debe tener exactamente una respuesta correcta.`);
+        return;
       }
-    };
+    }
+    setError("");
+
+    const testData = { title, description, is_public: isPublic, questions };
+    try {
+      const response = await fetch("http://localhost:5000/api/tests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(testData),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setError(data.error);
+      } else {
+        console.log("Test creado:", data);
+        window.alert("El test ha sido creado con éxito!");
+        navigate("/host", { replace: true });
+      }
+    } catch (err) {
+      setError("Error de conexión con el servidor");
+    }
+  };
 
   return (
     <>
       <h1>Create Test</h1>
       <p className="page-description">
-        En esta página puedes crear tu propio test. Configura el título, la descripción y añade las preguntas con sus respectivas respuestas.
+        En esta página puedes crear tu propio test. Configura el título, 
+        la descripción y añade las preguntas con sus respectivas respuestas.
       </p>
       {error && <p className="error-message">{error}</p>}
       <div className="create-test-container">
@@ -176,7 +176,18 @@ export function CreateTestPage(): JSX.Element {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        {/* Resto del formulario */}
+        {/* Checkbox to toggle public/private */}
+        <div style={{ margin: "1rem 0" }}>
+          <label>
+            <input
+              type="checkbox"
+              checked={isPublic}
+              onChange={(e) => setIsPublic(e.target.checked)}
+            />
+            &nbsp;Hacer test público
+          </label>
+        </div>
+        {/* Rest of the form for questions */}
         <h2>Questions</h2>
         <div className="questions-container">
           {questions.map((q, qIndex) => (

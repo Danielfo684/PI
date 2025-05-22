@@ -1,3 +1,9 @@
+.host-page-container {
+  padding: 2rem;
+  background: #242424;
+  min-height: 100vh;
+}
+
 h1 {
   text-align: center;
   margin-bottom: 1.5rem;
@@ -5,11 +11,35 @@ h1 {
   font-size: 2.5rem;
 }
 
-.host-actions {
+.pagination-settings {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.pagination-settings label {
+  margin-right: 0.5rem;
+  font-weight: 500;
+}
+
+.pagination-settings select {
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.tests-section {
   margin-bottom: 2rem;
+}
+
+.tests-section h2 {
+  color: #fff;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
 }
 
 .cards-section {
@@ -20,16 +50,16 @@ h1 {
 }
 
 .host-card {
-  position: relative;
-  overflow: hidden;
   background-color: #2c3e50;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  transition: transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
 }
 
 .host-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .card-text {
@@ -37,7 +67,7 @@ h1 {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(44, 62, 80, 0.8);
+  background: rgba(44, 62, 80, 0.9);
   color: #fff;
   padding: 0.75rem 1rem;
   text-align: left;
@@ -46,9 +76,46 @@ h1 {
 .card-text h2 {
   margin: 0;
   font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .card-text p {
   margin: 0.25rem 0 0;
   font-size: 0.9rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.pagination button {
+  padding: 0.5rem 1rem;
+  background-color: #3498db;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination button:disabled {
+  background-color: #7f8c8d;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-weight: 600;
+  color: #fff;
+}
+
+.no-tests {
+  color: #bbb;
+  text-align: center;
+  font-size: 1rem;
+  margin: 1rem 0;
 }

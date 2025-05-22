@@ -5,7 +5,7 @@ from config import config
 
 tests_api = Blueprint("tests_api", __name__)
 
-#  Solicitar todos los tests de un usuario
+#  Solicitar todos los tests de un usuario privados y ver los publicos
 @tests_api.route("/api/tests", methods=["GET"])
 def get_tests():
     if "user_id" not in session:
@@ -21,7 +21,12 @@ def get_tests():
             database=config.DB_NAME
         )
         cursor = connection.cursor(dictionary=True)
-        query = "SELECT id, title, description FROM tests WHERE user_id = %s"
+        query = """
+            SELECT id, title, description, is_public 
+            FROM tests 
+            WHERE is_public = TRUE OR user_id = %s
+            ORDER BY created_at DESC
+        """
         cursor.execute(query, (user_id,))
         tests = cursor.fetchall()
         return jsonify(tests=tests), 200
@@ -40,6 +45,7 @@ def create_test():
     data = request.get_json()
     title = data.get("title")
     description = data.get("description")
+    is_public = data.get("is_public", False)
     questions = data.get("questions", [])
     
     if not title:
@@ -58,8 +64,8 @@ def create_test():
         )
         cursor = connection.cursor()
         # Insertar test
-        query_test = "INSERT INTO tests (title, description, user_id) VALUES (%s, %s, %s)"
-        cursor.execute(query_test, (title, description, user_id))
+        query_test = "INSERT INTO tests (title, description, user_id, is_public) VALUES (%s, %s, %s, %s)"
+        cursor.execute(query_test, (title, description, user_id, is_public))
         test_id = cursor.lastrowid
 
         # Iterar sobre cada pregunta
@@ -70,7 +76,6 @@ def create_test():
                 cursor.execute(query_question, (test_id, question_text))
                 question_id = cursor.lastrowid
 
-                # Iterar sobre cada respuesta de la pregunta
                 answers = question.get("answers", [])
                 for answer in answers:
                     answer_text = answer.get("answerText")
