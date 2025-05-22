@@ -27,10 +27,12 @@ export function LoginPage(): JSX.Element {
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
+      console.log("Login response:", data);
       if (!response.ok) {
         setError(data.error);
       } else {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.user.id);
         setLoggedIn(true);
       }
     } catch (err) {

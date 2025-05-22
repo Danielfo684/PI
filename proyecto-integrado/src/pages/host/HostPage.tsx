@@ -19,6 +19,9 @@ export function HostPage(): JSX.Element {
   const [privatePage, setPrivatePage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
 
+  // Obtén el id del usuario logueado
+  const loggedUserId = Number(localStorage.getItem("userId"));
+  console.log("loggedUserId:", loggedUserId);
 
   useEffect(() => {
     const fetchTests = async () => {
@@ -57,10 +60,36 @@ export function HostPage(): JSX.Element {
   const totalPrivatePages = Math.ceil(privateTests.length / itemsPerPage);
 
 
+  // Funciones para editar y borrar
+  const handleEdit = (test: any) => {
+    // Aquí podrías redirigir a una página o abrir un modal para editar el test
+    // Por ejemplo: navigate(`/edit-test/${test.id}`, { state: { data: test } })
+    console.log("Editar test", test.id);
+  };
+
+  const handleDelete = async (testId: number) => {
+    if (!window.confirm("¿Estás seguro de eliminar este test?")) return;
+    try {
+      const response = await fetch(`http://localhost:5000/api/tests/${testId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setTests(tests.filter((t) => t.id !== testId));
+        alert("Test eliminado correctamente");
+      } else {
+        alert(data.error);
+      }
+    } catch (err) {
+      console.error("Error al eliminar test:", err);
+    }
+  };
+
   return (
     <div className="host-page-container">
       <h1>Elige el test que deseas hostear</h1>
-      
+
       <div className="pagination-settings">
         <label htmlFor="itemsPerPage">Tests por página: </label>
         <select
@@ -68,7 +97,6 @@ export function HostPage(): JSX.Element {
           value={itemsPerPage}
           onChange={(e) => {
             setItemsPerPage(Number(e.target.value));
-            // Reiniciamos la paginación al cambiar cantidad
             setPublicPage(1);
             setPrivatePage(1);
           }}
@@ -76,23 +104,35 @@ export function HostPage(): JSX.Element {
           <option value={5}>5</option>
           <option value={10}>10</option>
           <option value={20}>20</option>
+          <option value={50}>50</option>
         </select>
       </div>
 
       <section className="tests-section">
         <h2>Tests Públicos</h2>
         <div className="cards-section">
-          {publicTestsPage.map((test) => (
-            <Link key={test.id} to={`/host/${test.id}`} state={{ data: test }}>
-              <Card className="host-card" dataset={test.id}>
-                <CardContent dataset={test.id} />
-                <div className="card-text">
-                  <h2>{test.title}</h2>
-                  <p>{test.description}</p>
-                </div>
-              </Card>
-            </Link>
-          ))}
+          {publicTestsPage.map((test) => {
+            console.log("Test user_id:", test.user_id);
+            return (
+              <div key={test.id} className="test-card-container">
+                <Link to={`/host/${test.id}`} state={{ data: test }}>
+                  <Card className="host-card" dataset={test.id}>
+                    <CardContent dataset={test.id} />
+                    <div className="card-text">
+                      <h2>{test.title}</h2>
+                      <p>{test.description}</p>
+                    </div>
+                  </Card>
+                </Link>
+                {test.user_id === loggedUserId && (
+                  <div className="action-buttons">
+                    <button onClick={() => handleEdit(test)}>Editar</button>
+                    <button onClick={() => handleDelete(test.id)}>Borrar</button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
           {publicTestsPage.length === 0 && <p className="no-tests">No hay tests públicos disponibles.</p>}
         </div>
         <div className="pagination">
@@ -102,7 +142,10 @@ export function HostPage(): JSX.Element {
           <span>
             Página {publicPage} de {totalPublicPages || 1}
           </span>
-          <button disabled={publicPage === totalPublicPages || totalPublicPages === 0} onClick={() => setPublicPage(publicPage + 1)}>
+          <button
+            disabled={publicPage === totalPublicPages || totalPublicPages === 0}
+            onClick={() => setPublicPage(publicPage + 1)}
+          >
             Siguiente
           </button>
         </div>
@@ -112,15 +155,23 @@ export function HostPage(): JSX.Element {
         <h2>Tests Privados</h2>
         <div className="cards-section">
           {privateTestsPage.map((test) => (
-            <Link key={test.id} to={`/host/${test.id}`} state={{ data: test }}>
-              <Card className="host-card" dataset={test.id}>
-                <CardContent dataset={test.id} />
-                <div className="card-text">
-                  <h2>{test.title}</h2>
-                  <p>{test.description}</p>
+            <div key={test.id} className="test-card-container">
+              <Link to={`/host/${test.id}`} state={{ data: test }}>
+                <Card className="host-card" dataset={test.id}>
+                  <CardContent dataset={test.id} />
+                  <div className="card-text">
+                    <h2>{test.title}</h2>
+                    <p>{test.description}</p>
+                  </div>
+                </Card>
+              </Link>
+              {test.user_id === loggedUserId && (
+                <div className="action-buttons">
+                  <button onClick={() => handleEdit(test)}>Editar</button>
+                  <button onClick={() => handleDelete(test.id)}>Borrar</button>
                 </div>
-              </Card>
-            </Link>
+              )}
+            </div>
           ))}
           {privateTestsPage.length === 0 && <p className="no-tests">No hay tests privados para ti.</p>}
         </div>
@@ -131,7 +182,10 @@ export function HostPage(): JSX.Element {
           <span>
             Página {privatePage} de {totalPrivatePages || 1}
           </span>
-          <button disabled={privatePage === totalPrivatePages || totalPrivatePages === 0} onClick={() => setPrivatePage(privatePage + 1)}>
+          <button
+            disabled={privatePage === totalPrivatePages || totalPrivatePages === 0}
+            onClick={() => setPrivatePage(privatePage + 1)}
+          >
             Siguiente
           </button>
         </div>
