@@ -36,6 +36,59 @@ def get_tests():
         if connection and connection.is_connected():
             connection.close()
 
+# Obtener un test por su ID
+@tests_api.route('/api/tests/<int:test_id>', methods=['GET'])
+def get_test(test_id):
+    # Implementa la lógica para obtener el test por ID
+    try:
+        # Por ejemplo, consulta a la base de datos
+        test = get_test_from_db(test_id)  # función que recupera el test
+        if test:
+            return jsonify(test=test), 200
+        else:
+            return jsonify(error="Test no encontrado"), 404
+    except Exception as e:
+        return jsonify(error=str(e)), 500
+
+def get_test_from_db(test_id: int) -> dict:
+    connection = None
+    try:
+        connection = mysql.connector.connect(
+            host=config.DB_HOST,
+            port=config.DB_PORT,
+            user=config.DB_USER,
+            password=config.DB_PASSWORD,
+            database=config.DB_NAME
+        )
+        cursor = connection.cursor(dictionary=True)
+        # Recuperar información del test
+        query_test = "SELECT id, title, description, is_public, user_id FROM tests WHERE id = %s"
+        cursor.execute(query_test, (test_id,))
+        test = cursor.fetchone()
+        if not test:
+            return None
+
+        # Recuperar las preguntas del test
+        query_questions = "SELECT id, question_text FROM questions WHERE test_id = %s"
+        cursor.execute(query_questions, (test_id,))
+        questions = cursor.fetchall()
+
+        # Para cada pregunta, recuperar las respuestas
+        for question in questions:
+            query_answers = "SELECT id, answer_text, is_correct FROM answers WHERE question_id = %s"
+            cursor.execute(query_answers, (question["id"],))
+            answers = cursor.fetchall()
+            question["answers"] = answers
+
+        test["questions"] = questions
+        return test
+    except Exception as e:
+        print("Error en get_test_from_db:", e)
+        return None
+    finally:
+        if connection and connection.is_connected():
+            connection.close()
+
 # Crear un test con un usuario
 @tests_api.route("/api/tests", methods=["POST"])
 def create_test():

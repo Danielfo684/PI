@@ -10,6 +10,7 @@ import { Layout } from './components/layout/Layout'
 import { UserMainPage } from './pages/user/UserMainPage'
 import { UserSettingPage } from './pages/user/UserSettingPage'
 import { CreateTestPage } from './pages/create/CreateTestPage'
+import { EditTestPage } from './pages/edit/EditTestPage'
 import { HostingGamePage } from './pages/hostingGamePage/HostingGamePage'
 import { MainPage } from './pages/main/MainPage'
 import { PlayPage } from './pages/play/PlayPage'
@@ -41,6 +42,7 @@ createRoot(rootElement).render(
             <Route path="/host" element={<HostPage />} />
             <Route path="/host/:id" element={<HostingGamePage />} />
             <Route path="/create" element={<CreateTestPage />} />
+            <Route path="/edit-test/:id" element={<EditTestPage />} />
           </Route>
           <Route path="/play" element={<PlayPage />} />
           <Route path="/join" element={<JoinRoomPage />} />

@@ -1,6 +1,6 @@
 import { JSX, useState, useEffect } from "react";
 import { Card, CardContent, Button } from "../../components/basicComponents/index";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import { GameController } from "../../services/GameController";
 import "./HostPage.css";
@@ -9,6 +9,8 @@ import { Footer } from "../../components/footer/Footer";
 
 export function HostPage(): JSX.Element {
   usePageTitle("Host Game");
+
+    const navigate = useNavigate();
 
     const gameController =  GameController.getInstance();
     gameController.init("http://localhost:5000");
@@ -62,8 +64,7 @@ export function HostPage(): JSX.Element {
 
   // Funciones para editar y borrar
   const handleEdit = (test: any) => {
-    // Aquí podrías redirigir a una página o abrir un modal para editar el test
-    // Por ejemplo: navigate(`/edit-test/${test.id}`, { state: { data: test } })
+    navigate(`/edit-test/${test.id}`, { state: { testData: test } });
     console.log("Editar test", test.id);
   };
 
