@@ -55,3 +55,9 @@
 button {
   margin-top: 1rem;
 }
+.error-message {
+  color: #ff4d4f;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  text-align: center;
+}
