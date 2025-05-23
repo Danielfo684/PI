@@ -99,6 +99,11 @@ git config --global user.email "fmarmar172@ieszaidinvergeles.org"
 git config --global user.name "JaviMartin2002"
 ```
 
+```sh
+git config --global user.email "aluqmor651@ieszaidinvergeles.org"
+git config --global user.name "aluqmor"
+```
+
 Cada usuario debe configurar su identidad de Git (ya sea a nivel global o local por repositorio) para que los commits se registren con la cuenta correspondiente. Esto ayuda a mantener un historial claro de quién ha realizado cada cambio en el proyecto.
 
 
