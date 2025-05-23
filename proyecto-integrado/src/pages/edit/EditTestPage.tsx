@@ -25,29 +25,39 @@ export function EditTestPage(): JSX.Element {
   const [error, setError] = useState<string>("");
 
   // Si el objeto testData no tiene preguntas, carga los datos completos del backend
-  useEffect(() => {
-    if (!testData.questions) {
-      fetch(`http://localhost:5000/api/tests/${testData.id}`, {
-        method: "GET",
-        credentials: "include",
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.test) {
-            setTitle(data.test.title);
-            setDescription(data.test.description);
-            setIsPublic(data.test.is_public);
-            setQuestions(data.test.questions || []);
-          } else {
-            setError("No se pudo cargar la información completa del test");
-          }
+    useEffect(() => {
+      // Si testData.questions está vacío, intentamos cargar la información completa
+      if (!testData.questions || testData.questions.length === 0) {
+        fetch(`http://localhost:5000/api/tests/${testData.id}`, {
+          method: "GET",
+          credentials: "include",
         })
-        .catch((err) => {
-          console.error(err);
-          setError("Error de conexión con el servidor");
-        });
-    }
-  }, [testData.id, testData.questions]);
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("DEBUG: Fetched test data:", data);
+            if (data.test) {
+              setTitle(data.test.title);
+              setDescription(data.test.description);
+              setIsPublic(Boolean(data.test.is_public));
+              // Normaliza las preguntas y respuestas
+              const normalizedQuestions = (data.test.questions || []).map((q: any) => ({
+                questionText: q.question_text,
+                answers: (q.answers || []).map((a: any) => ({
+                  answerText: a.answer_text,
+                  isCorrect: Boolean(a.is_correct),
+                })),
+              }));
+              setQuestions(normalizedQuestions);
+            } else {
+              setError("No se pudo cargar la información completa del test");
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            setError("Error de conexión con el servidor");
+          });
+      }
+    }, [testData.id, testData.questions]);
 
   // Funciones de manejo de formulario (igual que CreateTestPage)
   const updateQuestionText = (qIndex: number, value: string): void => {
@@ -163,7 +173,12 @@ export function EditTestPage(): JSX.Element {
   const addAnswerToQuestion = (qIndex: number): void => {
     const newQuestions = questions.map((q, i) => {
       if (i === qIndex) {
-        return { ...q, answers: [...q.answers, { answerText: "", isCorrect: false }] };
+        if (q.answers.length < 4) {
+          return { ...q, answers: [...q.answers, { answerText: "", isCorrect: false }] };
+        } else {
+          alert("Cada pregunta puede tener máximo 4 respuestas");
+          return q;
+        }
       }
       return q;
     });
@@ -243,6 +258,7 @@ export function EditTestPage(): JSX.Element {
       ))}
       <Button text="Agregar Pregunta" onClick={addQuestion} dataset="add-question" />
       <Button text="Guardar Cambios" onClick={handleSubmit} dataset="edit-test" />
-    </div>
+      <Button text="Cancelar" onClick={() => navigate("/host")} dataset="cancel-edit" />
+  </div>
   );
 }

@@ -36,20 +36,7 @@ def get_tests():
         if connection and connection.is_connected():
             connection.close()
 
-# Obtener un test por su ID
-@tests_api.route('/api/tests/<int:test_id>', methods=['GET'])
-def get_test(test_id):
-    # Implementa la lógica para obtener el test por ID
-    try:
-        # Por ejemplo, consulta a la base de datos
-        test = get_test_from_db(test_id)  # función que recupera el test
-        if test:
-            return jsonify(test=test), 200
-        else:
-            return jsonify(error="Test no encontrado"), 404
-    except Exception as e:
-        return jsonify(error=str(e)), 500
-
+# Solicitar un test por id
 def get_test_from_db(test_id: int) -> dict:
     connection = None
     try:
@@ -61,33 +48,41 @@ def get_test_from_db(test_id: int) -> dict:
             database=config.DB_NAME
         )
         cursor = connection.cursor(dictionary=True)
-        # Recuperar información del test
+        # Recuperar la información del test
         query_test = "SELECT id, title, description, is_public, user_id FROM tests WHERE id = %s"
         cursor.execute(query_test, (test_id,))
         test = cursor.fetchone()
         if not test:
             return None
 
-        # Recuperar las preguntas del test
+        # Recuperar las preguntas
         query_questions = "SELECT id, question_text FROM questions WHERE test_id = %s"
         cursor.execute(query_questions, (test_id,))
         questions = cursor.fetchall()
 
-        # Para cada pregunta, recuperar las respuestas
+        # Para cada pregunta, recuperar sus respuestas
         for question in questions:
             query_answers = "SELECT id, answer_text, is_correct FROM answers WHERE question_id = %s"
             cursor.execute(query_answers, (question["id"],))
             answers = cursor.fetchall()
             question["answers"] = answers
-
         test["questions"] = questions
         return test
-    except Exception as e:
-        print("Error en get_test_from_db:", e)
+    except Error as e:
+        print("Error in get_test_from_db:", e)
         return None
     finally:
         if connection and connection.is_connected():
             connection.close()
+
+
+@tests_api.route('/api/tests/<int:test_id>', methods=['GET'])
+def get_test(test_id):
+    test = get_test_from_db(test_id)
+    if test:
+        return jsonify(test=test), 200
+    else:
+        return jsonify(error="Test no encontrado"), 404
 
 # Crear un test con un usuario
 @tests_api.route("/api/tests", methods=["POST"])
@@ -153,6 +148,10 @@ def update_test(test_id):
         return jsonify(error="No autenticado"), 401
 
     data = request.get_json()
+    title = data.get("title")
+    description = data.get("description")
+    is_public = data.get("is_public", False)
+    questions = data.get("questions", [])
     user_id = session["user_id"]
 
     try:
@@ -163,7 +162,7 @@ def update_test(test_id):
             password=config.DB_PASSWORD,
             database=config.DB_NAME
         )
-        cursor = connection.cursor(dictionary=True)
+        cursor = connection.cursor()
 
         # Verifica que el test exista y pertenezca al usuario
         query_select = "SELECT user_id FROM tests WHERE id = %s"
@@ -171,24 +170,45 @@ def update_test(test_id):
         test = cursor.fetchone()
         if not test:
             return jsonify(error="Test no encontrado"), 404
-        if test["user_id"] != user_id:
+        if test[0] != user_id:
             return jsonify(error="No autorizado"), 403
 
-        # Actualiza los campos: título, descripción e is_public
+        # Actualizar el test principal
         query_update = """
             UPDATE tests
             SET title = %s, description = %s, is_public = %s
             WHERE id = %s
         """
-        cursor.execute(
-            query_update,
-            (
-                data.get("title"),
-                data.get("description"),
-                data.get("is_public", False),
-                test_id,
-            ),
-        )
+        cursor.execute(query_update, (title, description, is_public, test_id))
+
+        # Eliminar respuestas asociadas a las preguntas del test
+        query_delete_answers = """
+            DELETE a FROM answers a
+            JOIN questions q ON a.question_id = q.id
+            WHERE q.test_id = %s
+        """
+        cursor.execute(query_delete_answers, (test_id,))
+
+        # Eliminar las preguntas del test
+        query_delete_questions = "DELETE FROM questions WHERE test_id = %s"
+        cursor.execute(query_delete_questions, (test_id,))
+
+        # Insertar nuevamente cada pregunta y sus respuestas
+        for question in questions:
+            question_text = question.get("questionText")
+            if question_text:
+                query_insert_question = "INSERT INTO questions (test_id, question_text) VALUES (%s, %s)"
+                cursor.execute(query_insert_question, (test_id, question_text))
+                question_id = cursor.lastrowid
+
+                answers = question.get("answers", [])
+                for answer in answers:
+                    answer_text = answer.get("answerText")
+                    is_correct = answer.get("isCorrect", False)
+                    if answer_text:
+                        query_insert_answer = "INSERT INTO answers (question_id, answer_text, is_correct) VALUES (%s, %s, %s)"
+                        cursor.execute(query_insert_answer, (question_id, answer_text, is_correct))
+
         connection.commit()
         return jsonify(message="Test actualizado correctamente"), 200
 
