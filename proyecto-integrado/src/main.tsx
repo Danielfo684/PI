@@ -18,7 +18,7 @@ import { LoginPage } from './pages/login/LoginPage'
 import Quiz from './pages/pruebaPregunta/Pregunta'
 import { ProtectedRoute } from "./components/protectedroute/ProtectedRoute";
 import { RegisterPage } from "./pages/register/RegisterPage";
-
+import { ViewTestPage } from "./pages/viewtest/ViewTestPage";
 
 const rootElement = document.getElementById('root')
 
@@ -44,6 +44,7 @@ createRoot(rootElement).render(
             <Route path="/create" element={<CreateTestPage />} />
             <Route path="/edit-test/:id" element={<EditTestPage />} />
             <Route path="/quiz" element={<Quiz />} /> {/* Ruta provisional para editar la interfaz de las preguntas */}
+            <Route path="/view-test/:id" element={<ViewTestPage />} />
           </Route>
           <Route path="/play" element={<PlayPage />} />
           <Route path="/join" element={<JoinRoomPage />} />

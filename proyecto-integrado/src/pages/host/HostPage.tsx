@@ -113,7 +113,7 @@ export function HostPage(): JSX.Element {
         <h2>Tests Públicos</h2>
         <div className="cards-section">
           {publicTestsPage.map((test) => {
-            console.log("Test user_id:", test.user_id);
+            //console.log("Test user_id:", test.user_id);
             return (
               <div key={test.id} className="test-card-container">
                 <Link to={`/host/${test.id}`} state={{ data: test }}>
@@ -125,12 +125,19 @@ export function HostPage(): JSX.Element {
                     </div>
                   </Card>
                 </Link>
-                {test.user_id === loggedUserId && (
-                  <div className="action-buttons">
-                    <button onClick={() => handleEdit(test)}>Editar</button>
-                    <button onClick={() => handleDelete(test.id)}>Borrar</button>
-                  </div>
-                )}
+                <div className="action-buttons">
+                  {/* El botón "Visualizar" se muestra para todos, ya que es un test público */}
+                  <button onClick={() => navigate(`/view-test/${test.id}`)}>
+                    Visualizar
+                  </button>
+                  {/* Si el usuario es el creador, además se muestran Editar y Borrar */}
+                  {test.user_id === loggedUserId && (
+                    <>
+                      <button onClick={() => handleEdit(test)}>Editar</button>
+                      <button onClick={() => handleDelete(test.id)}>Borrar</button>
+                    </>
+                  )}
+                </div>
               </div>
             );
           })}
@@ -168,6 +175,9 @@ export function HostPage(): JSX.Element {
               </Link>
               {test.user_id === loggedUserId && (
                 <div className="action-buttons">
+                  <button onClick={() => navigate(`/view-test/${test.id}`)}>
+                    Visualizar
+                  </button>
                   <button onClick={() => handleEdit(test)}>Editar</button>
                   <button onClick={() => handleDelete(test.id)}>Borrar</button>
                 </div>
