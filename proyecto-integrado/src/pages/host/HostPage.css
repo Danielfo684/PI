@@ -1,6 +1,6 @@
 .host-page-container {
   padding: 2rem;
-  background: #242424;
+  background: transparent; 
   min-height: 100vh;
 }
 

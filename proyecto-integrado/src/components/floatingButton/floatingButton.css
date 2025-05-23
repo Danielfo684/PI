@@ -8,7 +8,8 @@
   top: auto !important;
   background-color: #2d20f7 !important;
   color: white !important;
-  border: none;
+  border: 1px solid white !important;
+  border-radius: 50% !important;
   width: 45px;
   height: 45px;
   cursor: pointer;
@@ -30,5 +31,9 @@
 }
 
 .patata:hover {
-  background-color: #4145d2 !important;
+  background-color: white !important;
+}
+
+.patata:hover svg {
+  fill: #2d20f7 !important;
 }

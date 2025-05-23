@@ -36,14 +36,15 @@ a:hover {
   color: #535bf2;
 }
 
-html{
+html {
   scroll-behavior: smooth;
+  background: linear-gradient(120deg, #6c00ff, #b300c9);   
 }
+
 body {
   display: flex;
   place-items: center;
-  width: 100%;
-  background: linear-gradient(90deg, #2d20f7,#4145d2,#2d20f7);                                      
+  width: 100%;                                   
   }
 
 h1 {
@@ -78,51 +79,95 @@ button:hover {
   }
 }
 
-/* ------------------ BURGUER ---------------------------------- */
+/* ------------------ MENÚ HAMBURGUESA RESPONSIVE ----------------------------- */
 
 .nav-bar {
   display: none;
   cursor: pointer;
-  width: 30px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
   position: relative;
-  z-index: 102;
+  z-index: 2001;
+  margin-left: auto;
+  margin-right: 1rem;
+  background: none;
+  border: none;
 }
 
 .nav-bar span {
   display: block;
   position: absolute;
-  height: 2px;
+  height: 3px;
   width: 100%;
-  background: white;
-  transition: 0.3s ease-in-out;
+  background: #fff;
+  border-radius: 2px;
+  opacity: 1;
+  left: 0;
+  transition: all 0.3s;
 }
 
-.nav-bar span:nth-child(1) {
-  top: 0;
-}
-
-.nav-bar span:nth-child(2) {
-  top: 9px;
-}
-
-.nav-bar span:nth-child(3) {
-  top: 18px;
-}
+.nav-bar span:nth-child(1) { top: 6px; }
+.nav-bar span:nth-child(2) { top: 14px; }
+.nav-bar span:nth-child(3) { top: 22px; }
 
 .nav-bar.open span:nth-child(1) {
-  top: 9px;
-  transform: rotate(135deg);
+  top: 14px;
+  transform: rotate(45deg);
 }
-
 .nav-bar.open span:nth-child(2) {
   opacity: 0;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.nav-bar.open span:nth-child(3) {
+  top: 14px;
+  transform: rotate(-45deg);
 }
 
-.nav-bar.open span:nth-child(3) {
-  top: 9px;
-  transform: rotate(-135deg);
+@media (max-width: 1000px) {
+  .nav-bar {
+    display: block;
+  }
+  .navigation {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    background: linear-gradient(120deg, #6c00ff 60%, #b300c9 100%);
+    position: absolute;
+    top: 60px;
+    right: 2vw;
+    width: 140px;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px 0 rgba(44, 0, 80, 0.18);
+    z-index: 2000;
+    padding: 0.7rem 0.5rem;
+    animation: fadeInMenu 0.3s;
+  }
+  .navigation.menu-mobile {
+    display: flex;
+  }
+  .navigation ul {
+    flex-direction: column;
+    gap: 0.4rem;
+    width: 100%;
+    align-items: flex-start;
+  }
+  .navigation li {
+    width: 100%;
+    text-align: left;
+  }
+  .navigation a {
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.35rem 0.5rem;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+    display: block;
+    text-align: left;
+  }
+  .navigation a:hover {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+  }
 }
 
 /* ------------------ BOTON FLOTANTE ----------------------------- */
