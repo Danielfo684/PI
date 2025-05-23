@@ -10,7 +10,8 @@ export function MainPage() : JSX.Element {
 
   return (
     <>
-      <Floating target="#header"/>
+      <div id="top"></div>
+      <Floating target="#top" />    
       <div className="hero">
         <header className="header">
           <div className="logo">
@@ -97,6 +98,7 @@ export function MainPage() : JSX.Element {
           </div></Link>
         </div>
       </div>
+      
 
       <Footer />
 

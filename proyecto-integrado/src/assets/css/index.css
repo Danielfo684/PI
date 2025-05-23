@@ -125,7 +125,7 @@ button:hover {
   transform: rotate(-135deg);
 }
 
-* ------------------ BOTON FLOTANTE ----------------------------- */
+/* ------------------ BOTON FLOTANTE ----------------------------- */
 
 .top {
   position: absolute !important;

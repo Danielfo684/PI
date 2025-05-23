@@ -1,9 +1,11 @@
-* ------------------ BOTON FLOTANTE ----------------------------- */
+/* ------------------ BOTON FLOTANTE ----------------------------- */
 
 .patata {
-  position: absolute !important;
+  position: fixed !important;
   bottom: 20px !important;
   right: 20px !important;
+  left: auto !important;
+  top: auto !important;
   background-color: #2d20f7 !important;
   color: white !important;
   border: none;
@@ -13,7 +15,7 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s, visibility 0.3s;
-  z-index: 101;
+  z-index: 9999 !important;
 }
 .patata svg {
   fill: white;
