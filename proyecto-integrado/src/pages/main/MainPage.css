@@ -69,6 +69,53 @@ header {
     font-size: 1.3rem;
 }
 
+/* ------------- SCROLL-DOWN --------------------- */
+
+.hero .scroll-down {
+    bottom: 2%;
+}
+
+.scroll-down {
+  position: absolute;
+  right: 48%;
+  top: 90%;
+  gap: 10px;
+
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.scroll {
+  width: 30px;
+  height: 60px;
+  border: 1px solid white;
+  border-radius: 60px;
+  position: relative;
+
+  &::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    border-radius: 50%;
+    opacity: 1;
+    animation: wheel 2s infinite;
+  }
+}
+
+@keyframes wheel {
+  to {
+    opacity: 0;
+    top: 50px;
+  }
+}
+
 /*--------ABOUT US------*/
 
 .about-us {
@@ -198,11 +245,16 @@ header {
   background-color: #f9fbfc;
   color: #2d20f7;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s;
 
   display: flex;
   flex-flow: column;
   justify-content: space-around;
   align-items: center;
+}
+
+.play:hover {
+  transform: translateY(-5px);
 }
 
 .play-title {

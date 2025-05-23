@@ -3,18 +3,25 @@ import { Link } from 'react-router-dom';
 import { usePageTitle } from "../../hooks/usePageTitle";
 import "./MainPage.css";
 import { Footer } from "../../components/footer/Footer";
+import { Floating } from "../../components/floatingButton/floatingButton";
 
 export function MainPage() : JSX.Element {
   usePageTitle("Quizify");
 
   return (
     <>
+      <Floating />
       <div className="hero">
         <header className="header">
           <div className="logo">
             <Link to="/">
               <img src="../src/assets/images/logo-sinborde.png" alt="Logo" className="logo-icon" />
             </Link>
+          </div>
+          <div className="nav-bar">
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
           <nav className="navigation">
             <ul>
@@ -35,6 +42,9 @@ export function MainPage() : JSX.Element {
         <div className="intro-hero">
           — Aprender nunca fue tan divertido
         </div>
+          <div className="scroll-down">
+          <div className="scroll"></div>
+        </div>
       </div>
 
       <div className="about-us">
@@ -53,7 +63,7 @@ export function MainPage() : JSX.Element {
       <div className="quote-section">
         <div className="quote-img"></div>
         <div className="quote-text">
-          <p className="quote">“We learn from failure, not from success”</p><br/>
+          <p className="quote">“Aprendemos de los errores, no de los éxitos”</p><br/>
           <p className="author">— Bram Stoker</p>
         </div>
       </div>
@@ -61,33 +71,30 @@ export function MainPage() : JSX.Element {
       <div className="play-section">
         <h2 className="play-title">¿Cómo jugar?</h2>
         <div className="play-container">
-          <div className="play play1">
+          <Link to="/play"><div className="play play1">
             <div className="play-title">Jugar en solitario</div>
             <div className="img1"></div>
             <div className="play-text">
               <p className="text">
                 Pon a prueba tus <span>conocimientos</span> respondiendo preguntas de cualquier <span>categoría</span>.
               </p></div>
-            <button><Link to="/play"><p>Jugar</p></Link></button>
-          </div>
-          <div className="play play2">
+          </div></Link>
+          <Link to="/join"><div className="play play2">
             <div className="play-title">Unirse a partida</div>
             <div className="img2"></div>
             <div className="play-text">
               <p className="text"><span>
                 Conéctate</span> a una partida <span>ya creada</span> mediante un código para jugar en tiempo real con otros <span>jugadores</span>.
               </p></div>
-            <button><Link to="/join"><p>Unirse a partida</p></Link></button>
-          </div>
-          <div className="play play">
+          </div></Link>
+          <Link to="/create"><div className="play play">
             <div className="play-title">Organizar partida</div>
             <div className="img3"></div>
             <div className="play-text">
               <p className="text">
                 <span>Crea</span> y <span>configura</span> tu propia partida, <span>invita amigos</span> y empieza a jugar con el <span>test</span> que prefieras.
               </p></div>
-            <button><Link to="/create"><p>Organizar partida</p></Link></button>
-          </div>
+          </div></Link>
         </div>
       </div>
 

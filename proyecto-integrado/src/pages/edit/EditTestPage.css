@@ -45,9 +45,8 @@
     color: #d8000c;
 }
 
-button, .button {
+.button {
     padding: 0.75rem 1.5rem;
-    background-color: #3498db;
     border: none;
     border-radius: 5px;
     color: #fff;
@@ -55,6 +54,6 @@ button, .button {
     transition: background-color 0.3s ease;
 }
 
-button:hover, .button:hover {
+.button:hover {
     background-color: #2980b9;
 }

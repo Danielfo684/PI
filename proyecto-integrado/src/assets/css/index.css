@@ -82,6 +82,53 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* ------------------ BURGUER ---------------------------------- */
+
+.nav-bar {
+  display: none;
+  cursor: pointer;
+  width: 30px;
+  height: 20px;
+  position: relative;
+  z-index: 102;
+}
+
+.nav-bar span {
+  display: block;
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  background: white;
+  transition: 0.3s ease-in-out;
+}
+
+.nav-bar span:nth-child(1) {
+  top: 0;
+}
+
+.nav-bar span:nth-child(2) {
+  top: 9px;
+}
+
+.nav-bar span:nth-child(3) {
+  top: 18px;
+}
+
+.nav-bar.open span:nth-child(1) {
+  top: 9px;
+  transform: rotate(135deg);
+}
+
+.nav-bar.open span:nth-child(2) {
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.nav-bar.open span:nth-child(3) {
+  top: 9px;
+  transform: rotate(-135deg);
+}
+
 @media (prefers-color-scheme: light) {
   :root {
   }
