@@ -5,7 +5,7 @@
 
 .text {
     font-family: 'Roboto', sans-serif !important;
-    font-size: 1.2rem !important;
+    font-size: clamp(1rem, 0.933rem + 0.222vw, 1.2rem) !important;
     font-weight: 350 !important;
 }
 
@@ -45,7 +45,7 @@
 }
 
 .hero h1 {
-    font-size: 4rem;
+    font-size: clamp(2.5rem, 2rem + 1.667vw, 4rem);
     color: #f9fbfc;
     text-align: center;
     margin-top: 16rem;
@@ -53,7 +53,7 @@
 
 .hero h1 span {
     font-family: 'Poetsen One', sans-serif;
-    font-size: 5rem;
+    font-size: clamp(3rem, 2.333rem + 2.222vw, 5rem);
 }
 
 header {
@@ -66,7 +66,7 @@ header {
 }
 
 .intro-hero {
-    font-size: 1.3rem;
+    font-size: clamp(1.1rem, 1.033rem + 0.222vw, 1.3rem);
 }
 
 /* ------------- SCROLL-DOWN --------------------- */
@@ -139,14 +139,14 @@ header {
 }
 
 .about-text h2 {
-    font-size: 3rem;
+    font-size: clamp(2rem, 1.667rem + 1.111vw, 3rem);
     color: #f9fbfc;
     text-align: center;
 }
 
 .about-text h2 span {
     font-family: 'Poetsen One', sans-serif;
-    font-size: 3.5rem;
+    font-size: clamp(2.5rem, 2.167rem + 1.111vw, 3.5rem);
 }
 
 .about-text > p {
@@ -189,14 +189,14 @@ header {
 }
 
 .quote {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 1.333rem + 0.556vw, 2rem);
     color: #f9fbfc;
     text-align: center;
     font-family: 'Poetsen One', sans-serif;
 }
 
 .author {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 0.933rem + 0.222vw, 1.2rem);
     color: #f9fbfc;
 }
 
@@ -224,7 +224,7 @@ header {
 }
 
 .play-section h2 {
-  font-size: 3rem;
+  font-size: clamp(2rem, 1.667rem + 1.111vw, 3rem);
   color: #f9fbfc;
 }
 
@@ -258,7 +258,7 @@ header {
 }
 
 .play-title {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 1.1rem + 0.333vw, 1.5rem);
 }
 
 .img1 {
@@ -289,7 +289,7 @@ header {
 }
 
 .play-text {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 0.933rem + 0.222vw, 1.2rem);
   padding: 0 1rem;
 }
 

@@ -24,6 +24,7 @@
 
 #root {
   width: 100%;
+  position: relative;
 }
 
 a {
@@ -77,11 +78,6 @@ button:hover {
   }
 }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
 /* ------------------ BURGUER ---------------------------------- */
 
 .nav-bar {
@@ -129,13 +125,36 @@ button:focus-visible {
   transform: rotate(-135deg);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+* ------------------ BOTON FLOTANTE ----------------------------- */
+
+.top {
+  position: absolute !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  background-color: #2d20f7 !important;
+  color: white !important;
+  border: none;
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 101;
 }
+.top svg {
+  fill: white;
+  height: 25px;
+  width: 25px;
+  margin: 10px;
+}
+
+.top.show {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.top:hover {
+  background-color: #4145d2 !important;
+}
+

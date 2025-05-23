@@ -10,7 +10,7 @@ export function MainPage() : JSX.Element {
 
   return (
     <>
-      <Floating />
+      <Floating target="#header"/>
       <div className="hero">
         <header className="header">
           <div className="logo">
