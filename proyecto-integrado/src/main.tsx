@@ -43,13 +43,13 @@ createRoot(rootElement).render(
             <Route path="/host/:id" element={<HostingGamePage />} />
             <Route path="/create" element={<CreateTestPage />} />
             <Route path="/edit-test/:id" element={<EditTestPage />} />
-            <Route path="/quiz" element={<Quiz />} /> {/* Ruta provisional para editar la interfaz de las preguntas */}
             <Route path="/view-test/:id" element={<ViewTestPage />} />
           </Route>
           <Route path="/play" element={<PlayPage />} />
           <Route path="/join" element={<JoinRoomPage />} />
           {/* Other routes */}
         </Route>
+        <Route path="/quiz" element={<Quiz />} /> {/* Ruta provisional para editar la interfaz de las preguntas */}
       </Routes>
     </BrowserRouter>
   </StrictMode>
