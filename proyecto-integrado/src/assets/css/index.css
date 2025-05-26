@@ -129,6 +129,11 @@ button:hover {
   transform: rotate(-45deg);
 }
 
+.no-scroll {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
 @media (max-width: 1220px) {
   .nav-bar {
     display: block;
@@ -167,6 +172,9 @@ button:hover {
   .navigation.menu-mobile li {
     text-align: center;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .navigation.menu-mobile a {
