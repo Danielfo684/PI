@@ -66,3 +66,11 @@ header {
     width: 35px !important;
     height: 35px !important;
   }
+
+/*------------------------ MEDIA QUERIES -------------------------*/
+
+@media (max-width: 700px) {
+  header {
+    padding: 0.5rem 1rem !important;
+  }
+}

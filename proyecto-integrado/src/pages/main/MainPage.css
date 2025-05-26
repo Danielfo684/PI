@@ -274,6 +274,76 @@ h2 span {
 
 /*------------------------ MEDIA QUERIES -------------------------*/
 
-@media (max-width: 768px) {
-  
+@media (max-width: 1590px) {
+    .about-us {
+      width: 100%;
+      flex-flow: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .about-text {
+      padding: 2rem 18rem;
+    }
+
+    .about-img {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      right: 2%;
+      top: 20%;
+    }
+}
+
+@media (max-width: 1250px) {
+    .about-text {
+      padding: 2rem 10rem;
+    }
+}
+
+@media (max-width: 930px) {
+
+    .quote-section {
+      margin: 10rem 0;
+    }
+    .quote-img {
+      display: none;
+    }	
+}
+
+@media (max-width: 860px) {
+    .about-text {
+      padding: 2rem 2rem;
+    }
+
+    .about-img {
+      display: none;
+    }
+}
+
+@media screen and (max-width: 700px) {
+  .hero {
+    height: auto;
+  }
+
+  .hero h1 {
+    margin-top: 8rem;
+  }
+
+  .intro-hero {
+    padding-bottom: 8rem;
+  }
+
+  .hero .scroll-down {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+    .about-text {
+      padding: 2rem 0.5rem;
+    }
 }

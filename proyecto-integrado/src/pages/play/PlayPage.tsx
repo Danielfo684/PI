@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { usePageTitle } from "../../hooks/usePageTitle";
 import "./PlayPage.css";
 import { Footer } from "../../components/footer/Footer";
+import { Floating } from "../../components/floatingButton/floatingButton";
 
 export function PlayPage() : JSX.Element {
   usePageTitle("Quizify - Jugar");
@@ -10,6 +11,8 @@ export function PlayPage() : JSX.Element {
 
   return (
     <>
+        <div id="top"></div>
+        <Floating target="#top" /> 
         <h1>Bienvenidos a <span>Quizify</span></h1>
         <div className="intro-hero">
           — Aprender nunca fue tan divertido

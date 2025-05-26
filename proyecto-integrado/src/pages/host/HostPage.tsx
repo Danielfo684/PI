@@ -5,6 +5,7 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 import { GameController } from "../../services/GameController";
 import "./HostPage.css";
 import { Footer } from "../../components/footer/Footer";
+import { Floating } from "../../components/floatingButton/floatingButton";
 
 
 export function HostPage(): JSX.Element {
@@ -89,33 +90,84 @@ export function HostPage(): JSX.Element {
   };
 
   return (
-    <div className="host-page-container">
-      <h1>Elige el test que deseas hostear</h1>
-
-      <div className="pagination-settings">
-        <label htmlFor="itemsPerPage">Tests por página: </label>
-        <select
-          id="itemsPerPage"
-          value={itemsPerPage}
-          onChange={(e) => {
-            setItemsPerPage(Number(e.target.value));
-            setPublicPage(1);
-            setPrivatePage(1);
-          }}
-        >
-          <option value={5}>5</option>
-          <option value={10}>10</option>
-          <option value={20}>20</option>
-          <option value={50}>50</option>
-        </select>
-      </div>
-
-      <section className="tests-section">
-        <h2>Tests Públicos</h2>
-        <div className="cards-section">
-          {publicTestsPage.map((test) => {
-            //console.log("Test user_id:", test.user_id);
-            return (
+    <>
+      <div id="top"></div>
+      <Floating target="#top" /> 
+      <div className="host-page-container">
+        <h1>Elige el test que deseas hostear</h1>
+  
+        <div className="pagination-settings">
+          <label htmlFor="itemsPerPage">Tests por página: </label>
+          <select
+            id="itemsPerPage"
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setPublicPage(1);
+              setPrivatePage(1);
+            }}
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </select>
+        </div>
+  
+        <section className="tests-section">
+          <h2>Tests Públicos</h2>
+          <div className="cards-section">
+            {publicTestsPage.map((test) => {
+              //console.log("Test user_id:", test.user_id);
+              return (
+                <div key={test.id} className="test-card-container">
+                  <Link to={`/host/${test.id}`} state={{ data: test }}>
+                    <Card className="host-card" dataset={test.id}>
+                      <CardContent dataset={test.id} />
+                      <div className="card-text">
+                        <h2>{test.title}</h2>
+                        <p>{test.description}</p>
+                      </div>
+                    </Card>
+                  </Link>
+                  <div className="action-buttons">
+                    {/* El botón "Visualizar" se muestra para todos, ya que es un test público */}
+                    <button onClick={() => navigate(`/view-test/${test.id}`)}>
+                      Visualizar
+                    </button>
+                    {/* Si el usuario es el creador, además se muestran Editar y Borrar */}
+                    {test.user_id === loggedUserId && (
+                      <>
+                        <button onClick={() => handleEdit(test)}>Editar</button>
+                        <button onClick={() => handleDelete(test.id)}>Borrar</button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+            {publicTestsPage.length === 0 && <p className="no-tests">No hay tests públicos disponibles.</p>}
+          </div>
+          <div className="pagination">
+            <button disabled={publicPage === 1} onClick={() => setPublicPage(publicPage - 1)}>
+              Anterior
+            </button>
+            <span>
+              Página {publicPage} de {totalPublicPages || 1}
+            </span>
+            <button
+              disabled={publicPage === totalPublicPages || totalPublicPages === 0}
+              onClick={() => setPublicPage(publicPage + 1)}
+            >
+              Siguiente
+            </button>
+          </div>
+        </section>
+  
+        <section className="tests-section">
+          <h2>Tests Privados</h2>
+          <div className="cards-section">
+            {privateTestsPage.map((test) => (
               <div key={test.id} className="test-card-container">
                 <Link to={`/host/${test.id}`} state={{ data: test }}>
                   <Card className="host-card" dataset={test.id}>
@@ -126,88 +178,39 @@ export function HostPage(): JSX.Element {
                     </div>
                   </Card>
                 </Link>
-                <div className="action-buttons">
-                  {/* El botón "Visualizar" se muestra para todos, ya que es un test público */}
-                  <button onClick={() => navigate(`/view-test/${test.id}`)}>
-                    Visualizar
-                  </button>
-                  {/* Si el usuario es el creador, además se muestran Editar y Borrar */}
-                  {test.user_id === loggedUserId && (
-                    <>
-                      <button onClick={() => handleEdit(test)}>Editar</button>
-                      <button onClick={() => handleDelete(test.id)}>Borrar</button>
-                    </>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-          {publicTestsPage.length === 0 && <p className="no-tests">No hay tests públicos disponibles.</p>}
-        </div>
-        <div className="pagination">
-          <button disabled={publicPage === 1} onClick={() => setPublicPage(publicPage - 1)}>
-            Anterior
-          </button>
-          <span>
-            Página {publicPage} de {totalPublicPages || 1}
-          </span>
-          <button
-            disabled={publicPage === totalPublicPages || totalPublicPages === 0}
-            onClick={() => setPublicPage(publicPage + 1)}
-          >
-            Siguiente
-          </button>
-        </div>
-      </section>
-
-      <section className="tests-section">
-        <h2>Tests Privados</h2>
-        <div className="cards-section">
-          {privateTestsPage.map((test) => (
-            <div key={test.id} className="test-card-container">
-              <Link to={`/host/${test.id}`} state={{ data: test }}>
-                <Card className="host-card" dataset={test.id}>
-                  <CardContent dataset={test.id} />
-                  <div className="card-text">
-                    <h2>{test.title}</h2>
-                    <p>{test.description}</p>
+                {test.user_id === loggedUserId && (
+                  <div className="action-buttons">
+                    <button onClick={() => navigate(`/view-test/${test.id}`)}>
+                      Visualizar
+                    </button>
+                    <button onClick={() => handleEdit(test)}>Editar</button>
+                    <button onClick={() => handleDelete(test.id)}>Borrar</button>
                   </div>
-                </Card>
-              </Link>
-              {test.user_id === loggedUserId && (
-                <div className="action-buttons">
-                  <button onClick={() => navigate(`/view-test/${test.id}`)}>
-                    Visualizar
-                  </button>
-                  <button onClick={() => handleEdit(test)}>Editar</button>
-                  <button onClick={() => handleDelete(test.id)}>Borrar</button>
-                </div>
-              )}
-            </div>
-          ))}
-          {privateTestsPage.length === 0 && <p className="no-tests">No hay tests privados para ti.</p>}
-        </div>
-        <div className="pagination">
-          <button disabled={privatePage === 1} onClick={() => setPrivatePage(privatePage - 1)}>
-            Anterior
-          </button>
-          <span>
-            Página {privatePage} de {totalPrivatePages || 1}
-          </span>
-          <button
-            disabled={privatePage === totalPrivatePages || totalPrivatePages === 0}
-            onClick={() => setPrivatePage(privatePage + 1)}
-          >
-            Siguiente
-          </button>
-        </div>
-      </section>
-    </div>
+                )}
+              </div>
+            ))}
+            {privateTestsPage.length === 0 && <p className="no-tests">No hay tests privados para ti.</p>}
+          </div>
+          <div className="pagination">
+            <button disabled={privatePage === 1} onClick={() => setPrivatePage(privatePage - 1)}>
+              Anterior
+            </button>
+            <span>
+              Página {privatePage} de {totalPrivatePages || 1}
+            </span>
+            <button
+              disabled={privatePage === totalPrivatePages || totalPrivatePages === 0}
+              onClick={() => setPrivatePage(privatePage + 1)}
+            >
+              Siguiente
+            </button>
+          </div>
+        </section>
+      </div>
   
-    
+      <Footer />
+    </>
   );
 
-  <>
-        <Footer />
-    </>
+  
 }
