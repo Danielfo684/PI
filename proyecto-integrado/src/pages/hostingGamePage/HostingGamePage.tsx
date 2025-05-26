@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./HostingGamePage.css";
 import { Player } from "../../components/player/Player";
 
+
 export function HostingGamePage(): JSX.Element | null {
   usePageTitle("Game Hosting");
 
@@ -22,9 +23,32 @@ export function HostingGamePage(): JSX.Element | null {
   const [roomCode, setRoomCode] = useState<any>(null);
   const socketFlag = useRef(false);
   const navigate = useNavigate();
-  const [waitingTime] = useState(1000);
+  const [waitingTime] = useState(5000);
   const roomCodeRef = useRef<any>(null);
+  const [timer, setTimer] = useState<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [kicked, setKicked] = useState(false);
 
+  const handleKick = (playerId: number) => {
+    gameControllerInstance.socketMessage({
+      type: "KICK_PLAYER",
+      content: { playerId, roomCode }
+    });
+  };
+
+  // Obtén el id del usuario logueado para saber si es host
+  const loggedUserId = Number(localStorage.getItem("userId"));
+  const isHost = players.length > 0 && players[0].id === loggedUserId; // Ajusta según tu lógica de host
+
+
+  if (kicked) {
+    return (
+      <div className="kicked-message">
+        <h2>Has sido expulsado de la sala</h2>
+        <button onClick={() => navigate("/")}>Volver al inicio</button>
+      </div>
+    );
+  }
 
   const handleMessage = (payload: any) => {
     console.log("Mensaje recibido del socket", payload);
@@ -39,20 +63,61 @@ export function HostingGamePage(): JSX.Element | null {
       console.log(`Nuevo jugador unido: ${payload}`);
     }
     if (payload.type === "QUESTION") {
-      console.log(`Pregunta recibida :` + payload.content);
       setCurrentQuestion(payload.content);
+      setShowPoints(false);
+      setTimer(20);
+      if (timerRef.current) clearInterval(timerRef.current);
+      timerRef.current = setInterval(() => {
+        setTimer(prev => (prev !== null ? prev - 1 : null));
+      }, 1000);
+    }
+    if (payload.type === "HIDE_QUESTION") {
+      setCurrentQuestion(null);
       setShowPoints(true);
+      setTimer(null);
+      if (timerRef.current) clearInterval(timerRef.current);
     }
     if (payload.type === "START_GAME") {
       console.log("El juego ha comenzado");
       console.log(roomCode);
       setGameStarted(true);
       setTimeout(() => {
-         gameControllerInstance.socketMessage({ type: "QUESTION", content: { roomCode: roomCodeRef.current } });
+        gameControllerInstance.socketMessage({ type: "QUESTION", content: { roomCode: roomCodeRef.current } });
       }, waitingTime);
     }
   };
 
+  useEffect(() => {
+  if (!gameControllerSocket) return;
+  const handleKickMessage = (payload: any) => {
+    if (payload.type === "KICKED") {
+      setKicked(true);
+    }
+  };
+  gameControllerSocket.onMessage(handleKickMessage);
+  return () => {
+    if (gameControllerSocket.offMessage) {
+      gameControllerSocket.offMessage(handleKickMessage);
+    }
+  };
+}, [gameControllerSocket]);
+
+  useEffect(() => {
+    if (timer === 0) {
+      setTimer(null);
+      setCurrentQuestion(null);
+      setShowPoints(true);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    }
+  }, [timer]);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
   useEffect(() => { if (!data) { navigate("/host", { replace: true }); } }, [data, navigate]);
   useEffect(() => {
     const initGame = async () => {
@@ -119,34 +184,41 @@ export function HostingGamePage(): JSX.Element | null {
                   name={player.name}
                   className={player.className}
                   iconNumber={player.iconNumber}
+                  isHost={isHost}
+                  onKick={isHost ? handleKick : undefined}
                 />
               ))}
             </div>
           </>
         ) : currentQuestion ? (
-          <div className="question-section">
-            <h3>{currentQuestion.text}</h3>
-            <ul>
-              {currentQuestion.answers?.map((answer: any) => (
-                <li key={answer.id}>{answer.text}</li>
-              ))}
-            </ul>
-            <Button
-              text="Volver a jugadores"
-              onClick={() => setCurrentQuestion(null)}
-              dataset=""
-            />
+          <div className="quiz-container">
+            <div className="quiz-box">
+              {timer !== null && (
+                <div className="timer">Tiempo restante: {timer}s</div>
+              )}
+              <div className="question-mark">?</div>
+              <div className="question-text">
+                <p>{currentQuestion.text}</p>
+              </div>
+              <div className="options">
+                {currentQuestion.answers?.map((answer: any, idx: number) => (
+                  <div className="option" key={answer.id || idx}>
+                    {String.fromCharCode(65 + idx)}. {answer.text}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         ) : showPoints ? (
           <>
-            <h3>Jugadores en la sala:</h3>
+            <h3>Puntuación de los jugadores</h3>
             <div>
               {players.map((player, idx) => (
-                <Player.PlayerCard
+                <Player.PlayerPoints
                   key={player.id}
                   id={player.id}
                   name={player.name}
-                  className={player.className}
+                  points={player.score}
                   iconNumber={player.iconNumber}
                 />
               ))}
@@ -165,7 +237,10 @@ export function HostingGamePage(): JSX.Element | null {
               />
             ))}
           </div>
-          <div> Sección para la cuenta atrás</div>
+          <div className="waiting-question-loader">
+            <div className="spinner"></div>
+            <p>Preparando la primera pregunta...</p>
+          </div>
         </>)}
       </div>
     </>

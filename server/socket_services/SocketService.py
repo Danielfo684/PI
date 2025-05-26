@@ -10,6 +10,7 @@ class SocketService:
             "START_GAME": "do_start_game",
             "QUESTION": "do_send_question",
             "ANSWER": "do_submit_answer",
+            "PLAYER_LIST": "do_send_player_list",
         },
     }
 

@@ -13,19 +13,19 @@ class Room:
         self.remaining_time = 0
         self.timer_thread = None
 
-    def set_remaining_time(self, seconds=10, on_time_end=None):
+    def set_remaining_time(self, seconds=20, on_time_end=None):
         self.remaining_time = seconds
         if self.timer_thread and self.timer_thread.is_alive():
-            return  # Ya hay un temporizador corriendo
+            return  
 
         def countdown():
             while self.remaining_time > 0:
-                print(f"Tiempo restante en la sala {self.name}: {self.remaining_time}")
+                print(f"Tiempo restante en la pregunta de la sala {self.name}: {self.remaining_time}")
                 self.remaining_time -= 1
                 threading.Event().wait(1)
-            print(f"¡Tiempo terminado en la sala {self.name}!")
+            print(f"¡Tiempo terminado en la pregunta de la sala {self.name}!")
             if on_time_end:
-                on_time_end()  # Llama al callback cuando termina el tiempo
+                on_time_end()  
 
         self.timer_thread = threading.Thread(target=countdown, daemon=True)
         self.timer_thread.start()
@@ -49,7 +49,6 @@ class RoomService:
 
     def create_room(self, data):
         room_name = self.gen_ran_hex()
-        # Esto lo tenemos que cambiar cuando tengamos la base de datos con las preguntas
         new_quiz = Quiz()
         new_room = Room(name=room_name, quiz=new_quiz)
         self.rooms.append(new_room)

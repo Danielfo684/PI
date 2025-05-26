@@ -68,6 +68,7 @@ export function HostPage(): JSX.Element {
     console.log("Editar test", test.id);
   };
 
+
   const handleDelete = async (testId: number) => {
     if (!window.confirm("¿Estás seguro de eliminar este test?")) return;
     try {

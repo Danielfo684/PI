@@ -133,49 +133,60 @@ button:hover {
   .nav-bar {
     display: block;
   }
+
   .navigation {
     display: none;
-    flex-direction: column;
-    align-items: flex-start;
-    background: linear-gradient(120deg, #6c00ff 60%, #b300c9 100%);
-    position: absolute;
-    top: 60px;
-    right: 2vw;
-    width: 140px;
-    border-radius: 10px;
-    box-shadow: 0 4px 16px 0 rgba(44, 0, 80, 0.18);
-    z-index: 2000;
-    padding: 0.7rem 0.5rem;
-    animation: fadeInMenu 0.3s;
   }
+
   .navigation.menu-mobile {
     display: flex;
-  }
-  .navigation ul {
     flex-direction: column;
-    gap: 0.4rem;
-    width: 100%;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(120deg, #6c00ff 60%, #b300c9 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
+    padding: 2rem;
+    animation: fadeInMenu 0.3s ease-in-out;
   }
-  .navigation li {
-    width: 100%;
-    text-align: left;
+
+  .navigation.menu-mobile ul {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
-  .navigation a {
+
+  .navigation.menu-mobile li {
+    text-align: center;
+    width: 100%;
+  }
+
+  .navigation.menu-mobile a {
     color: #fff;
-    font-size: 0.95rem;
-    font-weight: 500;
-    padding: 0.35rem 0.5rem;
-    border-radius: 6px;
-    transition: background 0.2s, color 0.2s;
+    font-size: 1.8rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background 0.3s, transform 0.3s;
+    text-decoration: none;
+    text-align: center;
     display: block;
-    text-align: left;
   }
-  .navigation a:hover {
-    background: rgba(255,255,255,0.18);
-    color: #fff;
+
+  .navigation.menu-mobile a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
   }
 }
+
 
 /* ------------------ BOTON FLOTANTE ----------------------------- */
 

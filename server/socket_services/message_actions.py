@@ -9,14 +9,6 @@ def do_create_room(service, sid, data):
     service.socket.emit("message", {"type": "ROOM_CODE", "content": generated_room})
 
 
-def get_message_actions():
-    return {
-        "REQUEST_QUESTION": do_request_question,
-        "SUBMIT_ANSWER": do_submit_answer,
-        "CREATE_ROOM": do_create_room,
-    }
-
-
 def do_join_room(service, sid, data):
     room_code = data.get("roomCode")
     print(f"Intentando unirse a la sala: {room_code}")
@@ -36,7 +28,6 @@ def do_start_game(service, sid, data):
     room = find_room(service, data)
     if room:
         gameQuestion = room.quiz.get_question()
-        # Aquí podría mandar en content el tiempo que estableceré como base para que se inicie el juego
         service.socket.emit(
             "message", {"type": "START_GAME", "content": "Starting game..."}
         )
@@ -49,7 +40,6 @@ def do_send_question(service, sid, data):
         service.socket.emit("message", {"type": "QUESTION", "content": gameQuestion})
 
         def on_time_end():
-            # Envía mensaje para quitar la pregunta al cliente
             service.socket.emit("message", {"type": "HIDE_QUESTION", "content": {"roomCode": room.name}})
             print(f"Mensaje enviado para ocultar la pregunta en la sala {room.name}")
 
@@ -73,11 +63,34 @@ def do_submit_answer(service, sid, data):
     if room:
         player = service.find_player(sid)
         if player:
-            player.answer = data.get("answer")
+            answer_id = data.get("answer") or data.get("selection")
+            question = room.quiz.current_question
+            selected_answer = next((a for a in question.answers if a.id == answer_id), None)
+            if selected_answer and selected_answer.is_correct:
+                time_left = max(room.remaining_time, 0)
+                score = 100 + int((time_left / 20) * 900)
+                player.points += score
+            else:
+                score = 0
+            player.answer = answer_id
             service.socket.emit(
-                "message", {"type": "ANSWER_SUBMITTED", "content": "Answer submitted"}
+                "message", {"type": "ANSWER_SUBMITTED", "content": {"score": score, "isCorrect": selected_answer.is_correct if selected_answer else False}}
             )
         else:
             service.socket.emit(
                 "message", {"type": "PLAYER_NOT_FOUND", "content": "Player not found"}
             )
+
+def send_player_list(service, room):
+    players = [
+        {
+            "id": player.id,
+            "name": player.name,
+            "points": player.points,
+            "iconNumber": getattr(player, "icon_number", 1)
+        }
+        for player in room.players
+    ]
+    service.socket.emit(
+        "message", {"type": "PLAYER_LIST", "content": {"players": players}}
+    )
