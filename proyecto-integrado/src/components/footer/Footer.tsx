@@ -10,8 +10,8 @@ export function Footer() {
             </Link>
         </div>
         <div className="footer-text">
-            <p><span>© 2025 Quizify</span></p>
-            <p><span>Daniel Fontalva</span>, <span>Álvaro Luque</span>, <span>Ismael Manzano</span>, <span>Francisco Javier Martín</span></p>
+            <p><span className="brand">© 2025 Quizify</span></p>
+            <p><span>Daniel Fontalva Ostio</span> | <span>Álvaro Luque Morillo</span> | <span>Ismael Manzano Reinoso</span> | <span>Francisco Javier Martín Mariscal</span></p>
         </div>
         <div className="agrad">
             <p>Especial agradecimiento a </p>

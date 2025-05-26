@@ -15,7 +15,7 @@ export function MainPage() : JSX.Element {
       <Floating target="#top" />    
       <div className="hero">
         <Header />
-        <h1>Bienvenidos a <span>Quizify</span></h1>
+        <h1><span>Quizify</span></h1>
         <div className="intro-hero">
           — Aprender nunca fue tan divertido
         </div>

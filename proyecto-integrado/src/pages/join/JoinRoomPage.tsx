@@ -5,6 +5,7 @@ import "./JoinRoomPage.css";
 import { GameController } from "../../services/GameController";
 import { useNavigate } from "react-router-dom";
 import { Footer } from "../../components/footer/Footer";
+import { Floating } from "../../components/floatingButton/floatingButton";
 
 export function JoinRoomPage(): JSX.Element {
   usePageTitle("Join Game");
@@ -45,7 +46,7 @@ export function JoinRoomPage(): JSX.Element {
       if (socket && socket.offMessage) {
         socket.offMessage(handleMessage);
       }
-    
+
       localStorage.removeItem("roomCode");
       localStorage.removeItem("playerName");
     };
@@ -87,21 +88,24 @@ export function JoinRoomPage(): JSX.Element {
 
   return (
     <>
-      <h1>Unirse a una Sala</h1>
-      <div className="join-room-container">
-        <Input
-          placeholder="Código de la sala"
-          value={roomCode}
-          onChange={(e) => setRoomCode(e.target.value)}
-        />
-        <Input
-          placeholder="Nombre del jugador"
-          value={playerName}
-          onChange={(e) => setPlayerName(e.target.value)}
-        />
-        <Button text="Unirse" onClick={handleJoin} dataset="join-room" />
+      <div id="top"></div>
+      <Floating target="#top" />
+      <div className="join-section">
+        <h2>Unirse a partida</h2>
+        <div className="join-room-container">
+          <Input
+            placeholder="Código de la sala"
+            value={roomCode}
+            onChange={(e) => setRoomCode(e.target.value)}
+          />
+          <Input
+            placeholder="Nombre del jugador"
+            value={playerName}
+            onChange={(e) => setPlayerName(e.target.value)}
+          />
+          <Button text="Unirse" onClick={handleJoin} dataset="join-room" />
+        </div>
       </div>
-
       <Footer />
     </>
   );

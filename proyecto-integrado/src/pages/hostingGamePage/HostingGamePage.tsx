@@ -6,6 +6,7 @@ import { GameController } from "../../services/GameController";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./HostingGamePage.css";
 import { Player } from "../../components/player/Player";
+import { Footer } from "../../components/footer/Footer";
 
 
 export function HostingGamePage(): JSX.Element | null {
@@ -243,6 +244,7 @@ export function HostingGamePage(): JSX.Element | null {
           </div>
         </>)}
       </div>
+      <Footer />
     </>
   )
 }

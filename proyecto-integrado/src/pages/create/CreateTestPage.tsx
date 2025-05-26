@@ -4,6 +4,7 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 import { useNavigate } from "react-router-dom";
 import "./CreateTestPage.css";
 import { Footer } from "../../components/footer/Footer";
+import { Floating } from "../../components/floatingButton/floatingButton";
 
 export function CreateTestPage(): JSX.Element {
   usePageTitle("Create Test");
@@ -160,6 +161,8 @@ export function CreateTestPage(): JSX.Element {
 
   return (
     <>
+      <div id="top"></div>
+      <Floating target="#top" />
       <h1>Create Test</h1>
       <p className="page-description">
         En esta página puedes crear tu propio test. Configura el título, 
