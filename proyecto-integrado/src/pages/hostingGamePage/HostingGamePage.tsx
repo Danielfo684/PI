@@ -64,6 +64,7 @@ export function HostingGamePage(): JSX.Element | null {
     }
     if (payload.type === "QUESTION") {
       setCurrentQuestion(payload.content);
+      console.log(payload.content);
       setShowPoints(false);
       setTimer(20);
       if (timerRef.current) clearInterval(timerRef.current);
@@ -79,7 +80,6 @@ export function HostingGamePage(): JSX.Element | null {
     }
     if (payload.type === "START_GAME") {
       console.log("El juego ha comenzado");
-      console.log(roomCode);
       setGameStarted(true);
       setTimeout(() => {
         gameControllerInstance.socketMessage({ type: "QUESTION", content: { roomCode: roomCodeRef.current } });
@@ -88,19 +88,19 @@ export function HostingGamePage(): JSX.Element | null {
   };
 
   useEffect(() => {
-  if (!gameControllerSocket) return;
-  const handleKickMessage = (payload: any) => {
-    if (payload.type === "KICKED") {
-      setKicked(true);
-    }
-  };
-  gameControllerSocket.onMessage(handleKickMessage);
-  return () => {
-    if (gameControllerSocket.offMessage) {
-      gameControllerSocket.offMessage(handleKickMessage);
-    }
-  };
-}, [gameControllerSocket]);
+    if (!gameControllerSocket) return;
+    const handleKickMessage = (payload: any) => {
+      if (payload.type === "KICKED") {
+        setKicked(true);
+      }
+    };
+    gameControllerSocket.onMessage(handleKickMessage);
+    return () => {
+      if (gameControllerSocket.offMessage) {
+        gameControllerSocket.offMessage(handleKickMessage);
+      }
+    };
+  }, [gameControllerSocket]);
 
   useEffect(() => {
     if (timer === 0) {
@@ -183,7 +183,7 @@ export function HostingGamePage(): JSX.Element | null {
                   id={player.id}
                   name={player.name}
                   className={player.className}
-                  iconNumber={player.iconNumber}
+                  iconNumber={player.id}
                   isHost={isHost}
                   onKick={isHost ? handleKick : undefined}
                 />
@@ -198,12 +198,12 @@ export function HostingGamePage(): JSX.Element | null {
               )}
               <div className="question-mark">?</div>
               <div className="question-text">
-                <p>{currentQuestion.text}</p>
+                <p>{currentQuestion.question_text}</p>
               </div>
               <div className="options">
                 {currentQuestion.answers?.map((answer: any, idx: number) => (
                   <div className="option" key={answer.id || idx}>
-                    {String.fromCharCode(65 + idx)}. {answer.text}
+                    {String.fromCharCode(65 + idx)}. {answer.answer_text}
                   </div>
                 ))}
               </div>
@@ -219,7 +219,7 @@ export function HostingGamePage(): JSX.Element | null {
                   id={player.id}
                   name={player.name}
                   points={player.score}
-                  iconNumber={player.iconNumber}
+                  iconNumber={player.id}
                 />
               ))}
             </div>

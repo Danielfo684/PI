@@ -4,6 +4,7 @@ import threading
 
 
 def do_create_room(service, sid, data):
+    print(f"Creando sala con id de quiz: {data}")
     room_service = RoomService.get_instance()
     generated_room = room_service.create_room(data)
     service.socket.emit("message", {"type": "ROOM_CODE", "content": generated_room})
@@ -37,6 +38,7 @@ def do_send_question(service, sid, data):
     room = find_room(service, data)
     if room:
         gameQuestion = room.quiz.get_question()
+        print(gameQuestion)
         service.socket.emit("message", {"type": "QUESTION", "content": gameQuestion})
 
         def on_time_end():
@@ -61,7 +63,8 @@ def find_room(service, data):
 def do_submit_answer(service, sid, data):
     room = find_room(service, data)
     if room:
-        player = service.find_player(sid)
+        player_id = data.get("playerId")
+        player = RoomService.get_instance().find_player(player_id)
         if player:
             answer_id = data.get("answer") or data.get("selection")
             question = room.quiz.current_question

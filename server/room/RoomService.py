@@ -49,7 +49,8 @@ class RoomService:
 
     def create_room(self, data):
         room_name = self.gen_ran_hex()
-        new_quiz = Quiz()
+       
+        new_quiz = Quiz(data)
         new_room = Room(name=room_name, quiz=new_quiz)
         self.rooms.append(new_room)
         return room_name
@@ -89,4 +90,10 @@ class RoomService:
             for player in room.players:
                 if getattr(player, "id", None) == player_id:
                     return player
+        return None
+
+    def find_player_in_room(self, sid, room):
+        for player in room.players:
+            if getattr(player, "sid", None) == sid:
+                return player
         return None

@@ -33,13 +33,16 @@ export function Header() {
       </div>
       <nav className={`navigation${menuOpen ? ' menu-mobile' : ''}`}>
         <ul>
-          <li><Link to="/">Inicio</Link></li>
-          <li><Link to="/play">Jugar</Link></li>
-          <li><Link to="/join">Unirse a partida</Link></li>
-          <li><Link to="/host">Organizar partida</Link></li>
-          <li><Link to="/create">Crear test</Link></li>
+          <li><Link to="/" onClick={() => setMenuOpen(false)}>Inicio</Link></li>
+          <li><Link to="/play" onClick={() => setMenuOpen(false)}>Jugar</Link></li>
+          <li><Link to="/join" onClick={() => setMenuOpen(false)}>Unirse a partida</Link></li>
+          <li><Link to="/host" onClick={() => setMenuOpen(false)}>Organizar partida</Link></li>
+          <li><Link to="/create" onClick={() => setMenuOpen(false)}>Crear test</Link></li>
           <li>
-            <Link to={ localStorage.getItem("token") ? "/user" : "/login" }>
+            <Link
+              to={localStorage.getItem("token") ? "/user" : "/login"}
+              onClick={() => setMenuOpen(false)}
+            >
               <img src="/src/assets/images/user.png" alt="User Sign In" className="user-icon" />
             </Link>
           </li>

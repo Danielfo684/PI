@@ -25,21 +25,19 @@ export function GamePage(): JSX.Element {
   usePageTitle("Game");
 
   const [players, setPlayers] = useState<Player[]>([]);
+  const location = useLocation();
   const [myPlayerId, setMyPlayerId] = useState<number | null>(null);
 
+  const { player, roomCode } = location.state || {};
   const [gameControllerInstance] = useState(() => GameController.getInstance());
   const [gameControllerSocket] = useState(() => gameControllerInstance.getSocketService());
   const [currentQuestion, setCurrentQuestion] = useState<any>(null);
   const [showPoints, setShowPoints] = useState(false);
-  const [roomCode, setRoomCode] = useState<string | null>(null);
-  const location = useLocation();
+
   const { data } = location.state || {};
   const [timer, setTimer] = useState<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    if (data?.id) setMyPlayerId(data.id);
-  }, [data?.id]);
 
   useEffect(() => {
     if (timer === 0) {
@@ -47,9 +45,6 @@ export function GamePage(): JSX.Element {
     }
   }, [timer]);
 
-  useEffect(() => {
-    setRoomCode(data?.roomCode ?? null);
-  }, [data?.roomCode]);
 
   useEffect(() => {
     if (gameControllerSocket) {
@@ -96,7 +91,7 @@ export function GamePage(): JSX.Element {
     if (timer === 0) {
       setTimer(null);
       setCurrentQuestion(null);
-      setShowPoints(false);
+      setShowPoints(true);
       if (timerRef.current) clearInterval(timerRef.current);
     }
   }, [timer]);
@@ -108,10 +103,10 @@ export function GamePage(): JSX.Element {
       type: "ANSWER",
       content: {
         selection: answer,
-        playerId: data?.id,
+        playerId: player.id,
         roomCode: roomCode,
       }
-    } as Message);
+    });
   }
 
   return (
@@ -140,30 +135,14 @@ export function GamePage(): JSX.Element {
             </div>
           </div>
         </div>
-      ) : showPoints ? (
-        <div>
-          <h3>Puntuación de los jugadores</h3>
-          <div>
-            {players.map((player) => (
-              <Player.PlayerPoints
-                key={player.id}
-                id={player.id}
-                name={player.name}
-                points={player.score}
-                iconNumber={player.id}
-                className={player.id === myPlayerId ? "my-player" : ""}
-              />
-            ))}
-          </div>
-        </div>
       ) : (
-        <Player.PlayerPoints
-          name={data?.name ?? "Jugador"}
-          points={data?.score ?? 0}
-          id={data?.id ?? 0}
-          iconNumber={data?.iconNumber ?? 1}
-        />
-      )}
+          <Player.PlayerPoints
+            name={player.name ?? "Jugador"}
+            points={player.score ?? 0}
+            id={player.id ?? 0}
+            iconNumber={player.id ?? 1}
+          />
+        )}
     </>
   );
 }

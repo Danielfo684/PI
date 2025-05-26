@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState } from "react";
+import { JSX, useEffect, useRef, useState } from "react";
 import { Input, Button } from "../../components/basicComponents/index";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import "./JoinRoomPage.css";
@@ -12,8 +12,10 @@ export function JoinRoomPage(): JSX.Element {
   const [roomCode, setRoomCode] = useState<string>("");
   const [playerName, setPlayerName] = useState<string>("");
   const [joined, setJoined] = useState(false);
-  const [player, setPlayer] = useState<any>({});
+  const [myPlayerId, setMyPlayerId] = useState<number | null>(null);
+  const hasJoinedSelf = useRef(false);
 
+  const joinedPlayer = useRef<any>(null);
   const gameControllerInstance = GameController.getInstance();
 
   useEffect(() => {
@@ -24,16 +26,22 @@ export function JoinRoomPage(): JSX.Element {
     const socket = gameControllerInstance.getSocketService();
     const handleMessage = (payload: any) => {
       console.log("Mensaje recibido del socket", payload);
-      if (payload.type === "JOIN_PLAYER") {
-        setPlayer(payload.content);
-        setJoined(true);
-      } if (payload.type === "JOIN_ERROR") {
+      if (payload.type === "JOIN_ERROR") {
         console.error(`Error al unirse a la sala: ${payload.content}`);
         alert("Error al unirse a la sala. Por favor, verifica el código de la sala.");
       }
+        if (payload.type === "JOIN_PLAYER") {
+      if (!hasJoinedSelf.current) {
+        joinedPlayer.current = payload.content;
+        setJoined(true);
+        hasJoinedSelf.current = true;
+      }
+
+    }
       if (payload.type === "START_GAME") {
+
         console.log("El juego ha comenzado");
-        navigate("/game", { state: { player, roomCode } });
+        navigate("/game", { state: { player: joinedPlayer.current, roomCode: roomCode } });
       }
     };
 
@@ -45,11 +53,11 @@ export function JoinRoomPage(): JSX.Element {
       if (socket && socket.offMessage) {
         socket.offMessage(handleMessage);
       }
-    
+
       localStorage.removeItem("roomCode");
       localStorage.removeItem("playerName");
     };
-  }, [gameControllerInstance]);
+  }, [gameControllerInstance, playerName, roomCode, navigate]);
 
   const handleJoin = async () => {
     const trimmedRoomCode = roomCode.trim();
@@ -77,6 +85,7 @@ export function JoinRoomPage(): JSX.Element {
   };
 
   if (joined) {
+
     return (
       <div className="join-room-success">
         <h2>¡Te has unido correctamente a la sala!</h2>
