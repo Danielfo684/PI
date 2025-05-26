@@ -1,12 +1,12 @@
 /* ------------------ BOTON FLOTANTE ----------------------------- */
 
-.patata {
+.top {
   position: fixed !important;
   bottom: 20px !important;
   right: 20px !important;
   left: auto !important;
   top: auto !important;
-  background-color: #2d20f7 !important;
+  background-color: white !important;
   color: white !important;
   border: 1px solid white !important;
   border-radius: 50% !important;
@@ -18,22 +18,22 @@
   transition: opacity 0.3s, visibility 0.3s;
   z-index: 9999 !important;
 }
-.patata svg {
-  fill: white;
+.top svg {
+  fill: #6c00ff;
   height: 25px;
   width: 25px;
   margin: 10px;
 }
 
-.patata.show {
+.top.show {
   opacity: 1 !important;
   visibility: visible !important;
 }
 
-.patata:hover {
+.top:hover {
   background-color: white !important;
 }
 
-.patata:hover svg {
-  fill: #2d20f7 !important;
+.top:hover svg {
+  fill: #6c00ff;
 }

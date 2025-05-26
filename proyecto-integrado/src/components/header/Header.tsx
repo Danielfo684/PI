@@ -9,7 +9,7 @@ export function Header() {
     <header className="header">
       <div className="logo">
         <Link to="/">
-          <img src="/src/assets/images/logo.png" alt="Logo" className="logo-icon" />
+          <img src="/src/assets/images/logo-sinborde.png" alt="Logo" className="logo-icon" />
         </Link>
       </div>
       <div
