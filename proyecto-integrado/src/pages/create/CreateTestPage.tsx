@@ -7,7 +7,7 @@ import { Footer } from "../../components/footer/Footer";
 import { Floating } from "../../components/floatingButton/floatingButton";
 
 export function CreateTestPage(): JSX.Element {
-  usePageTitle("Create Test");
+  usePageTitle("Quizify - Crear test");
 
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");

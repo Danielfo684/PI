@@ -1,20 +1,53 @@
 .user-dashboard {
-  max-width: 800px;
+  width: 100%;
   margin: 2rem auto;
   padding: 1rem;
   color: #fff;
 }
 
-.user-dashboard h1 {
+.user-dashboard > h2 {
   text-align: center;
   margin-bottom: 1.5rem;
 }
 
-.profile-section, .tests-section {
-  /* background-color: #2c3e50; */
-  padding: 1.5rem;
-  border-radius: 8px;
+.user-dashboard > p {
+  text-align: center;
   margin-bottom: 1.5rem;
+}
+
+.user-container1 {
+  width: 100%;
+  height: auto;
+  gap: 10rem;
+
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.profile-section h2, .tests-section h2 {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  border-bottom: 2px solid #f9fbfc;
+  padding-bottom: 0.5rem;
+}
+
+.profile-section, .tests-section {
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  margin-top: 4rem;
+  width: 500px;
+}
+
+.user-profile-buttons {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 .profile-details p {
@@ -30,19 +63,4 @@ ul li {
   margin-bottom: 0.5rem;
   padding: 0.5rem;
   border-radius: 4px;
-}
-
-.btn {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #3498db;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.btn:hover {
-  background-color: #2980b9;
 }

@@ -4,8 +4,10 @@ import type { JSX } from "react";
 import { Header } from "../../components/header/Header";
 import "./LoginPage.css";
 import { Footer } from "../../components/footer/Footer";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 export function LoginPage(): JSX.Element {
+  usePageTitle("Quizify - Inicio de sesión");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -48,9 +50,18 @@ export function LoginPage(): JSX.Element {
     <>
       <Header />
       <div className="login-page">
+        <h2>Iniciar sesión</h2>
         <div className="login-container">
-          <h1>Iniciar sesión</h1>
-          {error && <p className="error">{error}</p>}
+          {error && (
+            <p className="error">
+              <img 
+                src="/src/assets/images/error.png" 
+                alt="Error" 
+                className="error-icon"
+              />
+              {error}
+            </p>
+          )}
           <form
             onSubmit={(e) => {
               e.preventDefault();

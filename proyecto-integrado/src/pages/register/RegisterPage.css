@@ -1,29 +1,35 @@
 .register-page {
+  margin: 6.4rem 0;
   display: flex;
+  flex-flow: column;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 200px);
+  height: 100%;
 }
 
-.register-container {
+.login-container {
   max-width: 400px;
   width: 100%;
+  height: auto;
+  margin: 2rem auto;
   padding: 2rem;
-  background-color: #fff;
-  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
-  margin: 2rem auto;
 }
 
-.register-container h1 {
+.login-container h2 {
   text-align: center;
-  color: #333;
+  color: black;
 }
 
-.register-container input {
+.login-container input {
   padding: 1rem;
   margin: 0.5rem 0;
   border: 1px solid #ccc;
@@ -32,38 +38,39 @@
   box-sizing: border-box;
 }
 
-.register-container button {
-  padding: 0.75rem;
-  border: none;
-  border-radius: 4px;
-  background-color: #3498db;
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-  width: 100%;
-  transition: background-color 0.3s;
-}
-
-.register-container button:hover {
-  background-color: #2980b9;
+.login-container form button {
+  display: block;
+  margin: auto;
+  margin-top: 1rem;
 }
 
 .login-link {
   text-align: center;
   margin-top: 1rem;
-  font-size: 0.9rem;
 }
 
 .login-link a {
-  color: #3498db;
-  text-decoration: none;
+  color: #f9fbfc;
+  text-decoration: underline;
 }
 
 .login-link a:hover {
   text-decoration: underline;
 }
 
-.error {
-  color: red;
-  text-align: center;
+.login-container .error {
+  color: #f9fbfc;
+  padding: 0.5rem;
+  border-radius: 10px;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container .error-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.5rem;
+  margin-bottom: 0.4rem;
 }

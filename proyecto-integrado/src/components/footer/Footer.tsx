@@ -14,7 +14,7 @@ export function Footer() {
             <p><span>Daniel Fontalva Ostio</span> | <span>Álvaro Luque Morillo</span> | <span>Ismael Manzano Reinoso</span> | <span>Francisco Javier Martín Mariscal</span></p>
         </div>
         <div className="agrad">
-            <p>Especial agradecimiento a </p>
+            <p>Especial agradecimiento: </p>
             <a href="https://www.freepik.es/"><div className="freepik"></div></a>
         </div>
     </div>

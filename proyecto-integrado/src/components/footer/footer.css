@@ -24,7 +24,7 @@
 }
 
 .footer-text {
-    flex: 35%;
+    flex: 40%;
     text-align: center;
 }
 
@@ -33,13 +33,13 @@
 }
 
 .agrad {
-    flex: 35%;
+    flex: 30%;
 
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .freepik {
@@ -54,7 +54,7 @@
 
 /** --------------------- MEDIA QUERIES --------------------- **/
 
-@media screen and (max-width: 1025px) {
+@media screen and (max-width: 1160px) {
     .footer {
         flex-flow: column;
         align-items: center;

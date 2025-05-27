@@ -8,10 +8,11 @@ import { Footer } from "../../components/footer/Footer";
 import { Floating } from "../../components/floatingButton/floatingButton";
 
 export function JoinRoomPage(): JSX.Element {
-  usePageTitle("Join Game");
+  usePageTitle("Quizify - Unirse a partida");
   const navigate = useNavigate();
   const [roomCode, setRoomCode] = useState<string>("");
   const [playerName, setPlayerName] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const [joined, setJoined] = useState(false);
   const [myPlayerId, setMyPlayerId] = useState<number | null>(null);
   const hasJoinedSelf = useRef(false);
@@ -29,18 +30,16 @@ export function JoinRoomPage(): JSX.Element {
       console.log("Mensaje recibido del socket", payload);
       if (payload.type === "JOIN_ERROR") {
         console.error(`Error al unirse a la sala: ${payload.content}`);
-        alert("Error al unirse a la sala. Por favor, verifica el código de la sala.");
+        setError(payload.content || "Error al unirse a la sala");
       }
-        if (payload.type === "JOIN_PLAYER") {
-      if (!hasJoinedSelf.current) {
-        joinedPlayer.current = payload.content;
-        setJoined(true);
-        hasJoinedSelf.current = true;
+      if (payload.type === "JOIN_PLAYER") {
+        if (!hasJoinedSelf.current) {
+          joinedPlayer.current = payload.content;
+          setJoined(true);
+          hasJoinedSelf.current = true;
+        }
       }
-
-    }
       if (payload.type === "START_GAME") {
-
         console.log("El juego ha comenzado");
         navigate("/game", { state: { player: joinedPlayer.current, roomCode: roomCode } });
       }
@@ -65,13 +64,15 @@ export function JoinRoomPage(): JSX.Element {
     const trimmedPlayerName = playerName.trim();
 
     if (!trimmedRoomCode) {
-      alert("Por favor, introduce el código de la sala.");
+      setError("Por favor, introduce el código de la sala");
       return;
     }
     if (!trimmedPlayerName) {
-      alert("Por favor, introduce tu nombre.");
+      setError("Por favor, introduce tu nombre");
       return;
     }
+
+    setError("");
 
     setRoomCode(trimmedRoomCode);
     setPlayerName(trimmedPlayerName);
@@ -86,7 +87,6 @@ export function JoinRoomPage(): JSX.Element {
   };
 
   if (joined) {
-
     return (
       <div className="join-room-success">
         <h2>¡Te has unido correctamente a la sala!</h2>
@@ -102,6 +102,16 @@ export function JoinRoomPage(): JSX.Element {
       <div className="join-section">
         <h2>Unirse a partida</h2>
         <div className="join-room-container">
+          {error && (
+            <p className="error">
+              <img 
+                src="/src/assets/images/error.png" 
+                alt="Error" 
+                className="error-icon" 
+              />
+              {error}
+            </p>
+          )}
           <Input
             placeholder="Código de la sala"
             value={roomCode}

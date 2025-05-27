@@ -4,7 +4,7 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 import "./UserSettingPage.css";
 
 export function UserSettingPage(): JSX.Element {
-  usePageTitle("Configuración de Usuario - Quizify");
+  usePageTitle("Quizify - Configurar perfil");
   const navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");

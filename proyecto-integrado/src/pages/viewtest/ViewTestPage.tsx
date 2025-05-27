@@ -5,7 +5,7 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 import "./ViewTestPage.css";
 
 export function ViewTestPage(): JSX.Element {
-  usePageTitle("Ver Test");
+  usePageTitle("Quizify - Test");
   const { id } = useParams<{ id: string }>();
   const [test, setTest] = useState<any>(null);
   const [error, setError] = useState<string>("");

@@ -5,7 +5,7 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 import "./EditTestPage.css";
   
 export function EditTestPage(): JSX.Element {
-  usePageTitle("Editar Test");
+  usePageTitle("Quizify - Editar test");
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -14,8 +14,6 @@ export function EditTestPage(): JSX.Element {
     return <div>Error: No se encontraron datos del test a editar.</div>;
   }
   
-  // Inicialización de estados con datos precargados
-  // Estados iniciales
   const [title, setTitle] = useState<string>(testData.title);
   const [description, setDescription] = useState<string>(testData.description);
   const [isPublic, setIsPublic] = useState<boolean>(testData.is_public);
@@ -24,9 +22,7 @@ export function EditTestPage(): JSX.Element {
   >(testData.questions || []);
   const [error, setError] = useState<string>("");
 
-  // Si el objeto testData no tiene preguntas, carga los datos completos del backend
     useEffect(() => {
-      // Si testData.questions está vacío, intentamos cargar la información completa
       if (!testData.questions || testData.questions.length === 0) {
         fetch(`http://localhost:5000/api/tests/${testData.id}`, {
           method: "GET",
@@ -39,7 +35,6 @@ export function EditTestPage(): JSX.Element {
               setTitle(data.test.title);
               setDescription(data.test.description);
               setIsPublic(Boolean(data.test.is_public));
-              // Normaliza las preguntas y respuestas
               const normalizedQuestions = (data.test.questions || []).map((q: any) => ({
                 questionText: q.question_text,
                 answers: (q.answers || []).map((a: any) => ({
@@ -59,7 +54,6 @@ export function EditTestPage(): JSX.Element {
       }
     }, [testData.id, testData.questions]);
 
-  // Funciones de manejo de formulario (igual que CreateTestPage)
   const updateQuestionText = (qIndex: number, value: string): void => {
     const newQuestions = questions.map((q, i) =>
       i === qIndex ? { ...q, questionText: value } : q
@@ -148,8 +142,7 @@ export function EditTestPage(): JSX.Element {
       setError("Error de conexión con el servidor");
     }
   };
-  
-  // Funciones para agregar/eliminar preguntas y respuestas
+
   const addQuestion = (): void => {
     setQuestions([
       ...questions,

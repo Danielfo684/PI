@@ -7,10 +7,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./HostingGamePage.css";
 import { Player } from "../../components/player/Player";
 import { Footer } from "../../components/footer/Footer";
+import { QRCodeJoin } from "../../components/qr/QrCodeJoin";
 
 
 export function HostingGamePage(): JSX.Element | null {
-  usePageTitle("Game Hosting");
+  usePageTitle("Quizify - Hosteando partida");
 
   const [gameControllerInstance] = useState(() => GameController.getInstance());
   const [gameControllerSocket] = useState(() => gameControllerInstance.getSocketService());
@@ -67,27 +68,36 @@ export function HostingGamePage(): JSX.Element | null {
       setCurrentQuestion(payload.content);
       console.log(payload.content);
       setShowPoints(false);
-      setTimer(20);
+      setTimer(10);
       if (timerRef.current) clearInterval(timerRef.current);
       timerRef.current = setInterval(() => {
         setTimer(prev => (prev !== null ? prev - 1 : null));
       }, 1000);
     }
-    if (payload.type === "HIDE_QUESTION") {
-      setCurrentQuestion(null);
-      setShowPoints(true);
-      setTimer(null);
-      if (timerRef.current) clearInterval(timerRef.current);
-    }
+    // if (payload.type === "HIDE_QUESTION") {
+    //   setCurrentQuestion(null);
+    //   setShowPoints(true);
+    //   setTimer(null);
+    //   setPlayers(payload.content.players);
+    //   if (timerRef.current) clearInterval(timerRef.current);
+    // }
     if (payload.type === "START_GAME") {
       console.log("El juego ha comenzado");
+      setTimer(10);
       setGameStarted(true);
       setTimeout(() => {
         gameControllerInstance.socketMessage({ type: "QUESTION", content: { roomCode: roomCodeRef.current } });
       }, waitingTime);
     }
-  };
-
+    if (payload.type === "PLAYER_LIST") {
+      setPlayers(payload.content.players || []);
+      if (payload.content.players.length === 0) {
+        console.log("No hay jugadores en la sala");
+      } else {
+        console.log("Lista de jugadores actualizada", payload.content.players);
+      }
+    };
+  }
   useEffect(() => {
     if (!gameControllerSocket) return;
     const handleKickMessage = (payload: any) => {
@@ -104,15 +114,13 @@ export function HostingGamePage(): JSX.Element | null {
   }, [gameControllerSocket]);
 
   useEffect(() => {
-    if (timer === 0) {
-      setTimer(null);
-      setCurrentQuestion(null);
-      setShowPoints(true);
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
+    if (timer === 0 && roomCode) {
+      gameControllerInstance.socketMessage({
+        type: "PLAYER_LIST",
+        content: { roomCode }
+      });
     }
-  }, [timer]);
+  }, [timer, roomCode, gameControllerInstance]);
 
   useEffect(() => {
     return () => {
@@ -175,6 +183,7 @@ export function HostingGamePage(): JSX.Element | null {
             <p>Nombre del Quiz <strong>{data.title}</strong></p>
             <p>Descripción:{data.description}</p>
             <h2>Código de Sala: {roomCode ?? "Esperando código..."}</h2>
+            {roomCode && <QRCodeJoin roomCode={roomCode} />}
             <Button
               text="Iniciar Partida"
               onClick={() => startGame()}
@@ -223,8 +232,8 @@ export function HostingGamePage(): JSX.Element | null {
                   key={player.id}
                   id={player.id}
                   name={player.name}
-                  points={player.score}
-                  iconNumber={player.id}
+                  points={player.points ?? 0}
+                  iconNumber={player.id ?? 1}
                 />
               ))}
             </div>

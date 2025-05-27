@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Navigate, Link } from "react-router-dom";
 import { Header } from "../../components/header/Header";
+import { Footer } from "../../components/footer/Footer";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import "./RegisterPage.css";
 
 export function RegisterPage() {
-  usePageTitle("Registro - Quizify");
+  usePageTitle("Quizify - Registrarse");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,9 +41,18 @@ export function RegisterPage() {
     <>
       <Header />
       <div className="register-page">
-        <div className="register-container">
-          <h1>Registrarse</h1>
-          {error && <p className="error">{error}</p>}
+        <h2>Registrarse</h2>
+        <div className="login-container">
+          {error && (
+            <p className="error">
+              <img 
+                src="/src/assets/images/error.png" 
+                alt="Error" 
+                className="error-icon"
+              />
+              {error}
+            </p>
+          )}
           <form onSubmit={handleRegister}>
             <input
               type="text"
@@ -69,6 +79,7 @@ export function RegisterPage() {
           </p>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

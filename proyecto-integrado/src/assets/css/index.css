@@ -47,6 +47,10 @@ html {
   padding: 0;
 }
 
+p {
+  font-family: 'Roboto', sans-serif;
+}
+
 body {
   display: flex;
   width: 100%;

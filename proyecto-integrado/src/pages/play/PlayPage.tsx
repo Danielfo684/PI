@@ -6,7 +6,7 @@ import { Footer } from "../../components/footer/Footer";
 import { Floating } from "../../components/floatingButton/floatingButton";
 
 export function PlayPage() : JSX.Element {
-  usePageTitle("Quizify - Jugar");
+  usePageTitle("Quizify - Jugar en solitario");
   
 
   return (

@@ -22,7 +22,7 @@ interface Player {
 
 
 export function GamePage(): JSX.Element {
-  usePageTitle("Game");
+  usePageTitle("Quizify - Partida en curso");
 
   const [players, setPlayers] = useState<Player[]>([]);
   const location = useLocation();
@@ -61,10 +61,11 @@ export function GamePage(): JSX.Element {
     console.log("Mensaje recibido del socket", payload);
 
     if (payload.type === "QUESTION") {
+      setAnswered(false);
       console.log(`Pregunta recibida: ${payload.content}`);
       setCurrentQuestion(payload.content);
       // setShowPoints(true);
-      setTimer(20);
+    setTimer(10); 
 
       if (timerRef.current) clearInterval(timerRef.current);
       timerRef.current = setInterval(() => {
@@ -75,7 +76,10 @@ export function GamePage(): JSX.Element {
     if (payload.type === "HIDE_QUESTION") {
       setCurrentQuestion(null);
       // setShowPoints(true);
+      console.log("Ocultando pregunta");
       setTimer(null);
+      setPlayers(payload.content.players);
+
       setAnswered(false);
       if (timerRef.current) clearInterval(timerRef.current);
       gameControllerInstance.socketMessage({
@@ -136,21 +140,33 @@ export function GamePage(): JSX.Element {
                     {String.fromCharCode(65 + idx)}. {answer.answer_text}
                   </div>
                 ))}
-                </div>
               </div>
             </div>
-          ) : (
-            <div className="waiting-question-loader">
-              <div className="spinner"></div>
-            </div>
-          )
+          </div>
         ) : (
-          <Player.PlayerPoints
-            name={player.name ?? "Jugador"}
-          points={player.score ?? 0}
-          id={player.id ?? 0}
-          iconNumber={player.id ?? 1}
-        />
+
+          <div className="waiting-question-loader">
+            {timer !== null && (
+              <div className="timer">Tiempo restante: {timer}s</div>
+            )}
+            <div className="spinner"></div>
+          </div>
+        )
+      ) : (
+        <div>
+          {players.map((player, idx) => {
+            const myClassName = player.id === myPlayerId ? "my-player" : "";
+            return (
+              <Player.PlayerCard
+                key={player.id}
+                id={player.id}
+                name={player.name}
+                iconNumber={player.id}
+                className={myClassName}
+              />
+            );
+          })}
+        </div>
       )}
     </>
   );
