@@ -24,7 +24,7 @@ export function HostingGamePage(): JSX.Element | null {
   const [roomCode, setRoomCode] = useState<any>(null);
   const socketFlag = useRef(false);
   const navigate = useNavigate();
-  const [waitingTime] = useState(5000);
+  const [waitingTime] = useState(3000);
   const roomCodeRef = useRef<any>(null);
   const [timer, setTimer] = useState<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -161,6 +161,10 @@ export function HostingGamePage(): JSX.Element | null {
       setGameStarted(true);
     }
   }
+
+  const nextQuestion = () => {
+    gameControllerInstance.socketMessage({ type: "QUESTION", content: { roomCode } });
+  }
   return (
     <>
       <div className="hosting-game-container">
@@ -224,6 +228,11 @@ export function HostingGamePage(): JSX.Element | null {
                 />
               ))}
             </div>
+            <Button
+              text="Siguiente pregunta"
+              onClick={() => nextQuestion()}
+              dataset=""
+            />
           </>
         ) : (<>
           <h3>¿Preparados?</h3>

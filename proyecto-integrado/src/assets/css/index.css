@@ -165,12 +165,13 @@ button:hover {
     z-index: 2000;
     padding: 2rem;
     animation: fadeInMenu 0.3s ease-in-out;
+    font-size: 1rem;
   }
 
   .navigation.menu-mobile ul {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.3rem;
     align-items: center;
     list-style: none;
     padding: 0;
@@ -187,14 +188,15 @@ button:hover {
 
   .navigation.menu-mobile a {
     color: #fff;
-    font-size: 1.8rem;
+    font-size: 1.2rem; 
     font-weight: 600;
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 0.8rem;
     border-radius: 25px;
     transition: background 0.3s, transform 0.3s;
     text-decoration: none;
     text-align: center;
     display: block;
+    letter-spacing: -0.2px;
   }
 
   .navigation.menu-mobile a:hover {

@@ -66,14 +66,16 @@ def do_submit_answer(service, sid, data):
         player_id = data.get("playerId")
         player = RoomService.get_instance().find_player(player_id)
         if player:
-            answer_id = data.get("answer") or data.get("selection")
-            question = room.quiz.current_question
+            answer_id = data.get("selection")
+            question = room.quiz.get_current_question
             selected_answer = next((a for a in question.answers if a.id == answer_id), None)
             if selected_answer and selected_answer.is_correct:
+                print(f"Respuesta correcta seleccionada por el jugador {player.name} en la sala {room.name}")
                 time_left = max(room.remaining_time, 0)
                 score = 100 + int((time_left / 20) * 900)
                 player.points += score
             else:
+                print(f"Respuesta incorrecta seleccionada por el jugador {player.name} en la sala {room.name}")
                 score = 0
             player.answer = answer_id
             service.socket.emit(

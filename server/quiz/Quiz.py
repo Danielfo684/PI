@@ -38,3 +38,8 @@ class Quiz:
 
     def get_questions(self):
         return self.questions
+    
+    def get_current_question(self):
+        if self.current_index > 0 and self.current_index <= len(self.questions):
+            return self.questions[self.current_index - 1]
+        return None

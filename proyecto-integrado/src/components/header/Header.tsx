@@ -1,19 +1,17 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './header.css';
-import { useEffect } from 'react';
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false); 
 
   useEffect(() => {
     if (menuOpen) {
-      document.body.classList.add('no-scroll');
+      document.body.classList.add('no-scroll', 'hide-hero');
     } else {
-      document.body.classList.remove('no-scroll');
+      document.body.classList.remove('no-scroll', 'hide-hero');
     }
-    
-    return () => document.body.classList.remove('no-scroll');
+    return () => document.body.classList.remove('no-scroll', 'hide-hero');
   }, [menuOpen]);
 
   return (

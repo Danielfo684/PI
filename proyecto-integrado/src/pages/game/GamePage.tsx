@@ -32,11 +32,11 @@ export function GamePage(): JSX.Element {
   const [gameControllerInstance] = useState(() => GameController.getInstance());
   const [gameControllerSocket] = useState(() => gameControllerInstance.getSocketService());
   const [currentQuestion, setCurrentQuestion] = useState<any>(null);
-  const [showPoints, setShowPoints] = useState(false);
-
+  // const [showPoints, setShowPoints] = useState(false);
+  const [answered, setAnswered] = useState(false);
   const { data } = location.state || {};
   const [timer, setTimer] = useState<number | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export function GamePage(): JSX.Element {
     if (payload.type === "QUESTION") {
       console.log(`Pregunta recibida: ${payload.content}`);
       setCurrentQuestion(payload.content);
-      setShowPoints(true);
+      // setShowPoints(true);
       setTimer(20);
 
       if (timerRef.current) clearInterval(timerRef.current);
@@ -74,8 +74,9 @@ export function GamePage(): JSX.Element {
 
     if (payload.type === "HIDE_QUESTION") {
       setCurrentQuestion(null);
-      setShowPoints(true);
+      // setShowPoints(true);
       setTimer(null);
+      setAnswered(false);
       if (timerRef.current) clearInterval(timerRef.current);
       gameControllerInstance.socketMessage({
         type: "PLAYER_LIST",
@@ -91,7 +92,7 @@ export function GamePage(): JSX.Element {
     if (timer === 0) {
       setTimer(null);
       setCurrentQuestion(null);
-      setShowPoints(true);
+      // setShowPoints(true);
       if (timerRef.current) clearInterval(timerRef.current);
     }
   }, [timer]);
@@ -99,6 +100,7 @@ export function GamePage(): JSX.Element {
 
   const sendAnswer = (answer: number) => {
     console.log("Answer clicked:", answer);
+
     gameControllerInstance.socketMessage({
       type: "ANSWER",
       content: {
@@ -107,42 +109,49 @@ export function GamePage(): JSX.Element {
         roomCode: roomCode,
       }
     });
+    setAnswered(true);
   }
 
   return (
     <>
       {currentQuestion ? (
-        <div className="quiz-container">
-          <div className="quiz-box">
-            {timer !== null && (
-              <div className="timer">Tiempo restante: {timer}s</div>
-            )}
-            <div className="question-mark">?</div>
-            <div className="question-text">
-              <p>{currentQuestion.text}</p>
-            </div>
-            <div className="options">
-              {currentQuestion.answers?.map((answer: any, idx: number) => (
-                <div
-                  className="option"
-                  key={answer.id || idx}
-                  onClick={() => sendAnswer(answer.id)}
-                  style={{ cursor: "pointer" }}
-                >
-                  {String.fromCharCode(65 + idx)}. {answer.text}
+        !answered ? (
+          <div className="quiz-container">
+            <div className="quiz-box">
+              {timer !== null && (
+                <div className="timer">Tiempo restante: {timer}s</div>
+              )}
+              <div className="question-mark">?</div>
+              <div className="question-text">
+                <p>{currentQuestion.question_text}</p>
+              </div>
+              <div className="options">
+                {currentQuestion.answers?.map((answer: any, idx: number) => (
+                  <div
+                    className="option"
+                    key={answer.id || idx}
+                    onClick={() => sendAnswer(answer.id)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {String.fromCharCode(65 + idx)}. {answer.answer_text}
+                  </div>
+                ))}
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
-        </div>
-      ) : (
+          ) : (
+            <div className="waiting-question-loader">
+              <div className="spinner"></div>
+            </div>
+          )
+        ) : (
           <Player.PlayerPoints
             name={player.name ?? "Jugador"}
-            points={player.score ?? 0}
-            id={player.id ?? 0}
-            iconNumber={player.id ?? 1}
-          />
-        )}
+          points={player.score ?? 0}
+          id={player.id ?? 0}
+          iconNumber={player.id ?? 1}
+        />
+      )}
     </>
   );
 }

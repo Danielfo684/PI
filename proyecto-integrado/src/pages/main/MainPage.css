@@ -72,6 +72,10 @@ header {
     font-size: clamp(1.1rem, 1.033rem + 0.222vw, 1.3rem);
 }
 
+body.hide-hero .hero > *:not(header) {
+  display: none;
+}
+
 /* ------------- SCROLL-DOWN --------------------- */
 
 .hero .scroll-down {
