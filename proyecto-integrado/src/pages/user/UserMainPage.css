@@ -18,7 +18,6 @@
 .user-container1 {
   width: 100%;
   height: auto;
-  gap: 10rem;
 
   display: flex;
   flex-flow: row wrap;
@@ -34,7 +33,6 @@
 }
 
 .profile-section, .tests-section {
-  padding: 1.5rem;
   border-radius: 10px;
   margin-bottom: 1.5rem;
   margin-top: 4rem;

@@ -54,6 +54,8 @@ def do_send_question(service, sid, data):
                         }
                         for player in room.players
                     ]
+        room.set_remaining_time(10, players, service)
+
         print(f"Pregunta enviada: {gameQuestion}")
 
 def find_room(service, data):
@@ -81,7 +83,7 @@ def do_submit_answer(service, sid, data):
                 print(f"Respuesta correcta seleccionada por el jugador {player.name} en la sala {room.name}")
                 if room.remaining_time > 0:
                     time_left = max(room.remaining_time, 0)
-                    score = 100 + int((time_left / 20) * 900)
+                    score = 100 + int((time_left / 10) * 900)
                    
                 else :
                     score = 0
@@ -109,17 +111,18 @@ def do_submit_answer(service, sid, data):
                 room=room.name
             )
 
-def send_player_list(service, room):
-    players = [
-        {
-            "id": player.id,
-            "name": player.name,
-            "points": player.points,
-            "iconNumber": getattr(player, "icon_number", 1)
-        }
-        for player in room.players
-    ]
+def do_send_player_list(service, sid, data):
+    room = find_room(service, data)
+    if room:
+        players = [
+            {
+                "id": player.id,
+                "name": player.name,
+                "points": player.points,
+                "iconNumber": getattr(player, "icon_number", 1)
+            }
+            for player in room.players
+        ]
     service.socket.emit(
         "message", {"type": "PLAYER_LIST", "content": {"players": players}},
-        room=room.name
-    )
+        room=room.name)

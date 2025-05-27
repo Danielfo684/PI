@@ -14,20 +14,6 @@ export function UserMainPage(): JSX.Element {
     email: "",
   });
 
-  const tests = [
-    { name: "Test de Matemáticas", score: 85 },
-    { name: "Quiz de Historia", score: 90 },
-    { name: "Desafío de Ciencia", score: 75 },
-  ];
-
-  const testsPerPage = 2;
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(tests.length / testsPerPage);
-  const currentTests = tests.slice(
-    (currentPage - 1) * testsPerPage,
-    currentPage * testsPerPage
-  );
-
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -58,12 +44,6 @@ export function UserMainPage(): JSX.Element {
       navigate("/login", { replace: true });
     } catch (err) {
       console.error("Error during logout:", err);
-    }
-  };
-
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
     }
   };
 

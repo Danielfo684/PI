@@ -29,28 +29,29 @@ export function HostingGamePage(): JSX.Element | null {
   const roomCodeRef = useRef<any>(null);
   const [timer, setTimer] = useState<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [kicked, setKicked] = useState(false);
+  const [endingGame, setEndingGame] = useState(false);
+  // const [kicked, setKicked] = useState(false);
 
-  const handleKick = (playerId: number) => {
-    gameControllerInstance.socketMessage({
-      type: "KICK_PLAYER",
-      content: { playerId, roomCode }
-    });
-  };
+  // const handleKick = (playerId: number) => {
+  //   gameControllerInstance.socketMessage({
+  //     type: "KICK_PLAYER",
+  //     content: { playerId, roomCode }
+  //   });
+  // };
 
   // Obtén el id del usuario logueado para saber si es host
   const loggedUserId = Number(localStorage.getItem("userId"));
   const isHost = players.length > 0 && players[0].id === loggedUserId; // Ajusta según tu lógica de host
 
 
-  if (kicked) {
-    return (
-      <div className="kicked-message">
-        <h2>Has sido expulsado de la sala</h2>
-        <button onClick={() => navigate("/")}>Volver al inicio</button>
-      </div>
-    );
-  }
+  // if (kicked) {
+  //   return (
+  //     <div className="kicked-message">
+  //       <h2>Has sido expulsado de la sala</h2>
+  //       <button onClick={() => navigate("/")}>Volver al inicio</button>
+  //     </div>
+  //   );
+  // }
 
   const handleMessage = (payload: any) => {
     console.log("Mensaje recibido del socket", payload);
@@ -67,6 +68,9 @@ export function HostingGamePage(): JSX.Element | null {
     if (payload.type === "QUESTION") {
       setCurrentQuestion(payload.content);
       console.log(payload.content);
+      if (payload.content.end) {
+        setEndingGame(true);
+      }
       setShowPoints(false);
       setTimer(10);
       if (timerRef.current) clearInterval(timerRef.current);
@@ -90,31 +94,26 @@ export function HostingGamePage(): JSX.Element | null {
       }, waitingTime);
     }
     if (payload.type === "PLAYER_LIST") {
+
       setPlayers(payload.content.players || []);
       if (payload.content.players.length === 0) {
         console.log("No hay jugadores en la sala");
       } else {
         console.log("Lista de jugadores actualizada", payload.content.players);
       }
+      setShowPoints(true);
+
     };
   }
-  useEffect(() => {
-    if (!gameControllerSocket) return;
-    const handleKickMessage = (payload: any) => {
-      if (payload.type === "KICKED") {
-        setKicked(true);
-      }
-    };
-    gameControllerSocket.onMessage(handleKickMessage);
-    return () => {
-      if (gameControllerSocket.offMessage) {
-        gameControllerSocket.offMessage(handleKickMessage);
-      }
-    };
-  }, [gameControllerSocket]);
 
   useEffect(() => {
     if (timer === 0 && roomCode) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      setCurrentQuestion(null);
+      setTimer(null);
       gameControllerInstance.socketMessage({
         type: "PLAYER_LIST",
         content: { roomCode }
@@ -173,6 +172,14 @@ export function HostingGamePage(): JSX.Element | null {
   const nextQuestion = () => {
     gameControllerInstance.socketMessage({ type: "QUESTION", content: { roomCode } });
   }
+
+  const endGame = () => {
+    gameControllerInstance.socketMessage({ type: "PLAYER_LIST", content: { roomCode } });
+    setGameStarted(false);
+    setCurrentQuestion(null);
+    setShowPoints(true);
+
+  }
   return (
     <>
       <div className="hosting-game-container">
@@ -199,7 +206,7 @@ export function HostingGamePage(): JSX.Element | null {
                   className={player.className}
                   iconNumber={player.id}
                   isHost={isHost}
-                  onKick={isHost ? handleKick : undefined}
+                // onKick={isHost ? handleKick : undefined}
                 />
               ))}
             </div>
@@ -237,11 +244,19 @@ export function HostingGamePage(): JSX.Element | null {
                 />
               ))}
             </div>
-            <Button
-              text="Siguiente pregunta"
-              onClick={() => nextQuestion()}
-              dataset=""
-            />
+            {!endingGame ? (
+              <Button
+                text="Siguiente pregunta"
+                onClick={() => nextQuestion()}
+                dataset=""
+              />
+            ) : (
+              <Button
+                text="Finalizar partida"
+                onClick={() => endGame()}
+                dataset=""
+              />
+            )}
           </>
         ) : (<>
           <h3>¿Preparados?</h3>
