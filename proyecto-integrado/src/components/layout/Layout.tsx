@@ -1,6 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from '../header/Header';
-import { Floating } from '../floatingButton/floatingButton';
 import './layout.css';
 
 export function Layout() {

@@ -1,33 +1,13 @@
 .host-page-container {
   padding: 2rem;
   background: transparent; 
-  min-height: 100vh;
+  height: 100%;
 }
 
-h1 {
+.host-page-container > h2 {
+  color: #f9fbfc;
+  margin-bottom: 3rem;
   text-align: center;
-  margin-bottom: 1.5rem;
-  color: #fff;
-  font-size: 2.5rem;
-}
-
-.pagination-settings {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-bottom: 1rem;
-  color: #fff;
-}
-
-.pagination-settings label {
-  margin-right: 0.5rem;
-  font-weight: 500;
-}
-
-.pagination-settings select {
-  padding: 0.3rem 0.5rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
 }
 
 .tests-section {
@@ -35,10 +15,10 @@ h1 {
 }
 
 .tests-section h2 {
-  color: #fff;
+  color: #f9fbfc;
   margin-bottom: 1rem;
   font-size: 2rem;
-  border-bottom: 2px solid #3498db;
+  border-bottom: 2px solid #f9fbfc;
   padding-bottom: 0.5rem;
 }
 
@@ -68,7 +48,7 @@ h1 {
   left: 0;
   right: 0;
   background: rgba(44, 62, 80, 0.9);
-  color: #fff;
+  color: #f9fbfc;
   padding: 0.75rem 1rem;
   text-align: left;
 }
@@ -92,30 +72,29 @@ h1 {
   margin-top: 1rem;
 }
 
-.pagination button {
-  padding: 0.5rem 1rem;
-  background-color: #3498db;
-  border: none;
-  border-radius: 4px;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.pagination span {
+  margin-top: 1rem;
 }
 
 .pagination button:disabled {
   background-color: #7f8c8d;
+  color: #f9fbfc;
   cursor: not-allowed;
+}
+
+.pagination button:disabled:hover {
+  border: 1px solid #7f8c8d;
 }
 
 .pagination span {
   font-weight: 600;
-  color: #fff;
+  color: #f9fbfc;
 }
 
 .no-tests {
-  color: #bbb;
+  color: #f9fbfc;
   text-align: center;
   font-size: 1rem;
   margin: 1rem 0;
 }
+
