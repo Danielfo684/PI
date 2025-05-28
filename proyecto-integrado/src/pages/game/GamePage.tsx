@@ -6,14 +6,9 @@ import { Message } from "../../services/SocketService"
 import { useLocation } from "react-router-dom"
 import { usePageTitle } from "../../hooks/usePageTitle"
 import { Player } from "../../components/player/Player";
+import { utils } from "../../../src/services/utils";
 
 
-interface Question {
-  id: number;
-  title: string;
-  description?: string;
-  answers: [{ id: number, text?: string, isCorrect: boolean }];
-}
 interface Player {
   id: number;
   name: string;
@@ -24,7 +19,7 @@ interface Player {
 export function GamePage(): JSX.Element {
   usePageTitle("Quizify - Partida en curso");
 
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [players, setPlayers] = useState<any[]>([]);
   const location = useLocation();
   const [myPlayerId, setMyPlayerId] = useState<number | null>(null);
 
@@ -65,7 +60,7 @@ export function GamePage(): JSX.Element {
       console.log(`Pregunta recibida: ${payload.content}`);
       setCurrentQuestion(payload.content);
       // setShowPoints(true);
-    setTimer(10); 
+      setTimer(10);
 
       if (timerRef.current) clearInterval(timerRef.current);
       timerRef.current = setInterval(() => {
@@ -73,20 +68,20 @@ export function GamePage(): JSX.Element {
       }, 1000);
     }
 
-    if (payload.type === "HIDE_QUESTION") {
-      setCurrentQuestion(null);
-      // setShowPoints(true);
-      console.log("Ocultando pregunta");
-      setTimer(null);
-      setPlayers(payload.content.players);
+    // if (payload.type === "HIDE_QUESTION") {
+    //   setCurrentQuestion(null);
+    //   // setShowPoints(true);
+    //   console.log("Ocultando pregunta");
+    //   setTimer(null);
+    //   setPlayers(payload.content.players);
 
-      setAnswered(false);
-      if (timerRef.current) clearInterval(timerRef.current);
-      gameControllerInstance.socketMessage({
-        type: "PLAYER_LIST",
-        content: { roomCode }
-      });
-    }
+    //   setAnswered(false);
+    //   if (timerRef.current) clearInterval(timerRef.current);
+    //   gameControllerInstance.socketMessage({
+    //     type: "PLAYER_LIST",
+    //     content: { roomCode }
+    //   });
+    // }
 
     if (payload.type === "PLAYER_LIST") {
       setPlayers(payload.content.players || []);
@@ -147,27 +142,42 @@ export function GamePage(): JSX.Element {
 
           <div className="waiting-question-loader">
             {timer !== null && (
-              <div className="timer">Tiempo restante: {timer}s</div>
+              <>
+                <div className="timer">Tiempo restante: {timer}s</div>
+                <div className="spinner"></div>
+                <div> Esperando a que todos los jugadores respondan...</div>
+              </>
             )}
-            <div className="spinner"></div>
           </div>
         )
-      ) : (
+      ) : players.length > 0 ? (<div>
+        <div>Puntuaciones</div>
         <div>
-          {players.map((player, idx) => {
-            const myClassName = player.id === myPlayerId ? "my-player" : "";
-            return (
-              <Player.PlayerCard
+
+          {
+            utils.orderByPointsAndId(players).map((player, index) => (
+              <Player.PlayerPoints
                 key={player.id}
                 id={player.id}
                 name={player.name}
-                iconNumber={player.id}
-                className={myClassName}
+                points={player.points ?? 0}
+                iconNumber={player.id ?? 1}
+                className={
+                  index === 0 ? "first-place"
+                    : index === 1 ? "second-place"
+                      : index === 2 ? "third-place"
+                        : ""
+                }
               />
-            );
-          })}
+            ))}
         </div>
-      )}
+      </div>) : (
+        <div className="waiting-question-loader">
+          <div className="spinner"></div>
+          <p>Preparando la primera pregunta...</p>
+        </div>
+      )
+      }
     </>
   );
 }

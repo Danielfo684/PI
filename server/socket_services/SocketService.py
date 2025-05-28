@@ -12,6 +12,7 @@ class SocketService:
             "ANSWER": "do_submit_answer",
             "PLAYER_LIST": "do_send_player_list",
             "QUICK_PLAYER": "do_quick_player",
+            "END_GAME": "do_end_game",
         },
     }
 

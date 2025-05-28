@@ -1,33 +1,52 @@
+.create-title {
+  margin-bottom: 3rem;
+  margin-top: 3rem;
+}
+
 .page-description {
-  color: #fff;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
- 
+  color: #f9fbfc;
+  width: 40%;
+  font-size: clamp(1rem, 0.933rem + 0.222vw, 1.2rem) !important;
+  line-height: 1.5;
+  font-weight: 350;
+}
+
+.page-description span {
+  font-weight: 500;
 }
 
 .create-test-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  padding: 2rem;
   max-width: 600px;
-  margin: 2rem auto;
+  width: 90%;
+  margin: 3rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.create-test-container h1,
 .create-test-container h2 {
-  color: #fff;
   margin-bottom: 1rem;
+  font-size: 1.8rem;
+  border-bottom: 2px solid #f9fbfc;
+  padding-bottom: 0.5rem;
+  text-align: left !important;
+  width: 100%;
 }
 
-.create-test-container input {
+.input-test {
+  margin-top: 2rem;
+}
+
+.input-test input {
   margin: 0.5rem 0;
   padding: 0.75rem;
   width: 100%;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 
 .questions-container {
@@ -35,14 +54,34 @@
   margin: 1rem 0;
 }
 
-.question {
+.question2 > input, .answer > input {
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.question2 {
+  width: 100%;
+  margin: 1.5rem 0;
   padding: 1rem;
-  border-radius: 5px;
-  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
 
 .answers-container {
   margin-top: 0.5rem;
+}
+
+.answer > label {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
 }
 
 .answer {
@@ -55,9 +94,61 @@
 button {
   margin-top: 1rem;
 }
+
+.create-test-container > button {
+  display: block;
+  margin: 1rem auto;
+}
+
 .error-message {
   color: #ff4d4f;
   font-weight: 500;
   margin-bottom: 1rem;
   text-align: center;
+}
+
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: #f9fbfc;
+  cursor: pointer;
+  position: relative;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #6c00ff;
+  border: 1px solid #6c00ff;
+  box-shadow: 0 0 5px rgba(108, 0, 255, 0.6);
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✓';
+  color: #fff;
+  position: absolute;
+  bottom: -2px;
+  left: 1px;
+  font-size: 13px;
+}
+
+.done-section {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (max-width: 1140px) {
+  .page-description {
+    width: 60%;
+  }
+}
+
+@media screen and (max-width: 740px) {
+  .page-description {
+    width: 80%;
+  }
 }

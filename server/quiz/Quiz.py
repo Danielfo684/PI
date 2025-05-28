@@ -5,7 +5,9 @@ class Quiz:
     def __init__(self, quiz_id):
         self.quiz_id = quiz_id
         self.questions = self.load_questions_from_db(quiz_id)
-        self.current_index = 1
+        self.current_index = 0
+        self.players_answered = 0
+
 
     def load_questions_from_db(self, quiz_id):
         connection = mysql.connector.connect(
@@ -28,11 +30,12 @@ class Quiz:
         return questions
 
     def get_question(self):
-        if self.current_index <= len(self.questions):
+        if self.current_index < len(self.questions):
             question = self.questions[self.current_index]
             self.current_index += 1
-            print (f"Pregunta obtenida: {question}")
-            return question
+            print(f"Pregunta obtenida: {question}")
+            is_last = self.current_index == len(self.questions)
+            return {**question, "end": is_last}
         else:
             return None
 
@@ -43,3 +46,13 @@ class Quiz:
         if self.current_index > 0 and self.current_index <= len(self.questions):
             return self.questions[self.current_index - 1]
         return None
+    
+    def increase_players_answered(self):
+        self.players_answered += 1
+        print(f"Jugadores que han respondido: {self.players_answered}")
+    
+    def get_players_answered(self):
+        return self.players_answered
+    
+    def reset_players_answered(self):
+        self.players_answered = 0

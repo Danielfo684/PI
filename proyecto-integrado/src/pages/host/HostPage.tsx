@@ -11,9 +11,6 @@ export function HostPage(): JSX.Element {
   usePageTitle("Quizify - Organizar partida");
 
   const navigate = useNavigate();
-  const gameController = GameController.getInstance();
-  gameController.init("http://localhost:5000");
-
   const [tests, setTests] = useState<{ id: number; title: string; description: string; is_public: boolean; user_id?: number }[]>([]);
   const itemsPerPage = 8;
   const [publicPage, setPublicPage] = useState<number>(1);
@@ -23,6 +20,7 @@ export function HostPage(): JSX.Element {
   const [privateSearch, setPrivateSearch] = useState<string>("");
 
   const loggedUserId = Number(localStorage.getItem("userId"));
+  const gameController = GameController.getInstance();
 
   useEffect(() => {
     const fetchTests = async () => {
@@ -43,7 +41,13 @@ export function HostPage(): JSX.Element {
     };
     fetchTests();
   }, []);
-  
+
+
+  useEffect(() => {
+    const gameController = GameController.getInstance();
+    gameController.init("http://localhost:5000");
+  }, [gameController]);
+
 
   // After fetching tests and creating publicTests and privateTests arrays:
   const publicTests = tests.filter(t => t.is_public);
@@ -97,21 +101,21 @@ export function HostPage(): JSX.Element {
     }
   };
 
-  
+
   return (
     <>
       <div id="top"></div>
       <Floating target="#top" />
       <div className="host-page-container">
         <h2>Organiza tu propia partida</h2>
-        
+
         {/* Section for Private Tests */}
         <section className="tests-section">
           <h2>Tests Privados</h2>
-          <input 
-            type="text" 
-            className="search-input" 
-            placeholder="Buscar tests privados" 
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Buscar tests privados"
             value={privateSearch}
             onChange={(e) => {
               setPrivateSearch(e.target.value);
@@ -156,10 +160,10 @@ export function HostPage(): JSX.Element {
         {/* Section for Public Tests */}
         <section className="tests-section">
           <h2>Tests Públicos</h2>
-          <input 
-            type="text" 
-            className="search-input" 
-            placeholder="Buscar tests públicos" 
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Buscar tests públicos"
             value={publicSearch}
             onChange={(e) => {
               setPublicSearch(e.target.value);

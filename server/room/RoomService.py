@@ -13,7 +13,7 @@ class Room:
         self.remaining_time = 0
         self.timer_thread = None
 
-    def set_remaining_time(self, seconds=10, players=None, service=None):
+    def set_remaining_time(self, seconds=10, service=None):
         self.remaining_time = seconds
         if self.timer_thread and self.timer_thread.is_alive():
             return  
@@ -24,16 +24,14 @@ class Room:
                 self.remaining_time -= 1
                 threading.Event().wait(1)
             print(f"¡Tiempo terminado en la pregunta de la sala {self.name}!")
-            # if service:
-            #     service.socket.emit("message", {"type": "HIDE_QUESTION", "content": {"roomCode": self.name, "players": players}}, room = self.name)
-            #     print(f"Mensaje enviado para ocultar la pregunta en la sala {self.name}")
 
         self.timer_thread = threading.Thread(target=countdown, daemon=True)
         self.timer_thread.start()
-
+    def get_players_length(self):
+        return len(self.players)
 
 class RoomConfig:
-    maxRoomPlayers = 3
+    maxRoomPlayers = 2
 
 
 class RoomService:
@@ -100,4 +98,7 @@ class RoomService:
                 return player
         return None
     
+    def remove_room(self, room_name):
+        self.rooms = [room for room in self.rooms if room.name != room_name]
+        print(f"Sala eliminada: {room_name}")
 

@@ -187,3 +187,19 @@
 .my-player {
   background-color: #8e3dff;
 }
+
+
+.first-place {
+  background: linear-gradient(90deg, #ffd700 60%, #fffbe0 100%);
+  border: 2px solid #ffd700;
+}
+
+.second-place {
+  background: linear-gradient(90deg, #c0c0c0 60%, #f0f0f0 100%);
+  border: 2px solid #c0c0c0;
+}
+
+.third-place {
+  background: linear-gradient(90deg, #cd7f32 60%, #ffe4b5 100%);
+  border: 2px solid #cd7f32;
+}

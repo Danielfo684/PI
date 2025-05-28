@@ -173,3 +173,26 @@
   bottom: 20px;
   right: 20px;
 }
+
+.winner-section {
+  border: 2px solid gold;
+  background: #665500;
+  padding: 1em;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+.first-place {
+  background: linear-gradient(90deg, #ffd700 60%, #fffbe0 100%);
+  border: 2px solid #ffd700;
+}
+
+.second-place {
+  background: linear-gradient(90deg, #c0c0c0 60%, #f0f0f0 100%);
+  border: 2px solid #c0c0c0;
+}
+
+.third-place {
+  background: linear-gradient(90deg, #cd7f32 60%, #ffe4b5 100%);
+  border: 2px solid #cd7f32;
+}

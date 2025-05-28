@@ -8,7 +8,7 @@ import "./HostingGamePage.css";
 import { Player } from "../../components/player/Player";
 import { Footer } from "../../components/footer/Footer";
 import { QRCodeJoin } from "../../components/qr/QrCodeJoin";
-
+import { utils } from "../../../src/services/utils";
 
 export function HostingGamePage(): JSX.Element | null {
   usePageTitle("Quizify - Hosteando partida");
@@ -30,6 +30,9 @@ export function HostingGamePage(): JSX.Element | null {
   const [timer, setTimer] = useState<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [endingGame, setEndingGame] = useState(false);
+  const [gameEnded, setGameEnded] = useState(false);
+  const [topPlayer, setTopPlayer] = useState<any>(null);
+
   // const [kicked, setKicked] = useState(false);
 
   // const handleKick = (playerId: number) => {
@@ -78,13 +81,11 @@ export function HostingGamePage(): JSX.Element | null {
         setTimer(prev => (prev !== null ? prev - 1 : null));
       }, 1000);
     }
-    // if (payload.type === "HIDE_QUESTION") {
-    //   setCurrentQuestion(null);
-    //   setShowPoints(true);
-    //   setTimer(null);
-    //   setPlayers(payload.content.players);
-    //   if (timerRef.current) clearInterval(timerRef.current);
-    // }
+    if (payload.type === "QUESTION_FINISHED") {
+      setTimer(0);
+
+    }
+   
     if (payload.type === "START_GAME") {
       console.log("El juego ha comenzado");
       setTimer(10);
@@ -175,15 +176,61 @@ export function HostingGamePage(): JSX.Element | null {
 
   const endGame = () => {
     gameControllerInstance.socketMessage({ type: "PLAYER_LIST", content: { roomCode } });
-    setGameStarted(false);
+    gameControllerInstance.socketMessage({ type: "END_GAME", content: { roomCode } });
+    console.log("Partida finalizada");
+
     setCurrentQuestion(null);
     setShowPoints(true);
-
+    setGameEnded(true); 
+    navigate("/host", { replace: true });
   }
+
+  useEffect(() => {
+    if (players.length > 0 && !gameEnded) {
+      const sortedPlayers = [...players].sort((a, b) => (b.points || 0) - (a.points || 0));
+      setTopPlayer(sortedPlayers[0]);
+    }
+  }, [players, gameEnded]);
+
   return (
     <>
       <div className="hosting-game-container">
-        {!gameStarted ? (
+        {gameEnded ? (
+          <>
+            <h2>¡Partida finalizada!</h2>
+            {topPlayer && (
+              <div className="winner-section">
+                <h3>Ganador/a</h3>
+                <Player.PlayerPoints
+                  key={topPlayer.id}
+                  id={topPlayer.id}
+                  name={topPlayer.name}
+                  points={topPlayer.points ?? 0}
+                  iconNumber={topPlayer.id ?? 1}
+                />
+              </div>
+            )}
+            <h3>Puntuación de todos los jugadores</h3>
+            <div>
+              {players
+                .filter(p => !topPlayer || p.id !== topPlayer.id)
+                .map((player, idx) => (
+                  <Player.PlayerPoints
+                    key={player.id}
+                    id={player.id}
+                    name={player.name}
+                    points={player.points ?? 0}
+                    iconNumber={player.id ?? 1}
+                  />
+                ))}
+            </div>
+           <Button
+                text="Finalizar partida"
+                onClick={() => endGame()}
+                dataset=""
+              />
+          </>
+        ) : !gameStarted ? (
           <>
             <h1>Bienvenido al Juego</h1>
             <h2>Estás hosteando una sala</h2>
@@ -234,15 +281,22 @@ export function HostingGamePage(): JSX.Element | null {
           <>
             <h3>Puntuación de los jugadores</h3>
             <div>
-              {players.map((player, idx) => (
-                <Player.PlayerPoints
-                  key={player.id}
-                  id={player.id}
-                  name={player.name}
-                  points={player.points ?? 0}
-                  iconNumber={player.id ?? 1}
-                />
-              ))}
+              {
+                utils.orderByPointsAndId(players).map((player, index) => (
+                  <Player.PlayerPoints
+                    key={player.id}
+                    id={player.id}
+                    name={player.name}
+                    points={player.points ?? 0}
+                    iconNumber={player.id ?? 1}
+                    className={
+                      index === 0 ? "first-place"
+                        : index === 1 ? "second-place"
+                          : index === 2 ? "third-place"
+                            : ""
+                    }
+                  />
+                ))}
             </div>
             {!endingGame ? (
               <Button

@@ -16,9 +16,7 @@ export function CreateTestPage(): JSX.Element {
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [questions, setQuestions] = useState<
     { questionText: string; answers: { answerText: string; isCorrect: boolean }[] }[]
-  >([
-    { questionText: "", answers: [{ answerText: "", isCorrect: false }] }
-  ]);
+  >([{ questionText: "", answers: [{ answerText: "", isCorrect: false }] }]);
 
   const addQuestion = (): void => {
     setQuestions([
@@ -69,7 +67,6 @@ export function CreateTestPage(): JSX.Element {
     setQuestions(newQuestions);
   };
 
-
   const updateAnswerText = (
     qIndex: number,
     aIndex: number,
@@ -90,7 +87,7 @@ export function CreateTestPage(): JSX.Element {
   const toggleAnswerCorrect = (qIndex: number, aIndex: number): void => {
     const newQuestions = questions.map((q, i) => {
       if (i === qIndex) {
-      const isAlreadyCorrect = q.answers[aIndex].isCorrect;
+        const isAlreadyCorrect = q.answers[aIndex].isCorrect;
         return {
           ...q,
           answers: q.answers.map((ans, j) =>
@@ -103,7 +100,7 @@ export function CreateTestPage(): JSX.Element {
     setQuestions(newQuestions);
   };
 
-    const handleSubmit = async (): Promise<void> => {
+  const handleSubmit = async (): Promise<void> => {
     if (!title.trim()) {
       setError("Falta completar el título del test");
       return;
@@ -112,7 +109,6 @@ export function CreateTestPage(): JSX.Element {
       setError("Falta completar la descripción del test");
       return;
     }
-    // Validate each question and its answers
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i];
       if (!q.questionText.trim()) {
@@ -163,41 +159,33 @@ export function CreateTestPage(): JSX.Element {
     <>
       <div id="top"></div>
       <Floating target="#top" />
-      <h1>Create Test</h1>
+      <h2 className="create-title">Crear test</h2>
       <p className="page-description">
-        En esta página puedes crear tu propio test. Configura el título, 
-        la descripción y añade las preguntas con sus respectivas respuestas.
+        En esta <span>página</span> puedes crear tu propio test. Configura el <span>título</span>, 
+        la <span>descripción</span> y añade las preguntas con sus respectivas respuestas.
+        Por defecto, los test creados serán <span>privados</span>. Si quieres que otros
+        usuarios puedan <span>ver y jugar tu test</span>, marca la opción <span>"Hacer público"</span>.
       </p>
       {error && <p className="error-message">{error}</p>}
-      <div className="create-test-container">
+      <div className="input-test">
         <Input
-          placeholder="Test Title"
+          placeholder="Nombre del test"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
         <Input
-          placeholder="Test Description"
+          placeholder="Descripción breve del test"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        {/* Checkbox to toggle public/private */}
-        <div style={{ margin: "1rem 0" }}>
-          <label>
-            <input
-              type="checkbox"
-              checked={isPublic}
-              onChange={(e) => setIsPublic(e.target.checked)}
-            />
-            &nbsp;Hacer test público
-          </label>
-        </div>
-        {/* Rest of the form for questions */}
-        <h2>Questions</h2>
+      </div>
+      <div className="create-test-container">
+        <h2>Preguntas</h2>
         <div className="questions-container">
           {questions.map((q, qIndex) => (
-            <div key={qIndex} className="question">
+            <div key={qIndex} className="question2">
               <Input
-                placeholder="Enter your question"
+                placeholder="Escribe una pregunta"
                 value={q.questionText}
                 onChange={(e) => updateQuestionText(qIndex, e.target.value)}
               />
@@ -205,7 +193,7 @@ export function CreateTestPage(): JSX.Element {
                 {q.answers.map((ans, aIndex) => (
                   <div key={aIndex} className="answer">
                     <Input
-                      placeholder="Enter an answer"
+                      placeholder="Escribe una respuesta"
                       value={ans.answerText}
                       onChange={(e) =>
                         updateAnswerText(qIndex, aIndex, e.target.value)
@@ -217,35 +205,54 @@ export function CreateTestPage(): JSX.Element {
                         checked={ans.isCorrect}
                         onChange={() => toggleAnswerCorrect(qIndex, aIndex)}
                       />
-                      Correct
+                      Correcta
                     </label>
                   </div>
                 ))}
-                <div className="answer-actions">
-                  <Button
-                    text="Add Answer"
-                    onClick={() => addAnswerToQuestion(qIndex)}
-                    dataset={`add-answer-${qIndex}`}
-                  />
-                  <Button
-                    text="Delete Answer"
-                    onClick={() => removeLastAnswerFromQuestion(qIndex)}
-                    dataset={`delete-answer-${qIndex}`}
-                  />
-                </div>
+                
+                  <div className="answer-actions">
+                    {q.answers.length < 4 && (
+                    <Button
+                      text="Añadir respuesta"
+                      onClick={() => addAnswerToQuestion(qIndex)}
+                      dataset={`add-answer-${qIndex}`}
+                    />
+                    )}
+                    {q.answers.length > 1 && (
+                      <Button
+                        text="Borrar respuesta"
+                        onClick={() => removeLastAnswerFromQuestion(qIndex)}
+                        dataset={`delete-answer-${qIndex}`}
+                      />
+                    )}
+                  </div>
               </div>
-              {questions.length > 1 && (
-                <Button
-                  text="Remove Question"
-                  onClick={() => removeQuestion(qIndex)}
-                  dataset={`remove-question-${qIndex}`}
-                />
-              )}
+              <div className="delete-actions1">
+                {questions.length > 1 && (
+                  <Button
+                    text="Borrar pregunta"
+                    onClick={() => removeQuestion(qIndex)}
+                    dataset={`remove-question-${qIndex}`}
+                  />
+                )}
+              </div>
             </div>
           ))}
         </div>
-        <Button text="Add Question" onClick={addQuestion} dataset="add-question" />
-        <Button text="Create Test" onClick={handleSubmit} dataset="create-test" />
+        <Button text="Añadir pregunta" onClick={addQuestion} dataset="add-question" />
+      </div>
+      <div className="done-section">
+          <div style={{ margin: "1rem 0" }} className="last-lab">
+            <label>
+              <input
+                type="checkbox"
+                checked={isPublic}
+                onChange={(e) => setIsPublic(e.target.checked)}
+              />
+              &nbsp;Hacer público
+            </label>
+          </div>
+          <Button text="Crear test" onClick={handleSubmit} dataset="create-test" />
       </div>
 
       <Footer />

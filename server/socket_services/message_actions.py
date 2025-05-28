@@ -32,7 +32,6 @@ def do_join_room(service, sid, data):
 def do_start_game(service, sid, data):
     room = find_room(service, data)
     if room:
-        gameQuestion = room.quiz.get_question()
         service.socket.emit(
             "message", {"type": "START_GAME", "content": "Starting game..."},
             room=room.name
@@ -54,7 +53,7 @@ def do_send_question(service, sid, data):
                         }
                         for player in room.players
                     ]
-        room.set_remaining_time(10, players, service)
+        room.set_remaining_time(10, service)
 
         print(f"Pregunta enviada: {gameQuestion}")
 
@@ -93,23 +92,31 @@ def do_submit_answer(service, sid, data):
             player.points += score
             print(f"Puntos obtenidos por el jugador {player.name}: {score}")
             print(f"puntos totales del jugador {player.name}: {player.points}")
-            player.answer = answer_id
-            service.socket.emit(
-                "message",
-                {
-                    "type": "ANSWER_SUBMITTED",
-                    "content": {
-                        "score": score,
-                        "isCorrect": selected_answer["is_correct"] if selected_answer else False
-                    }
-                },
-                room=room.name
-            )
+            room.quiz.increase_players_answered()
+            if room.quiz.get_players_answered() == room.get_players_length():
+                room.quiz.reset_players_answered()
+                room.set_remaining_time(10, service)
+
+                # FIX AQUI, NO SE QUE ESTÄ ROTO PERO NO SE SI SE MANDA EL QUIESTION FINISHED O SI EL == VA MAL
+                service.socket.emit(
+                    "message", {"type": "QUESTION_FINISHED", "content": {}},
+                    room=room.name
+                )
+            # player.answer = answer_id
+            # service.socket.emit(
+            #     "message",
+            #     {
+            #         "type": "ANSWER_SUBMITTED",
+            #         "content": {
+            #             "score": score,
+            #             "isCorrect": selected_answer["is_correct"] if selected_answer else False
+            #         }
+            #     },
+            #     room=room.name
+            # )
         else:
-            service.socket.emit(
-                "message", {"type": "PLAYER_NOT_FOUND", "content": "Player not found"},
-                room=room.name
-            )
+          print(f"Jugador no encontrado: {player_id}")
+            
 
 def do_send_player_list(service, sid, data):
     room = find_room(service, data)
@@ -126,3 +133,13 @@ def do_send_player_list(service, sid, data):
     service.socket.emit(
         "message", {"type": "PLAYER_LIST", "content": {"players": players}},
         room=room.name)
+
+def do_end_game(service, sid, data):
+    room = find_room(service, data)
+    if room:
+        print(f"Finalizando juego en la sala: {room.name}")
+        RoomService.get_instance().remove_room(room.name)
+        sids = list(service.socket.manager.rooms['/'].get(room.name, set()))
+        for client_sid in sids:
+            service.socket.disconnect(client_sid)
+        

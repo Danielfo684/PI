@@ -8,6 +8,11 @@
   color: #fff;
 }
 
+.user-settings h2 {
+  text-align: center;
+  color: #f9fbfc;
+}
+
 .login-container {
   max-width: 400px;
   width: 100%;
