@@ -9,6 +9,7 @@ import { Player } from "../../components/player/Player";
 import { Footer } from "../../components/footer/Footer";
 import { QRCodeJoin } from "../../components/qr/QrCodeJoin";
 import { utils } from "../../../src/services/utils";
+import { Floating } from "../../components/floatingButton/floatingButton";
 
 export function HostingGamePage(): JSX.Element | null {
   usePageTitle("Quizify - Hosteando partida");
@@ -32,29 +33,17 @@ export function HostingGamePage(): JSX.Element | null {
   const [endingGame, setEndingGame] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   const [topPlayer, setTopPlayer] = useState<any>(null);
-
-  // const [kicked, setKicked] = useState(false);
-
-  // const handleKick = (playerId: number) => {
-  //   gameControllerInstance.socketMessage({
-  //     type: "KICK_PLAYER",
-  //     content: { playerId, roomCode }
-  //   });
-  // };
-
-  // Obtén el id del usuario logueado para saber si es host
-  const loggedUserId = Number(localStorage.getItem("userId"));
-  const isHost = players.length > 0 && players[0].id === loggedUserId; // Ajusta según tu lógica de host
+  
+  const handleKick = (playerId: number) => {
+    console.log("handleKick se ejecuta")
+    gameControllerInstance.socketMessage({
+      type: "KICK_PLAYER",
+      content: { playerId, roomCode }
+    });
+    setPlayers(prev => prev.filter(player => player.id !== playerId));
+  };
 
 
-  // if (kicked) {
-  //   return (
-  //     <div className="kicked-message">
-  //       <h2>Has sido expulsado de la sala</h2>
-  //       <button onClick={() => navigate("/")}>Volver al inicio</button>
-  //     </div>
-  //   );
-  // }
 
   const handleMessage = (payload: any) => {
     console.log("Mensaje recibido del socket", payload);
@@ -75,7 +64,7 @@ export function HostingGamePage(): JSX.Element | null {
         setEndingGame(true);
       }
       setShowPoints(false);
-      setTimer(10);
+      setTimer(20);
       if (timerRef.current) clearInterval(timerRef.current);
       timerRef.current = setInterval(() => {
         setTimer(prev => (prev !== null ? prev - 1 : null));
@@ -88,7 +77,7 @@ export function HostingGamePage(): JSX.Element | null {
    
     if (payload.type === "START_GAME") {
       console.log("El juego ha comenzado");
-      setTimer(10);
+      setTimer(20);
       setGameStarted(true);
       setTimeout(() => {
         gameControllerInstance.socketMessage({ type: "QUESTION", content: { roomCode: roomCodeRef.current } });
@@ -232,35 +221,41 @@ export function HostingGamePage(): JSX.Element | null {
           </>
         ) : !gameStarted ? (
           <>
-            <h1>Bienvenido al Juego</h1>
-            <h2>Estás hosteando una sala</h2>
-            <p>Nombre del Quiz <strong>{data.title}</strong></p>
-            <p>Descripción:{data.description}</p>
-            <h2>Código de Sala: {roomCode ?? "Esperando código..."}</h2>
-            {roomCode && <QRCodeJoin roomCode={roomCode} />}
-            <Button
-              text="Iniciar Partida"
-              onClick={() => startGame()}
-              dataset=""
-            />
-            <h3>Jugadores en la sala:</h3>
-            <div>
-              {players.map((player, idx) => (
-                <Player.PlayerCard
-                  key={player.id}
-                  id={player.id}
-                  name={player.name}
-                  className={player.className}
-                  iconNumber={player.id}
-                  isHost={isHost}
-                // onKick={isHost ? handleKick : undefined}
-                />
-              ))}
+                <div id="top"></div>
+                <Floating target="#top" />
+            <div className="host-info">
+              <h2>¡Estás organizando una sala!</h2>
+              <h2 className="room-code">
+                Código de Sala: <span className="code0">{roomCode ?? "Esperando código..."}</span>
+              </h2>
+              {roomCode && <div className="qr-code"><QRCodeJoin roomCode={roomCode} /></div>}
+            </div>
+            <div className="host-btn1">
+              <Button
+                text="Iniciar Partida"
+                onClick={() => startGame()}
+                dataset=""
+              />
+            </div>
+            <div className="player-section2">
+              {players.length > 0 && <h4>Jugadores en la sala:</h4>}
+              <div className="player-list1">
+                {players.map((player, idx) => (
+                  <Player.PlayerCard
+                    key={player.id}
+                    id={player.id}
+                    name={player.name}
+                    className={player.className}
+                    iconNumber={player.id}
+                    onKick={() => handleKick(player.id)}
+                  />
+                ))}
+              </div>
             </div>
           </>
         ) : currentQuestion ? (
-          <div className="quiz-container">
-            <div className="quiz-box">
+          <div className="quiz-container2">
+            <div className="quiz-box2">
               {timer !== null && (
                 <div className="timer">Tiempo restante: {timer}s</div>
               )}
@@ -279,7 +274,7 @@ export function HostingGamePage(): JSX.Element | null {
           </div>
         ) : showPoints ? (
           <>
-            <h3>Puntuación de los jugadores</h3>
+            <h4>Puntuación de los jugadores:</h4>
             <div>
               {
                 utils.orderByPointsAndId(players).map((player, index) => (
@@ -298,23 +293,28 @@ export function HostingGamePage(): JSX.Element | null {
                   />
                 ))}
             </div>
-            {!endingGame ? (
-              <Button
-                text="Siguiente pregunta"
-                onClick={() => nextQuestion()}
-                dataset=""
-              />
-            ) : (
-              <Button
-                text="Finalizar partida"
-                onClick={() => endGame()}
-                dataset=""
-              />
-            )}
+            <div className="next-section1">
+                {!endingGame ? (
+                  <Button
+                    text="Siguiente pregunta"
+                    onClick={() => nextQuestion()}
+                    dataset=""
+                  />
+                ) : (
+                  <Button
+                    text="Finalizar partida"
+                    onClick={() => endGame()}
+                    dataset=""
+                  />
+                )}
+            </div>
           </>
         ) : (<>
-          <h3>¿Preparados?</h3>
-          <div>
+          <div className="waiting-question-loader">
+            <div className="spinner"></div>
+            <p>Preparando la primera pregunta...</p>
+          </div>
+          <div className="player-list1">
             {players.map((player, idx) => (
               <Player.PlayerCard
                 key={player.id}
@@ -324,10 +324,6 @@ export function HostingGamePage(): JSX.Element | null {
                 iconNumber={player.iconNumber}
               />
             ))}
-          </div>
-          <div className="waiting-question-loader">
-            <div className="spinner"></div>
-            <p>Preparando la primera pregunta...</p>
           </div>
         </>)}
       </div>

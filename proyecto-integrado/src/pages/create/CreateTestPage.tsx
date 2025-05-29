@@ -1,4 +1,4 @@
-import { JSX, useState } from "react";
+import { JSX, useState, useRef, useEffect } from "react";
 import { Input, Button } from "../../components/basicComponents/index";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import { useNavigate } from "react-router-dom";
@@ -11,12 +11,19 @@ export function CreateTestPage(): JSX.Element {
 
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
+  const errorRef = useRef<HTMLParagraphElement>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [questions, setQuestions] = useState<
     { questionText: string; answers: { answerText: string; isCorrect: boolean }[] }[]
   >([{ questionText: "", answers: [{ answerText: "", isCorrect: false }] }]);
+
+  useEffect(() => {
+    if (error && errorRef.current) {
+      errorRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [error]);
 
   const addQuestion = (): void => {
     setQuestions([
@@ -161,12 +168,21 @@ export function CreateTestPage(): JSX.Element {
       <Floating target="#top" />
       <h2 className="create-title">Crear test</h2>
       <p className="page-description">
-        En esta <span>página</span> puedes crear tu propio test. Configura el <span>título</span>, 
+        En esta <span>página</span> puedes crear tu propio test. Configura el <span>título</span>,
         la <span>descripción</span> y añade las preguntas con sus respectivas respuestas.
         Por defecto, los test creados serán <span>privados</span>. Si quieres que otros
         usuarios puedan <span>ver y jugar tu test</span>, marca la opción <span>"Hacer público"</span>.
       </p>
-      {error && <p className="error-message">{error}</p>}
+      {error && (
+        <p ref={errorRef} className="error">
+          <img 
+            src="/src/assets/images/error.png" 
+            alt="Error" 
+            className="error-icon" 
+          />
+          {error}
+        </p>
+      )}
       <div className="input-test">
         <Input
           placeholder="Nombre del test"
@@ -184,6 +200,7 @@ export function CreateTestPage(): JSX.Element {
         <div className="questions-container">
           {questions.map((q, qIndex) => (
             <div key={qIndex} className="question2">
+              <h3>Pregunta {qIndex + 1}</h3>
               <Input
                 placeholder="Escribe una pregunta"
                 value={q.questionText}
@@ -209,23 +226,22 @@ export function CreateTestPage(): JSX.Element {
                     </label>
                   </div>
                 ))}
-                
-                  <div className="answer-actions">
-                    {q.answers.length < 4 && (
+                <div className="answer-actions">
+                  {q.answers.length < 4 && (
                     <Button
                       text="Añadir respuesta"
                       onClick={() => addAnswerToQuestion(qIndex)}
                       dataset={`add-answer-${qIndex}`}
                     />
-                    )}
-                    {q.answers.length > 1 && (
-                      <Button
-                        text="Borrar respuesta"
-                        onClick={() => removeLastAnswerFromQuestion(qIndex)}
-                        dataset={`delete-answer-${qIndex}`}
-                      />
-                    )}
-                  </div>
+                  )}
+                  {q.answers.length > 1 && (
+                    <Button
+                      text="Borrar respuesta"
+                      onClick={() => removeLastAnswerFromQuestion(qIndex)}
+                      dataset={`delete-answer-${qIndex}`}
+                    />
+                  )}
+                </div>
               </div>
               <div className="delete-actions1">
                 {questions.length > 1 && (
@@ -242,19 +258,18 @@ export function CreateTestPage(): JSX.Element {
         <Button text="Añadir pregunta" onClick={addQuestion} dataset="add-question" />
       </div>
       <div className="done-section">
-          <div style={{ margin: "1rem 0" }} className="last-lab">
-            <label>
-              <input
-                type="checkbox"
-                checked={isPublic}
-                onChange={(e) => setIsPublic(e.target.checked)}
-              />
-              &nbsp;Hacer público
-            </label>
-          </div>
-          <Button text="Crear test" onClick={handleSubmit} dataset="create-test" />
+        <div style={{ margin: "1rem 0" }} className="last-lab">
+          <label>
+            <input
+              type="checkbox"
+              checked={isPublic}
+              onChange={(e) => setIsPublic(e.target.checked)}
+            />
+            &nbsp;Hacer público
+          </label>
+        </div>
+        <Button text="Crear test" onClick={handleSubmit} dataset="create-test" />
       </div>
-
       <Footer />
     </>
   );

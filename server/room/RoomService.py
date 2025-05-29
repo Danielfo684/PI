@@ -5,30 +5,43 @@ from quiz.Quiz import Quiz
 
 
 class Room:
-    def __init__(self, name: str, players=None, occupied: bool = False, quiz=None):
+    def __init__(self, name: str, players=None, quiz=None):
         self.name = name
         self.players = players if players is not None else []
-        self.occupied = occupied
+        self.occupied = "false"
         self.quiz = quiz
         self.remaining_time = 0
         self.timer_thread = None
 
-    def set_remaining_time(self, seconds=10, service=None):
+    def set_remaining_time(self, seconds=20, service=None):
         self.remaining_time = seconds
-        if self.timer_thread and self.timer_thread.is_alive():
-            return  
+        if hasattr(self, "timer_cancel_event") and self.timer_cancel_event:
+            self.timer_cancel_event.set()
+        self.timer_cancel_event = threading.Event()
 
         def countdown():
-            while self.remaining_time > 0:
+            while self.remaining_time > 0 and not self.timer_cancel_event.is_set():
                 print(f"Tiempo restante en la pregunta de la sala {self.name}: {self.remaining_time}")
                 self.remaining_time -= 1
-                threading.Event().wait(1)
-            print(f"¡Tiempo terminado en la pregunta de la sala {self.name}!")
+                self.timer_cancel_event.wait(1)
+            if not self.timer_cancel_event.is_set():
+                print(f"¡Tiempo terminado en la pregunta de la sala {self.name}!")
+                # Aquí puedes emitir HIDE_QUESTION si quieres
 
         self.timer_thread = threading.Thread(target=countdown, daemon=True)
         self.timer_thread.start()
+
+    def cancel_timer(self):
+        if hasattr(self, "timer_cancel_event") and self.timer_cancel_event:
+            self.timer_cancel_event.set()
+
     def get_players_length(self):
         return len(self.players)
+    
+    def remove_player(self, player_id: str):
+        self.players = [player for player in self.players if getattr(player, "id", None) != player_id]
+        print(f"Jugador con ID {player_id} eliminado de la sala {self.name}.")
+
 
 class RoomConfig:
     maxRoomPlayers = 2

@@ -53,7 +53,7 @@ def do_send_question(service, sid, data):
                         }
                         for player in room.players
                     ]
-        room.set_remaining_time(10, service)
+        room.set_remaining_time(20, service)
 
         print(f"Pregunta enviada: {gameQuestion}")
 
@@ -95,25 +95,11 @@ def do_submit_answer(service, sid, data):
             room.quiz.increase_players_answered()
             if room.quiz.get_players_answered() == room.get_players_length():
                 room.quiz.reset_players_answered()
-                room.set_remaining_time(10, service)
-
-                # FIX AQUI, NO SE QUE ESTÄ ROTO PERO NO SE SI SE MANDA EL QUIESTION FINISHED O SI EL == VA MAL
+                room.cancel_timer()  # <--- Cancela el temporizador
                 service.socket.emit(
                     "message", {"type": "QUESTION_FINISHED", "content": {}},
                     room=room.name
                 )
-            # player.answer = answer_id
-            # service.socket.emit(
-            #     "message",
-            #     {
-            #         "type": "ANSWER_SUBMITTED",
-            #         "content": {
-            #             "score": score,
-            #             "isCorrect": selected_answer["is_correct"] if selected_answer else False
-            #         }
-            #     },
-            #     room=room.name
-            # )
         else:
           print(f"Jugador no encontrado: {player_id}")
             
@@ -142,4 +128,14 @@ def do_end_game(service, sid, data):
         sids = list(service.socket.manager.rooms['/'].get(room.name, set()))
         for client_sid in sids:
             service.socket.disconnect(client_sid)
-        
+
+def do_kick_player(service, sid, data):
+    room = find_room(service, data)
+    if room:
+        player_id = data.get("playerId")
+        player = RoomService.get_instance().find_player(player_id)
+        if player:
+            print(f"Expulsando al jugador {player.name} de la sala {room.name}")
+            room.remove_player(player)
+        else:
+            print(f"Jugador no encontrado: {player_id}")

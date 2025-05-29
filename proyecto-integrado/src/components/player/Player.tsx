@@ -3,7 +3,7 @@ import { JSX, useState } from "react";
 import "./player.css";
 
 export const Player = {
-    PlayerCard: (props: { name: string, className?: string, id: number, iconNumber?: number, isHost?: boolean, onKick?: (id: number) => void }): JSX.Element => {
+    PlayerCard: (props: { name: string, className?: string, id: number, iconNumber?: number, onKick?: (id: number) => void }): JSX.Element => {
         const iconStyle = {
             backgroundImage: `url(/user-icons/${props.iconNumber ?? 1}.png)`,
             
@@ -20,8 +20,9 @@ export const Player = {
                 <div className="player-info">
                     <p><strong>Nombre:</strong> {props.name}</p>
                     <p><strong>ID:</strong> {props.id}</p>
-                    {props.isHost && props.onKick && (
-                        <button onClick={() => props.onKick?.(props.id)} className="kick-btn">
+                    {props.onKick && (
+                        <button
+                        onClick={() => props.onKick?.(props.id)} className="kick-btn">
                             Expulsar
                         </button>
                     )}

@@ -10,8 +10,8 @@ export const QRCodeJoin: React.FC<QRCodeJoinProps> = ({ roomCode }) => {
   const joinUrl = `${window.location.origin}/host?roomCode=${roomCode}`;
 
   return (
-    <div style={{ textAlign: "center", margin: "20px 0" }}>
-      <QRCode value={joinUrl} size={128} />
+    <div className="qr-section" style={{ textAlign: "center", margin: "20px 0" }}>
+      <QRCode value={joinUrl} size={188} />
       <p>Escanea este QR para unirte a la sala</p>
     </div>
   );

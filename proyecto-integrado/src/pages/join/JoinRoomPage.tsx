@@ -88,9 +88,12 @@ export function JoinRoomPage(): JSX.Element {
 
   if (joined) {
     return (
-      <div className="join-room-success">
-        <h2>¡Te has unido correctamente a la sala!</h2>
-        <p>Espera a que el juego comience...</p>
+      <div className="join-success-container">
+        <div className="join-room-success">
+          <h2>¡Te has unido correctamente a la sala!</h2>
+          <p>Esperando a que el juego comience...</p>
+        </div>
+        <Footer />
       </div>
     );
   }

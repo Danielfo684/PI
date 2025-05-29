@@ -1,0 +1,36 @@
+.player-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.8rem;
+  text-align: center;
+}
+
+.player-icon {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 1rem;
+}
+
+.player-info-home {
+  color: #f9fbfc;
+}
+
+.player-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+.player-points {
+  font-size: 1rem;
+  margin: 0.25rem 0;
+}

@@ -23,6 +23,10 @@ export function HostPage(): JSX.Element {
   const gameController = GameController.getInstance();
 
   useEffect(() => {
+    GameController.getInstance().reset();
+  }, []);
+
+  useEffect(() => {
     const fetchTests = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/tests", {
@@ -49,11 +53,11 @@ export function HostPage(): JSX.Element {
   }, [gameController]);
 
 
-  // After fetching tests and creating publicTests and privateTests arrays:
+ 
   const publicTests = tests.filter(t => t.is_public);
   const privateTests = tests.filter(t => !t.is_public);
 
-  // Apply filter with the searches:
+  
   const filteredPublicTests = publicTests.filter(t =>
     t.title.toLowerCase().includes(publicSearch.toLowerCase()) ||
     t.description.toLowerCase().includes(publicSearch.toLowerCase())
@@ -63,7 +67,7 @@ export function HostPage(): JSX.Element {
     t.description.toLowerCase().includes(privateSearch.toLowerCase())
   );
 
-  // Paginate the filtered arrays instead of the full arrays:
+  
   const paginate = (items: any[], currentPage: number, perPage: number) => {
     const startIndex = (currentPage - 1) * perPage;
     return items.slice(startIndex, startIndex + perPage);
@@ -72,7 +76,7 @@ export function HostPage(): JSX.Element {
   const publicTestsPage = paginate(filteredPublicTests, publicPage, itemsPerPage);
   const privateTestsPage = paginate(filteredPrivateTests, privatePage, itemsPerPage);
 
-  // Calculate total pages based on filtered arrays:
+
   const totalPublicPages = Math.ceil(filteredPublicTests.length / itemsPerPage);
   const totalPrivatePages = Math.ceil(filteredPrivateTests.length / itemsPerPage);
 
@@ -109,7 +113,7 @@ export function HostPage(): JSX.Element {
       <div className="host-page-container">
         <h2>Organiza tu propia partida</h2>
 
-        {/* Section for Private Tests */}
+        
         <section className="tests-section">
           <h2>Tests Privados</h2>
           <input
@@ -134,6 +138,13 @@ export function HostPage(): JSX.Element {
                     </div>
                   </Card>
                 </Link>
+                {test.user_id === loggedUserId && (
+                  <div className="action-buttons">
+                    <button onClick={() => navigate(`/view-test/${test.id}`)}>Visualizar</button>
+                    <button onClick={() => handleEdit(test)}>Editar</button>
+                    <button onClick={() => handleDelete(test.id)}>Borrar</button>
+                  </div>
+                )}
               </div>
             ))}
             {privateTestsPage.length === 0 && <p className="no-tests">No tienes ningun test privado.</p>}
@@ -157,7 +168,7 @@ export function HostPage(): JSX.Element {
           )}
         </section>
 
-        {/* Section for Public Tests */}
+        
         <section className="tests-section">
           <h2>Tests Públicos</h2>
           <input

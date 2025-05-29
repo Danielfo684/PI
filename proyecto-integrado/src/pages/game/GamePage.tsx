@@ -3,7 +3,7 @@ import { Card, CardContent, Input, Button, CardSection } from '../../components/
 import "./gamePage.css"
 import { GameController } from "../../services/GameController"
 import { Message } from "../../services/SocketService"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { usePageTitle } from "../../hooks/usePageTitle"
 import { Player } from "../../components/player/Player";
 import { utils } from "../../../src/services/utils";
@@ -22,6 +22,7 @@ export function GamePage(): JSX.Element {
   const [players, setPlayers] = useState<any[]>([]);
   const location = useLocation();
   const [myPlayerId, setMyPlayerId] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const { player, roomCode } = location.state || {};
   const [gameControllerInstance] = useState(() => GameController.getInstance());
@@ -57,31 +58,29 @@ export function GamePage(): JSX.Element {
 
     if (payload.type === "QUESTION") {
       setAnswered(false);
-      console.log(`Pregunta recibida: ${payload.content}`);
       setCurrentQuestion(payload.content);
-      // setShowPoints(true);
-      setTimer(10);
+      setTimer(20);
 
       if (timerRef.current) clearInterval(timerRef.current);
       timerRef.current = setInterval(() => {
         setTimer(prev => (prev !== null ? prev - 1 : null));
       }, 1000);
     }
-
-    // if (payload.type === "HIDE_QUESTION") {
-    //   setCurrentQuestion(null);
-    //   // setShowPoints(true);
-    //   console.log("Ocultando pregunta");
-    //   setTimer(null);
-    //   setPlayers(payload.content.players);
-
-    //   setAnswered(false);
-    //   if (timerRef.current) clearInterval(timerRef.current);
-    //   gameControllerInstance.socketMessage({
-    //     type: "PLAYER_LIST",
-    //     content: { roomCode }
-    //   });
-    // }
+    if (payload.type === "END_GAME") {
+      GameController.getInstance().reset();
+      navigate("/join", { replace: true });
+    }
+    if (payload.type === "QUESTION_FINISHED") {
+      // Detén el temporizador y muestra los puntos
+      if (timerRef.current) clearInterval(timerRef.current);
+      setTimer(null);
+      setCurrentQuestion(null);
+      setAnswered(false);
+      gameControllerInstance.socketMessage({
+        type: "PLAYER_LIST",
+        content: { roomCode }
+      });
+    }
 
     if (payload.type === "PLAYER_LIST") {
       setPlayers(payload.content.players || []);

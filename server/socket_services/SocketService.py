@@ -13,6 +13,7 @@ class SocketService:
             "PLAYER_LIST": "do_send_player_list",
             "QUICK_PLAYER": "do_quick_player",
             "END_GAME": "do_end_game",
+            "KICK_PLAYER": "do_kick_player",
         },
     }
 
