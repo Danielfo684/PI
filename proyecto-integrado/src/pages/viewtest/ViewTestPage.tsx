@@ -21,7 +21,6 @@ export function ViewTestPage(): JSX.Element {
         .then((response) => response.json())
         .then((data) => {
           if (data.test) {
-            // Si el test es privado, solo el creador puede verlo
             if (!data.test.is_public && data.test.user_id !== loggedUserId) {
               setError("No estás autorizado para ver este test privado");
             } else {
@@ -56,7 +55,6 @@ export function ViewTestPage(): JSX.Element {
     return <div className="view-test-container">Cargando...</div>;
   }
 
-  // Función que renderiza las respuestas según el usuario
   const renderAnswers = (answers: any[]) => {
     return (
         <ul>

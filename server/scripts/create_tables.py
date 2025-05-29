@@ -21,11 +21,8 @@ def execute_sql_script(script_path: str) -> None:
         with open(script_path, "r") as file:
             sql_script = file.read()
 
-        # Eliminar comentarios de bloque (/* ... */)
         sql_script = re.sub(r'/\*.*?\*/', '', sql_script, flags=re.DOTALL)
-        # Eliminar líneas que comiencen con '--' o que sean compuestas solo de guiones
         sql_script = '\n'.join([line for line in sql_script.splitlines() if not line.strip().startswith('--') and not set(line.strip()) == {"-"}])
-        # Dividir por ';' y filtrar sentencias vacías
         statements = [stmt.strip() for stmt in sql_script.split(';') if stmt.strip()]
 
         for statement in statements:

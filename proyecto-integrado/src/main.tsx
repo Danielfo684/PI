@@ -47,7 +47,6 @@ createRoot(rootElement).render(
           </Route>
           <Route path="/play" element={<PlayPage />} />
           <Route path="/join" element={<JoinRoomPage />} />
-          {/* Other routes */}
         </Route>
         <Route path="/quiz" element={<Quiz />} /> {/* Ruta provisional para editar la interfaz de las preguntas */}
       </Routes>

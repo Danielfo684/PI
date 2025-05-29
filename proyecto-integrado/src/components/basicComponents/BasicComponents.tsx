@@ -17,7 +17,6 @@ export const Components = {
     Card: (props: { className?: string; dataset: number; answer?: boolean, onClick?: React.MouseEventHandler<HTMLButtonElement>; children?: React.ReactNode }): JSX.Element => {
         let cardImage: string = "";
 
-        // por implementar los estados de las respuestas
         const [answer, setAnswer] = useState(false)
         const [selected, setSelected] = useState(false)
 

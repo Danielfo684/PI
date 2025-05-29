@@ -71,7 +71,6 @@ export function GamePage(): JSX.Element {
       navigate("/join", { replace: true });
     }
     if (payload.type === "QUESTION_FINISHED") {
-      // Detén el temporizador y muestra los puntos
       if (timerRef.current) clearInterval(timerRef.current);
       setTimer(null);
       setCurrentQuestion(null);
