@@ -2,7 +2,7 @@
 
 Este proyecto es una aplicación full-stack que consta de dos grandes partes:
 
-- **Cliente (Front-end):** Desarrollado con React y Vite, ubicado en `PI/proyecto-integrado/`. Aquí se gestiona la interfaz de usuario, las rutas (por ejemplo, login, dashboard, configuración de usuario, etc.) y la interacción con el backend.
+- **Cliente (Front-end):** Desarrollado con React y Vite, ubicado en `PI/client/`. Aquí se gestiona la interfaz de usuario, las rutas (por ejemplo, login, dashboard, configuración de usuario, etc.) y la interacción con el backend.
 - **Servidor (Back-end):** Basado en Flask, Socket.IO y Eventlet, ubicado en `PI/server/`. Aquí se gestionan las APIs, la conexión a la base de datos MySQL y la lógica de negocio del juego y de las pruebas (tests).
 
 ## Estructura del Proyecto
@@ -12,7 +12,7 @@ Este proyecto es una aplicación full-stack que consta de dos grandes partes:
 - **PI/**
   - **.gitignore** - Excluye archivos y carpetas no deseados.
   - **readme.MD** - (Este archivo)
-  - **proyecto-integrado/**
+  - **client/**
     - Archivos de configuración para Vite, TypeScript, ESLint, etc.
     - **src/**
       - **main.tsx** - Punto de entrada de la aplicación React.
@@ -38,11 +38,15 @@ Este proyecto es una aplicación full-stack que consta de dos grandes partes:
 
 ### Configuración del Cliente
 
-1. Dirígete a la carpeta `PI/proyecto-integrado/` y ejecuta:
+1. Dirígete a la carpeta `PI/client/` y ejecuta:
    ```sh
    npm install
    ```
-2. Luego, para iniciar el proyecto:
+3. Instalar las dependencias de QRCode:
+   ```sh
+   npm install react-qr-code
+   ```
+3. Luego, para iniciar el proyecto:
    ```sh
    npm run dev
    ```

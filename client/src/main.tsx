@@ -13,7 +13,6 @@ import { CreateTestPage } from './pages/create/CreateTestPage'
 import { EditTestPage } from './pages/edit/EditTestPage'
 import { HostingGamePage } from './pages/hostingGamePage/HostingGamePage'
 import { MainPage } from './pages/main/MainPage'
-import { PlayPage } from './pages/play/PlayPage'
 import { LoginPage } from './pages/login/LoginPage'
 import Quiz from './pages/pruebaPregunta/Pregunta'
 import { ProtectedRoute } from "./components/protectedroute/ProtectedRoute";
@@ -45,7 +44,6 @@ createRoot(rootElement).render(
             <Route path="/edit-test/:id" element={<EditTestPage />} />
             <Route path="/view-test/:id" element={<ViewTestPage />} />
           </Route>
-          <Route path="/play" element={<PlayPage />} />
           <Route path="/join" element={<JoinRoomPage />} />
         </Route>
         <Route path="/quiz" element={<Quiz />} /> {/* Ruta provisional para editar la interfaz de las preguntas */}

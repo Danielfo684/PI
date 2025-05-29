@@ -48,13 +48,6 @@ export function MainPage() : JSX.Element {
       <div className="play-section">
         <h2><span>Modos de juego</span></h2>
         <div className="play-container">
-          <Link to="/play"><div className="play play1">
-            <div className="play-title">Jugar en solitario</div>
-            <div className="play-text">
-              <p className="text">
-                Pon a prueba tus <span>conocimientos</span> respondiendo preguntas de cualquier <span>categoría</span>.
-              </p></div>
-          </div></Link>
           <Link to="/join"><div className="play play2">
             <div className="play-title">Unirse a partida</div>
             <div className="play-text">

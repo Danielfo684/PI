@@ -32,7 +32,6 @@ export function Header() {
       <nav className={`navigation${menuOpen ? ' menu-mobile' : ''}`}>
         <ul>
           <li><Link to="/" onClick={() => setMenuOpen(false)}>Inicio</Link></li>
-          <li><Link to="/play" onClick={() => setMenuOpen(false)}>Jugar</Link></li>
           <li><Link to="/join" onClick={() => setMenuOpen(false)}>Unirse a partida</Link></li>
           <li><Link to="/host" onClick={() => setMenuOpen(false)}>Organizar partida</Link></li>
           <li><Link to="/create" onClick={() => setMenuOpen(false)}>Crear test</Link></li>
