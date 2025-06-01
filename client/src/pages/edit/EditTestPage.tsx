@@ -1,58 +1,75 @@
-import { JSX, useState, useEffect } from "react";
+import { JSX, useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Input, Button } from "../../components/basicComponents/index";
 import { usePageTitle } from "../../hooks/usePageTitle";
-import "./EditTestPage.css";
-  
+import { Footer } from "../../components/footer/Footer";
+import { Floating } from "../../components/floatingButton/floatingButton";
+import "../create/CreateTestPage.css";
+
 export function EditTestPage(): JSX.Element {
   usePageTitle("Quizify - Editar test");
   const navigate = useNavigate();
   const location = useLocation();
-  
   const { testData } = location.state as { testData: any } || {};
-  if (!testData) {
-    return <div>Error: No se encontraron datos del test a editar.</div>;
-  }
-  
-  const [title, setTitle] = useState<string>(testData.title);
-  const [description, setDescription] = useState<string>(testData.description);
-  const [isPublic, setIsPublic] = useState<boolean>(testData.is_public);
+
+  const [error, setError] = useState<string>("");
+  const errorRef = useRef<HTMLParagraphElement>(null);
+  const [title, setTitle] = useState<string>(testData?.title || "");
+  const [description, setDescription] = useState<string>(testData?.description || "");
+  const [isPublic, setIsPublic] = useState<boolean>(testData?.is_public || false);
   const [questions, setQuestions] = useState<
     { questionText: string; answers: { answerText: string; isCorrect: boolean }[] }[]
-  >(testData.questions || []);
-  const [error, setError] = useState<string>("");
+  >(
+    testData?.questions?.length
+      ? testData.questions.map((q: any) => ({
+          questionText: q.question_text,
+          answers: q.answers.map((a: any) => ({
+            answerText: a.answer_text,
+            isCorrect: Boolean(a.is_correct)
+          }))
+        }))
+      : [{ questionText: "", answers: [{ answerText: "", isCorrect: false }] }]
+  );
 
-    useEffect(() => {
-      if (!testData.questions || testData.questions.length === 0) {
-        fetch(`http://localhost:5000/api/tests/${testData.id}`, {
-          method: "GET",
-          credentials: "include",
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("DEBUG: Fetched test data:", data);
-            if (data.test) {
-              setTitle(data.test.title);
-              setDescription(data.test.description);
-              setIsPublic(Boolean(data.test.is_public));
-              const normalizedQuestions = (data.test.questions || []).map((q: any) => ({
+  // Si testData no trae preguntas, obtener información completa del test
+  useEffect(() => {
+    if (!testData.questions || !testData.questions.length) {
+      fetch(`http://proyectointegrado.hopto.org:5000/api/tests/${testData.id}`, {
+        method: "GET",
+        credentials: "include"
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.test) {
+            setTitle(data.test.title);
+            setDescription(data.test.description);
+            setIsPublic(data.test.is_public);
+            setQuestions(
+              data.test.questions.map((q: any) => ({
                 questionText: q.question_text,
-                answers: (q.answers || []).map((a: any) => ({
+                answers: q.answers.map((a: any) => ({
                   answerText: a.answer_text,
-                  isCorrect: Boolean(a.is_correct),
-                })),
-              }));
-              setQuestions(normalizedQuestions);
-            } else {
-              setError("No se pudo cargar la información completa del test");
-            }
-          })
-          .catch((err) => {
-            console.error(err);
-            setError("Error de conexión con el servidor");
-          });
-      }
-    }, [testData.id, testData.questions]);
+                  isCorrect: Boolean(a.is_correct)
+                }))
+              }))
+            );
+          } else {
+            setError("Error: No se pudo cargar la información completa del test.");
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          setError("Error de conexión con el servidor");
+        });
+    }
+  }, [testData]);
+
+  const addQuestion = (): void => {
+    setQuestions([
+      ...questions,
+      { questionText: "", answers: [{ answerText: "", isCorrect: false }] },
+    ]);
+  };
 
   const updateQuestionText = (qIndex: number, value: string): void => {
     const newQuestions = questions.map((q, i) =>
@@ -77,12 +94,12 @@ export function EditTestPage(): JSX.Element {
   const toggleAnswerCorrect = (qIndex: number, aIndex: number): void => {
     const newQuestions = questions.map((q, i) => {
       if (i === qIndex) {
-        const isAlreadyCorrect = q.answers[aIndex].isCorrect;
-        return { 
+        return {
           ...q,
-          answers: q.answers.map((ans, j) =>
-            j === aIndex ? { ...ans, isCorrect: !isAlreadyCorrect } : { ...ans, isCorrect: false }
-          )
+          answers: q.answers.map((ans, j) => ({
+            ...ans,
+            isCorrect: j === aIndex,
+          })),
         };
       }
       return q;
@@ -90,15 +107,46 @@ export function EditTestPage(): JSX.Element {
     setQuestions(newQuestions);
   };
 
+  const addAnswerToQuestion = (qIndex: number): void => {
+    const newQuestions = questions.map((q, i) => {
+      if (i === qIndex) {
+        if (q.answers.length < 4) {
+          return { ...q, answers: [...q.answers, { answerText: "", isCorrect: false }] };
+        }
+        return q;
+      }
+      return q;
+    });
+    setQuestions(newQuestions);
+  };
+
+  const removeLastAnswerFromQuestion = (qIndex: number): void => {
+    const newQuestions = questions.map((q, i) => {
+      if (i === qIndex && q.answers.length > 1) {
+        return { ...q, answers: q.answers.slice(0, -1) };
+      }
+      return q;
+    });
+    setQuestions(newQuestions);
+  };
+
+  const removeQuestion = (qIndex: number): void => {
+    if (questions.length > 1) {
+      const newQuestions = questions.filter((_, i) => i !== qIndex);
+      setQuestions(newQuestions);
+    }
+  };
+
   const handleSubmit = async (): Promise<void> => {
     if (!title.trim()) {
-      setError("El título no puede estar vacío");
+      setError("Falta completar el título del test");
       return;
     }
     if (!description.trim()) {
-      setError("La descripción no puede estar vacía");
+      setError("Falta completar la descripción del test");
       return;
     }
+
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i];
       if (!q.questionText.trim()) {
@@ -110,8 +158,9 @@ export function EditTestPage(): JSX.Element {
         return;
       }
       for (let j = 0; j < q.answers.length; j++) {
-        if (!q.answers[j].answerText.trim()) {
-          setError(`Falta la respuesta ${j + 1} en la pregunta ${i + 1}`);
+        const ans = q.answers[j];
+        if (!ans.answerText.trim()) {
+          setError(`Falta completar la respuesta ${j + 1} de la pregunta ${i + 1}`);
           return;
         }
       }
@@ -121,9 +170,17 @@ export function EditTestPage(): JSX.Element {
         return;
       }
     }
+
     setError("");
-  
-    const updatedTest = { title, description, is_public: isPublic, questions };
+
+    const updatedTest = { 
+      id: testData.id, 
+      title, 
+      description, 
+      is_public: isPublic, 
+      questions 
+    };
+
     try {
       const response = await fetch(`http://localhost:5000/api/tests/${testData.id}`, {
         method: "PUT",
@@ -135,7 +192,7 @@ export function EditTestPage(): JSX.Element {
       if (!response.ok) {
         setError(data.error);
       } else {
-        alert("Test actualizado correctamente");
+        window.alert("Test actualizado con éxito!");
         navigate("/host", { replace: true });
       }
     } catch (err) {
@@ -143,115 +200,108 @@ export function EditTestPage(): JSX.Element {
     }
   };
 
-  const addQuestion = (): void => {
-    setQuestions([
-      ...questions,
-      { 
-        questionText: "", 
-        answers: [
-          { answerText: "", isCorrect: false }, 
-          { answerText: "", isCorrect: false }
-        ]
-      }
-    ]);
-  };
-
-  const removeQuestion = (qIndex: number): void => {
-    if (questions.length > 1) {
-      const newQuestions = questions.filter((_, index) => index !== qIndex);
-      setQuestions(newQuestions);
-    }
-  };
-
-  const addAnswerToQuestion = (qIndex: number): void => {
-    const newQuestions = questions.map((q, i) => {
-      if (i === qIndex) {
-        if (q.answers.length < 4) {
-          return { ...q, answers: [...q.answers, { answerText: "", isCorrect: false }] };
-        } else {
-          alert("Cada pregunta puede tener máximo 4 respuestas");
-          return q;
-        }
-      }
-      return q;
-    });
-    setQuestions(newQuestions);
-  };
-
-  const removeAnswerFromQuestion = (qIndex: number, aIndex: number): void => {
-    const newQuestions = questions.map((q, i) => {
-      if (i === qIndex && q.answers.length > 2) {
-        return { ...q, answers: q.answers.filter((_, index) => index !== aIndex) };
-      }
-      return q;
-    });
-    setQuestions(newQuestions);
-  };
-    
   return (
-    <div className="edit-test-container">
-      <h1>Editar Test</h1>
-      {error && <p className="error-message">{error}</p>}
-      <Input placeholder="Título" value={title} onChange={(e) => setTitle(e.target.value)} />
-      <Input placeholder="Descripción" value={description} onChange={(e) => setDescription(e.target.value)} />
-      <div>
-        <label>
-          <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} />
-          Hacer test público
-        </label>
-      </div>
-      {questions.map((q, qIndex) => (
-        <div key={qIndex} className="question">
-          <Input
-            placeholder={`Pregunta ${qIndex + 1}`}
-            value={q.questionText}
-            onChange={(e) => updateQuestionText(qIndex, e.target.value)}
+    <>
+      <div id="top"></div>
+      <Floating target="#top" />
+      <h2 className="create-title">Editar Test</h2>
+      {error && (
+        <p ref={errorRef} className="error">
+          <img 
+            src="/src/assets/images/error.png" 
+            alt="Error" 
+            className="error-icon" 
           />
-          <div className="answers">
-            {q.answers.map((ans, aIndex) => (
-              <div key={aIndex} className="answer">
-                <Input
-                  placeholder={`Respuesta ${aIndex + 1}`}
-                  value={ans.answerText}
-                  onChange={(e) => updateAnswerText(qIndex, aIndex, e.target.value)}
-                />
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={ans.isCorrect}
-                    onChange={() => toggleAnswerCorrect(qIndex, aIndex)}
-                  />
-                  Correcta
-                </label>
-                {q.answers.length > 2 && (
+          {error}
+        </p>
+      )}
+      <div className="input-test">
+        <Input
+          placeholder="Nombre del test"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <Input
+          placeholder="Descripción breve del test"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+      <div className="create-test-container">
+        <h2>Preguntas</h2>
+        <div className="questions-container">
+          {questions.map((q, qIndex) => (
+            <div key={qIndex} className="question2">
+              <h3>Pregunta {qIndex + 1}</h3>
+              <Input
+                placeholder="Escribe una pregunta"
+                value={q.questionText}
+                onChange={(e) => updateQuestionText(qIndex, e.target.value)}
+              />
+              <div className="answers-container">
+                {q.answers.map((ans, aIndex) => (
+                  <div key={aIndex} className="answer">
+                    <Input
+                      placeholder="Escribe una respuesta"
+                      value={ans.answerText}
+                      onChange={(e) => updateAnswerText(qIndex, aIndex, e.target.value)}
+                    />
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={ans.isCorrect}
+                        onChange={() => toggleAnswerCorrect(qIndex, aIndex)}
+                      />
+                      Correcta
+                    </label>
+                  </div>
+                ))}
+                <div className="answer-actions">
+                  {q.answers.length < 4 && (
+                    <Button
+                      text="Añadir respuesta"
+                      onClick={() => addAnswerToQuestion(qIndex)}
+                      dataset={`add-answer-${qIndex}`}
+                    />
+                  )}
+                  {q.answers.length > 1 && (
+                    <Button
+                      text="Borrar respuesta"
+                      onClick={() => removeLastAnswerFromQuestion(qIndex)}
+                      dataset={`delete-answer-${qIndex}`}
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="delete-actions1">
+                {questions.length > 1 && (
                   <Button
-                    text="Eliminar Respuesta"
-                    onClick={() => removeAnswerFromQuestion(qIndex, aIndex)}
-                    dataset={`remove-answer-${qIndex}-${aIndex}`}
+                    text="Borrar pregunta"
+                    onClick={() => removeQuestion(qIndex)}
+                    dataset={`remove-question-${qIndex}`}
                   />
                 )}
               </div>
-            ))}
-          </div>
-          <div className="answer-actions">
-            <Button
-              text="Agregar Respuesta"
-              onClick={() => addAnswerToQuestion(qIndex)}
-              dataset={`add-answer-${qIndex}`}
-            />
-          </div>
-          {questions.length > 1 && (
-            <Button
-              text="Eliminar Pregunta"
-              onClick={() => removeQuestion(qIndex)}
-              dataset={`remove-question-${qIndex}`}
-            />
-          )}
+            </div>
+          ))}
         </div>
-      ))}
-      <Button text="Agregar Pregunta" onClick={addQuestion} dataset="add-question" />
-      <Button text="Guardar Cambios" onClick={handleSubmit} dataset="edit-test" />
-      <Button text="Cancelar" onClick={() => navigate("/host")} dataset="cancel-edit" />
-  </div>
+        <Button text="Añadir pregunta" onClick={addQuestion} dataset="add-question" />
+      </div>
+      <div className="done-section">
+          <div style={{ marginBottom: "1rem" }}>
+            <label>
+              <input
+                type="checkbox"
+                checked={isPublic}
+                onChange={(e) => setIsPublic(e.target.checked)}
+              />
+              &nbsp;Hacer público
+            </label>
+          </div>
+          <Button text="Guardar cambios" onClick={handleSubmit} dataset="edit-test" />
+          <Button text="Volver" onClick={() => navigate("/host")} dataset="back-view" />
+      </div>
+      <Footer />
+    </>
   );
 }

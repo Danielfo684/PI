@@ -70,7 +70,7 @@ export const Components = {
 
     },
 
-    Input: (props: { placeholder: string; value: string; onChange: (e: any) => void; className?: string }): JSX.Element => {
+    Input: (props: { placeholder: string; value: string; onChange: (e: any) => void; className?: string; maxLength?: number }): JSX.Element => {
         return (
             <input
                 type="text"
@@ -78,6 +78,7 @@ export const Components = {
                 value={props.value}
                 onChange={props.onChange}
                 className={props.className}
+                maxLength={props.maxLength}
             />
         );
     }

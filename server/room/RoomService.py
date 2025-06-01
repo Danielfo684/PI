@@ -12,6 +12,7 @@ class Room:
         self.quiz = quiz
         self.remaining_time = 0
         self.timer_thread = None
+        self.game_started = False
 
     def set_remaining_time(self, seconds=20, service=None):
         self.remaining_time = seconds
@@ -26,7 +27,6 @@ class Room:
                 self.timer_cancel_event.wait(1)
             if not self.timer_cancel_event.is_set():
                 print(f"¡Tiempo terminado en la pregunta de la sala {self.name}!")
-                # Aquí puedes emitir HIDE_QUESTION si quieres
 
         self.timer_thread = threading.Thread(target=countdown, daemon=True)
         self.timer_thread.start()
@@ -39,9 +39,15 @@ class Room:
         return len(self.players)
     
     def remove_player(self, player_id: str):
-        self.players = [player for player in self.players if getattr(player, "id", None) != player_id]
+        self.players = [player for player in self.players if str(getattr(player, "id", None)) != str(player_id)]
         print(f"Jugador con ID {player_id} eliminado de la sala {self.name}.")
 
+    def set_game_started(self, started: bool):
+        self.game_started = started
+        print(f"Estado del juego en la sala {self.name} cambiado a: {self.game_started}")
+
+    def get_game_started(self):
+        return self.game_started
 
 class RoomConfig:
     maxRoomPlayers = 2
@@ -90,6 +96,7 @@ class RoomService:
         player = Player(
             id=player_id,
             name=data.get("playerName"),
+            sid=sid,
         )
         room.players.append(player)
         if len(room.players) == RoomConfig.maxRoomPlayers:
@@ -98,11 +105,10 @@ class RoomService:
             room.occupied = False
         return player
 
-    def find_player(self, player_id: str):
-        for room in self.rooms:
-            for player in room.players:
-                if getattr(player, "id", None) == player_id:
-                    return player
+    def find_player(self, player_id: str, room):
+        for player in room.players:
+            if str(getattr(player, "id", None)) == str(player_id):
+                return player
         return None
 
     def find_player_in_room(self, sid, room):

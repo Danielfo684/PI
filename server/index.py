@@ -12,11 +12,10 @@ from api.tests import tests_api
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "mi_clave_secreta")
 
-CORS(app, supports_credentials=True, origins=[config.CLIENT_URL])
+CORS(app, supports_credentials=True, origins="*")
 
 sio = socketio.Server(
-    #cors_allowed_origins="*",
-    cors_allowed_origins=[config.CLIENT_URL],
+    cors_allowed_origins="*",
     logger=False,
     engineio_logger=False
 )
@@ -52,6 +51,8 @@ def add_cors_headers(response):
 if __name__ == "__main__":
     try:
         print(f"Connected successfully on port {config.PORT}")
-        eventlet.wsgi.server(eventlet.listen(("", config.PORT)), app, log_output=False)
+        eventlet.wsgi.server(eventlet.listen(("0.0.0.0", config.PORT)), app, log_output=False)
     except Exception as error:
         print(f"Error occurred: {error}")
+
+

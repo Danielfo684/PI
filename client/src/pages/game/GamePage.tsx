@@ -8,13 +8,11 @@ import { usePageTitle } from "../../hooks/usePageTitle"
 import { Player } from "../../components/player/Player";
 import { utils } from "../../../src/services/utils";
 
-
 interface Player {
   id: number;
   name: string;
   score: number;
 }
-
 
 export function GamePage(): JSX.Element {
   usePageTitle("Quizify - Partida en curso");
@@ -33,6 +31,7 @@ export function GamePage(): JSX.Element {
   const { data } = location.state || {};
   const [timer, setTimer] = useState<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [gameEnded, setGameEnded] = useState(false);
 
 
   useEffect(() => {
@@ -53,6 +52,11 @@ export function GamePage(): JSX.Element {
     }
   }, [data?.id, gameControllerSocket]);
 
+  const handleEndGame = () => {
+    GameController.getInstance().reset();
+    navigate("/join", { replace: true });
+  };
+
   const handleMessage = (payload: any) => {
     console.log("Mensaje recibido del socket", payload);
 
@@ -67,8 +71,13 @@ export function GamePage(): JSX.Element {
       }, 1000);
     }
     if (payload.type === "END_GAME") {
-      GameController.getInstance().reset();
-      navigate("/join", { replace: true });
+
+      if (timerRef.current) clearInterval(timerRef.current);
+      setGameEnded(true);
+      setCurrentQuestion(null);
+      setTimer(null);
+      gameControllerSocket.disconnect();
+      navigate("/", { replace: true });
     }
     if (payload.type === "QUESTION_FINISHED") {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -111,12 +120,34 @@ export function GamePage(): JSX.Element {
 
   return (
     <>
-      {currentQuestion ? (
+      {gameEnded ? (
+        <div className="game-ended-container">
+          <h2>¡La partida ha terminado!</h2>
+          <div className="game-ended-players">
+            {utils.orderByPointsAndId(players).map((player, index) => (
+              <Player.PlayerPoints
+                key={player.id}
+                id={player.id}
+                name={player.name}
+                points={player.points ?? 0}
+                iconNumber={player.id ?? 1}
+                className={
+                  index === 0 ? "first-place"
+                    : index === 1 ? "second-place"
+                      : index === 2 ? "third-place"
+                        : ""
+                }
+              />
+            ))}
+          </div>
+          <Button text="Volver al inicio" onClick={handleEndGame} dataset="" />
+        </div>
+      ) : currentQuestion ? (
         !answered ? (
           <div className="quiz-container">
             <div className="quiz-box">
               {timer !== null && (
-                <div className="timer">Tiempo restante: {timer}s</div>
+                <div className="timer">{timer}</div>
               )}
               <div className="question-mark">?</div>
               <div className="question-text">
@@ -141,17 +172,15 @@ export function GamePage(): JSX.Element {
           <div className="waiting-question-loader">
             {timer !== null && (
               <>
-                <div className="timer">Tiempo restante: {timer}s</div>
+                <div className="timer">{timer}</div>
                 <div className="spinner"></div>
                 <div> Esperando a que todos los jugadores respondan...</div>
               </>
             )}
           </div>
         )
-      ) : players.length > 0 ? (<div>
-        <div>Puntuaciones</div>
+      ) : players.length > 0 ? (<div className="game-page-container1">
         <div>
-
           {
             utils.orderByPointsAndId(players).map((player, index) => (
               <Player.PlayerPoints

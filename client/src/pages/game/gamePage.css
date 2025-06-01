@@ -24,9 +24,6 @@
   }
 }
 
-
-
-/* Fondo general con gradiente y centrado */
 .quiz-container {
   display: flex;
   justify-content: center;
@@ -40,7 +37,6 @@
   overflow: hidden;
 }
 
-/* Caja principal del quiz */
 .quiz-box {
   background: transparent;
   border: 2px solid #ffffff44;
@@ -54,7 +50,6 @@
   animation: fadeInUp 1s ease;
 }
 
-/* Contador de tiempo */
 .timer {
   position: absolute;
   top: 20px;
@@ -69,7 +64,6 @@
   animation: fadeInUp 1s ease;
 }
 
-/* Flechas decorativas */
 .quiz-box::before,
 .quiz-box::after {
   content: '';
@@ -89,7 +83,6 @@
   right: auto;
 }
 
-/* Signo de pregunta grande */
 .question-mark {
   font-size: 160px;
   font-weight: bold;
@@ -101,7 +94,6 @@
   z-index: 0;
 }
 
-/* Texto de la pregunta */
 .question-text p {
   font-size: 26px;
   font-weight: 600;
@@ -111,7 +103,6 @@
   color: #ffffff;
 }
 
-/* Opciones del quiz */
 .options {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -139,7 +130,6 @@
   border-color: #ffffffaa;
 }
 
-/* Animaciones */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -164,7 +154,6 @@
   }
 }
 
-/* Puntos decorativos */
 .quiz-container::before,
 .quiz-container::after {
   content: '••••';
@@ -202,4 +191,36 @@
 .third-place {
   background: linear-gradient(90deg, #cd7f32 60%, #ffe4b5 100%);
   border: 2px solid #cd7f32;
+}
+
+.game-page-container1 {
+  max-width: 1200px;
+  width: 100%;
+  margin: 3rem auto;
+}
+
+.game-ended-container h2 {
+  text-align: center;
+  margin: 3rem 0;
+}
+
+.game-ended-players {
+  max-width: 1200px;
+  width: 100%;
+  margin: 3rem auto;
+}
+
+.game-ended-container button {
+  display: block;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 550px) {
+  .options {
+    gap: 15px !important;
+  }
+
+  .option {
+    padding: 20px 35px !important;
+  }
 }

@@ -2,12 +2,14 @@ import { JSX } from "react";
 import { Player } from "../../components/player/Player";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import "./HomePage.css";
+import { Header } from "../../components/header/Header";
 
 export function HomePage(): JSX.Element {
   usePageTitle("Quizify - Inicio");
 
   return (
     <>
+      <Header />
       <div className="player-section1">
         <div className="player-card-home" key={1}>
           <Player.PlayerCard 

@@ -119,7 +119,7 @@ export function HostingGamePage(): JSX.Element | null {
   useEffect(() => { if (!data) { navigate("/host", { replace: true }); } }, [data, navigate]);
   useEffect(() => {
     const initGame = async () => {
-      gameControllerInstance.init("http://localhost:5000");
+      gameControllerInstance.init("/http://proyectointegrado.hopto.org:5000");
       console.log("Promesa terminada");
       if (!socketFlag.current && data?.id) {
         gameControllerInstance.socketMessage({ type: "CREATE_ROOM", content: data.id });
@@ -144,6 +144,8 @@ export function HostingGamePage(): JSX.Element | null {
     }
   }, [data?.id, gameControllerSocket]);
 
+
+
   useEffect(() => {
     if (gameInstance === false || !data) {
       navigate("/host", { replace: true });
@@ -167,11 +169,12 @@ export function HostingGamePage(): JSX.Element | null {
     gameControllerInstance.socketMessage({ type: "PLAYER_LIST", content: { roomCode } });
     gameControllerInstance.socketMessage({ type: "END_GAME", content: { roomCode } });
     console.log("Partida finalizada");
+    gameControllerInstance.reset();
 
     setCurrentQuestion(null);
     setShowPoints(true);
     setGameEnded(true); 
-    navigate("/host", { replace: true });
+    navigate("/", { replace: true });
   }
 
   useEffect(() => {
@@ -257,7 +260,7 @@ export function HostingGamePage(): JSX.Element | null {
           <div className="quiz-container2">
             <div className="quiz-box2">
               {timer !== null && (
-                <div className="timer">Tiempo restante: {timer}s</div>
+                <div className="timer">{timer}</div>
               )}
               <div className="question-mark">?</div>
               <div className="question-text">

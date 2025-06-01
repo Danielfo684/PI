@@ -17,7 +17,7 @@ export function UserMainPage(): JSX.Element {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/user", {
+        const res = await fetch("http://proyectointegrado.hopto.org:5000/api/user", {
           method: "GET",
           credentials: "include"
         });
@@ -35,7 +35,7 @@ export function UserMainPage(): JSX.Element {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:5000/logout", {
+      const response = await fetch("http://proyectointegrado.hopto.org:5000/logout", {
         method: "POST",
         credentials: "include",
       });

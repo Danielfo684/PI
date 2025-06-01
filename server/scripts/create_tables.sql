@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS tests (
     user_id INT NOT NULL,
     is_public BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS questions (
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS questions (
     test_id INT NOT NULL,
     question_text TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (test_id) REFERENCES tests(id)
+    FOREIGN KEY (test_id) REFERENCES tests(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS answers (
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS answers (
     answer_text TEXT NOT NULL,
     is_correct BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (question_id) REFERENCES questions(id)
+    FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
 );
 
 INSERT INTO users (username, email, password, is_admin)

@@ -17,7 +17,7 @@ export function UserSettingPage(): JSX.Element {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/user", {
+        const res = await fetch("http://proyectointegrado.hopto.org:5000/api/user", {
           method: "GET",
           credentials: "include"
         });

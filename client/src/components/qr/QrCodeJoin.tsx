@@ -7,7 +7,7 @@ interface QRCodeJoinProps {
 }
 
 export const QRCodeJoin: React.FC<QRCodeJoinProps> = ({ roomCode }) => {
-  const joinUrl = `${window.location.origin}/host?roomCode=${roomCode}`;
+  const joinUrl = `http://proyectointegrado.hopto.org:5173/join?roomCode=${roomCode}`;
 
   return (
     <div className="qr-section" style={{ textAlign: "center", margin: "20px 0" }}>

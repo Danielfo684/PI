@@ -123,6 +123,7 @@ button:hover {
   opacity: 1;
   left: 0;
   transition: all 0.3s;
+  z-index: 3000 !important; 
 }
 
 .nav-bar span:nth-child(1) { top: 6px; }
@@ -139,6 +140,13 @@ button:hover {
 .nav-bar.open span:nth-child(3) {
   top: 14px;
   transform: rotate(-45deg);
+}
+
+.nav-bar.open {
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  z-index: 3002;
 }
 
 .no-scroll {

@@ -1,5 +1,5 @@
 import { JSX, useState, useEffect } from "react";
-import { Card, CardContent, Button } from "../../components/basicComponents/index";
+import { Card, CardContent } from "../../components/basicComponents/index";
 import { Link, useNavigate } from "react-router-dom";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import { GameController } from "../../services/GameController";
@@ -22,14 +22,12 @@ export function HostPage(): JSX.Element {
   const loggedUserId = Number(localStorage.getItem("userId"));
   const gameController = GameController.getInstance();
 
-  useEffect(() => {
-    GameController.getInstance().reset();
-  }, []);
+
 
   useEffect(() => {
     const fetchTests = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/tests", {
+        const response = await fetch("http://proyectointegrado.hopto.org:5000/api/tests", {
           method: "GET",
           credentials: "include",
         });
@@ -48,16 +46,15 @@ export function HostPage(): JSX.Element {
 
 
   useEffect(() => {
-    const gameController = GameController.getInstance();
-    gameController.init("http://localhost:5000");
+    gameController.init("http://proyectointegrado.hopto.org:5000");
   }, [gameController]);
 
 
- 
+
   const publicTests = tests.filter(t => t.is_public);
   const privateTests = tests.filter(t => !t.is_public);
 
-  
+
   const filteredPublicTests = publicTests.filter(t =>
     t.title.toLowerCase().includes(publicSearch.toLowerCase()) ||
     t.description.toLowerCase().includes(publicSearch.toLowerCase())
@@ -67,7 +64,7 @@ export function HostPage(): JSX.Element {
     t.description.toLowerCase().includes(privateSearch.toLowerCase())
   );
 
-  
+
   const paginate = (items: any[], currentPage: number, perPage: number) => {
     const startIndex = (currentPage - 1) * perPage;
     return items.slice(startIndex, startIndex + perPage);
@@ -89,7 +86,7 @@ export function HostPage(): JSX.Element {
   const handleDelete = async (testId: number) => {
     if (!window.confirm("¿Estás seguro de eliminar este test?")) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/tests/${testId}`, {
+      const response = await fetch(`http://proyectointegrado.hopto.org:5000/api/tests/${testId}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -112,13 +109,11 @@ export function HostPage(): JSX.Element {
       <Floating target="#top" />
       <div className="host-page-container">
         <h2>Organiza tu propia partida</h2>
-
-        
-        <section className="tests-section">
+        <section className="tests-section1">
           <h2>Tests Privados</h2>
           <input
             type="text"
-            className="search-input"
+            className="search-input1"
             placeholder="Buscar tests privados"
             value={privateSearch}
             onChange={(e) => {
@@ -140,7 +135,7 @@ export function HostPage(): JSX.Element {
                 </Link>
                 {test.user_id === loggedUserId && (
                   <div className="action-buttons">
-                    <button onClick={() => navigate(`/view-test/${test.id}`)}>Visualizar</button>
+                    <button onClick={() => navigate(`/view-test/${test.id}`)}>Ver</button>
                     <button onClick={() => handleEdit(test)}>Editar</button>
                     <button onClick={() => handleDelete(test.id)}>Borrar</button>
                   </div>
@@ -168,12 +163,11 @@ export function HostPage(): JSX.Element {
           )}
         </section>
 
-        
-        <section className="tests-section">
+        <section className="tests-section1">
           <h2>Tests Públicos</h2>
           <input
             type="text"
-            className="search-input"
+            className="search-input1"
             placeholder="Buscar tests públicos"
             value={publicSearch}
             onChange={(e) => {
@@ -195,7 +189,7 @@ export function HostPage(): JSX.Element {
                 </Link>
                 {test.user_id === loggedUserId && (
                   <div className="action-buttons">
-                    <button onClick={() => navigate(`/view-test/${test.id}`)}>Visualizar</button>
+                    <button onClick={() => navigate(`/view-test/${test.id}`)}>Ver</button>
                     <button onClick={() => handleEdit(test)}>Editar</button>
                     <button onClick={() => handleDelete(test.id)}>Borrar</button>
                   </div>

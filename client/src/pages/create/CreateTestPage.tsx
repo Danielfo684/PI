@@ -143,7 +143,7 @@ export function CreateTestPage(): JSX.Element {
 
     const testData = { title, description, is_public: isPublic, questions };
     try {
-      const response = await fetch("http://localhost:5000/api/tests", {
+      const response = await fetch("http://proyectointegrado.hopto.org:5000/api/tests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -193,6 +193,7 @@ export function CreateTestPage(): JSX.Element {
           placeholder="Descripción breve del test"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          maxLength={100}
         />
       </div>
       <div className="create-test-container">

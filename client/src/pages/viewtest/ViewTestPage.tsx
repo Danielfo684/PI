@@ -2,19 +2,22 @@ import { JSX, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "../../components/basicComponents";
 import { usePageTitle } from "../../hooks/usePageTitle";
-import "./ViewTestPage.css";
+import "../create/CreateTestPage.css";
+import { Footer } from "../../components/footer/Footer";
+import { Floating } from "../../components/floatingButton/floatingButton";
 
 export function ViewTestPage(): JSX.Element {
   usePageTitle("Quizify - Test");
   const { id } = useParams<{ id: string }>();
-  const [test, setTest] = useState<any>(null);
-  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
   const loggedUserId = Number(localStorage.getItem("userId"));
 
+  const [test, setTest] = useState<any>(null);
+  const [error, setError] = useState<string>("");
+
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:5000/api/tests/${id}`, {
+      fetch(`http://proyectointegrado.hopto.org:5000/api/tests/${id}`, {
         method: "GET",
         credentials: "include",
       })
@@ -39,52 +42,53 @@ export function ViewTestPage(): JSX.Element {
 
   if (error) {
     return (
-      <div className="view-test-container">
-        <h1>Error</h1>
-        <p>{error}</p>
-        <Button
-          text="Volver"
-          onClick={() => navigate("/host")}
-          dataset="back-view"
-        />
+      <div className="create-test-container">
+        <h2 className="create-title">Error</h2>
+        <p className="error">{error}</p>
+        <Button text="Volver" onClick={() => navigate("/host")} dataset="back-view" />
+        <Footer />
       </div>
     );
   }
 
   if (!test) {
-    return <div className="view-test-container">Cargando...</div>;
+    return (
+      <div className="create-test-container">
+        <h2 className="create-title">Cargando test...</h2>
+      </div>
+    );
   }
 
-  const renderAnswers = (answers: any[]) => {
-    return (
-        <ul>
-        {answers.map((a, idx) => (
-            <li key={idx}>
-            {a.answer_text}
-            {test.user_id === loggedUserId && a.is_correct ? " (Correcta)" : ""}
-            </li>
-        ))}
-        </ul>
-    );
-    };
+  const renderAnswers = (answers: any[]) => (
+    <ul>
+      {answers.map((a, idx) => (
+        <li key={idx}>
+          {a.answer_text}
+          {test.user_id === loggedUserId && a.is_correct ? " (Correcta)" : ""}
+        </li>
+      ))}
+    </ul>
+  );
 
   return (
-    <div className="view-test-container">
-      <h1>{test.title}</h1>
-      <p>{test.description}</p>
-      <div className="questions">
-        {test.questions.map((q: any, index: number) => (
-          <div key={index} className="question">
-            <h3>{`Pregunta ${index + 1}: ${q.question_text}`}</h3>
-            {renderAnswers(q.answers)}
-          </div>
-        ))}
+    <>
+      <div id="top"></div>
+      <Floating target="#top" />
+      <div className="create-test-container">
+        <h2 className="create-title">{test.title}</h2>
+        <p>{test.description}</p>
+        <div className="questions-container">
+          {test.questions.map((q: any, index: number) => (
+            <div key={index} className="question2">
+              <h3>{`Pregunta ${index + 1}`}</h3>
+              <p>{q.question_text}</p>
+              {renderAnswers(q.answers)}
+            </div>
+          ))}
+        </div>
       </div>
-      <Button
-        text="Volver"
-        onClick={() => navigate("/host")}
-        dataset="back-view"
-      />
-    </div>
+      <Button text="Volver" onClick={() => navigate("/host")} dataset="back-view" />
+      <Footer />
+    </>
   );
 }

@@ -20,18 +20,20 @@ def do_join_room(service, sid, data):
     if room is None:
         service.socket.emit("message", {"type": "JOIN_ERROR", "content": room})
     else:
-        player = room_service.add_player(sid, data, room)
-        print(f"Player creado: {player.to_dict()}")
-        service.socket.enter_room(sid, room.name)
-        service.socket.emit(
-            "message", {"type": "JOIN_PLAYER", "content": player.to_dict()},
-            room=room.name
-        )
+        if not room.get_game_started():
+            player = room_service.add_player(sid, data, room)
+            print(f"Player creado: {player.to_dict()}")
+            service.socket.enter_room(sid, room.name)
+            service.socket.emit(
+                "message", {"type": "JOIN_PLAYER", "content": player.to_dict()},
+                room=room.name
+            )
 
 
 def do_start_game(service, sid, data):
     room = find_room(service, data)
     if room:
+        room.set_game_started(True)
         service.socket.emit(
             "message", {"type": "START_GAME", "content": "Starting game..."},
             room=room.name
@@ -73,7 +75,7 @@ def do_submit_answer(service, sid, data):
     room = find_room(service, data)
     if room:
         player_id = data.get("playerId")
-        player = RoomService.get_instance().find_player(player_id)
+        player = RoomService.get_instance().find_player(player_id, room)
         if player:
             answer_id = data.get("selection")
             question = room.quiz.get_current_question()  
@@ -97,9 +99,8 @@ def do_submit_answer(service, sid, data):
                 room.quiz.reset_players_answered()
                 room.cancel_timer()  # <--- Cancela el temporizador
                 service.socket.emit(
-                    "message", {"type": "QUESTION_FINISHED", "content": {}},
-                    room=room.name
-                )
+                    "message", {"type": "QUESTION_FINISHED", "content": {} }, room=room.name
+            )
         else:
           print(f"Jugador no encontrado: {player_id}")
             
@@ -126,6 +127,9 @@ def do_end_game(service, sid, data):
         print(f"Finalizando juego en la sala: {room.name}")
         RoomService.get_instance().remove_room(room.name)
         sids = list(service.socket.manager.rooms['/'].get(room.name, set()))
+        service.socket.emit(
+            "message", {"type": "END_GAME", "content": {}}, room=room.name
+        )
         for client_sid in sids:
             service.socket.disconnect(client_sid)
 
@@ -133,9 +137,14 @@ def do_kick_player(service, sid, data):
     room = find_room(service, data)
     if room:
         player_id = data.get("playerId")
-        player = RoomService.get_instance().find_player(player_id)
+        player = RoomService.get_instance().find_player(player_id, room)
         if player:
             print(f"Expulsando al jugador {player.name} de la sala {room.name}")
-            room.remove_player(player)
+            room.remove_player(player_id)
+            print(len(room.players))
+            service.socket.emit(
+                "message", {"type": "PLAYER_KICKED", "content": {"playerId": player_id}},
+                room=player.sid 
+            )
         else:
             print(f"Jugador no encontrado: {player_id}")
