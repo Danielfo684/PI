@@ -32,7 +32,7 @@ export function MainPage() : JSX.Element {
             Ya sea que estés estudiando para un examen o simplemente quieras poner a prueba tus conocimientos, 
             Quizify es la <span>herramienta perfecta</span> para ti.
           </p>
-          <button><Link to="/play"><p>¡Empieza ahora!</p></Link></button>
+          <button><Link to="/create"><p>¡Empieza ahora!</p></Link></button>
         </div>
         <div className="about-img"></div>
       </div>

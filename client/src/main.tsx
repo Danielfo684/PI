@@ -46,7 +46,7 @@ createRoot(rootElement).render(
           </Route>
           <Route path="/join" element={<JoinRoomPage />} />
         </Route>
-        <Route path="/quiz" element={<Quiz />} /> {/* Ruta provisional para editar la interfaz de las preguntas */}
+        <Route path="/quiz" element={<Quiz />} /> 
       </Routes>
     </BrowserRouter>
   </StrictMode>
